@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">DailyExpenseManager</string>
+    <string name="income">income</string>
+    <string name="expense">expense</string>
+    <string name="balance">balance</string>
+    <string name="value">0.0</string>
+    <string name="Daily">Daily</string>
+    <string name="Monthly">Monthly</string>
+    <string name="Transactions">Transactions</string>
+    <string name="Income">Income</string>
+    <string name="Expenses">Expenses</string>
+    <string name="Add">Add</string>
+    <string name="IncomeDescription">Income Description</string>
+    <string name="Salary">Salary</string>
+    <string name="Business">Business</string>
+    <string name="Deposit">Deposit</string>
+    <string name="HouseRent">House Rent</string>
+    <string name="EnterAmount">Enter Amount</string>
+    <string name="demoDate">23/12/21</string>
+    <string name="ChangeDate">ChangeDate</string>
+    <string name="Save">Save</string>
+    <string name="Back">Back</string>
+    <string name="ExpenseDescription">Expense Description</string>
+    <string name="Food">Food</string>
+    <string name="Transport">Transport</string>
+    <string name="Bills">Bills</string>
+    <string name="Gift">Gift</string>
+    <string name="Medicine">Medicine</string>
+    <string name="Education">Education</string>
+    <string name="LifeStyle">Life Style</string>
+</resources>
