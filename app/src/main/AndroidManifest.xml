@@ -9,7 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyExpenseManager">
-        <activity android:name=".view.Transactions"></activity>
+        <activity android:name=".view.TodaysTransactions"></activity>
+        <activity android:name=".view.AllExpenses" />
+        <activity android:name=".view.AllIncomes" />
+        <activity android:name=".view.PieChart" />
+        <activity android:name=".view.Monthly" />
+        <activity android:name=".view.Daily" />
+        <activity android:name=".view.Transactions" />
         <activity android:name=".view.AddExpense" />
         <activity android:name=".view.AddIncome" />
         <activity android:name=".view.MainActivity">

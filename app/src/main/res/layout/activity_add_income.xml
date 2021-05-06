@@ -9,7 +9,7 @@
     tools:context=".view.AddIncome">
 
     <EditText
-        android:id="@+id/et_addIncome_AddIncome"
+        android:id="@+id/et_incomeDescription_AddIncome"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="5dp"
@@ -31,7 +31,7 @@
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_addIncome_AddIncome">
+        app:layout_constraintTop_toBottomOf="@+id/et_incomeDescription_AddIncome">
 
         <LinearLayout
             android:id="@+id/ll_horizontalView_MainActivity"
@@ -110,41 +110,6 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_deposit_AddIncome"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
-                        android:src="@drawable/diposit" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
-                        android:text="@string/Deposit"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_houseRent_AddIncome"
                 style="@style/CV_horizontalScroll_MainActivity"
                 android:layout_width="wrap_content"
@@ -178,6 +143,41 @@
 
 
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_other_AddIncome"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/other" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/Other"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
     </HorizontalScrollView>
@@ -198,8 +198,10 @@
         app:strokeWidth="1dp">
 
         <EditText
+            android:id="@+id/et_amount_AddIncome"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textColor="@color/black"
             android:background="@color/transparent"
             android:drawableLeft="@drawable/ic_dollar"
             android:drawablePadding="10dp"
@@ -571,9 +573,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="40dp"
+            android:paddingStart="50dp"
             android:paddingTop="5dp"
-            android:paddingEnd="40dp"
+            android:paddingEnd="50dp"
             android:textAlignment="center"
             android:paddingBottom="5dp"
             android:text="@string/Back"
@@ -596,11 +598,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cv_save_AddIncome"
         app:strokeColor="@color/red"
-        app:strokeWidth="1dp">
+        app:strokeWidth="1dp"
+        android:focusable="true">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="match_parent"
             android:src="@drawable/calculator_round" />
 
     </com.google.android.material.card.MaterialCardView>

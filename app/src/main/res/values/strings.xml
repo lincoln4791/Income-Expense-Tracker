@@ -28,4 +28,204 @@
     <string name="Medicine">Medicine</string>
     <string name="Education">Education</string>
     <string name="LifeStyle">Life Style</string>
+    <string name="AllTransactions">All Transactions</string>
+    <string name="Cloths">Cloths</string>
+    <string name="Other">Other</string>
+    <string name="All">All</string>
+    <string name="TotalIncome">Total Income</string>
+    <string name="TotalExpense">Total Expense</string>
+    <string name="Type">Type</string>
+    <string name="Category">Category</string>
+    <string name="Amount">Amount</string>
+    <string name="Report">Report</string>
+    <string name="Full_Report">Full Report</string>
+    <string name="Today">Today</string>
+    <string name="Incomes">Incomes</string>
+    <string name="Home">Home</string>
+    <string name="a500">500</string>
+    <string name="a1000">1000</string>
+    <string name="a1500">1500</string>
+    <string name="a2000">2000</string>
+    <string name="a2500">2500</string>
+    <string name="a3000">3000</string>
+    <string name="a3500">3500</string>
+    <string name="a4000">4000</string>
+    <string name="a5000">5000</string>
+    <string name="a10000">10000</string>
+    <string name="a20000">20000</string>
+    <string name="a30000">30000</string>
+    <string name="a40000">40000</string>
+    <string name="a50000">50000</string>
+    <string name="a100000">100000</string>
+    <string name="a200000">200000</string>
+    <string name="a300000">300000</string>
+    <string name="a400000">400000</string>
+    <string name="a500000">500000</string>
+    <string name="do_you_want_to_logout">Do you want to logout?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+
+
+    <string-array name="nullCategory"></string-array>
+
+    <string-array name="incomeCategory">
+        <item>All</item>
+        <item>Salary</item>
+        <item>Business</item>
+        <item>House Rent</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="expenseCategory">
+        <item>All</item>
+        <item>Food</item>
+        <item>Transport</item>
+        <item>House Rent</item>
+        <item>Business</item>
+        <item>Medicine</item>
+        <item>Cloths</item>
+        <item>Education</item>
+        <item>Life Style</item>
+        <item>Bills</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="monthNames">
+        <item>Null</item>
+        <item>JAN</item>
+        <item>FEB</item>
+        <item>MAR</item>
+        <item>APR</item>
+        <item>MAY</item>
+        <item>JUNE</item>
+        <item>JULY</item>
+        <item>AUG</item>
+        <item>SEP</item>
+        <item>OCT</item>
+        <item>NOV</item>
+        <item>DEC</item>
+    </string-array>
+
+
+    <string-array name="year">
+        <item>2020</item>
+        <item>2021</item>
+        <item>2022</item>
+        <item>2023</item>
+        <item>2024</item>
+        <item>2025</item>
+    </string-array>
+
+    <string-array name="type">
+        <item>Both</item>
+        <item>Income</item>
+        <item>Expense</item>
+    </string-array>
+
+    <string-array name="dayNull"></string-array>
+
+    <string-array name="day31">
+        <item>Null</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+
+
+    <string-array name="day30">
+        <item>Null</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+    </string-array>
+
+
+    <string-array name="day28">
+        <item>Null</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+    </string-array>
+
+
 </resources>
