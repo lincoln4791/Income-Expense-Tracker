@@ -509,7 +509,7 @@
     </HorizontalScrollView>
 
     <TextView
-        android:id="@+id/tv_date_AddIncome"
+        android:id="@+id/tv_dateTime_AddIncome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -530,7 +530,8 @@
         android:text="@string/ChangeDate"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView3_AddIncome"
-        app:layout_constraintTop_toTopOf="@+id/tv_date_AddIncome" />
+        app:layout_constraintTop_toTopOf="@+id/tv_dateTime_AddIncome"
+        android:visibility="gone"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_save_AddIncome"
@@ -567,7 +568,7 @@
         android:backgroundTint="@color/gray"
         app:cardCornerRadius="25dp"
         app:cardElevation="16dp"
-        app:layout_constraintStart_toStartOf="@+id/tv_date_AddIncome"
+        app:layout_constraintStart_toStartOf="@+id/tv_dateTime_AddIncome"
         app:layout_constraintTop_toTopOf="@+id/cv_save_AddIncome">
 
         <TextView

@@ -71,14 +71,13 @@ public class AllExpenses extends AppCompatActivity {
 
 
         //*********************************************Initial Methods***************************************************
-
+        observe();
 
     }
 
+    private void observe() {
 
-
-
-
+    }
 
 
 }

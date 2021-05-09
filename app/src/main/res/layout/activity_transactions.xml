@@ -16,9 +16,9 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:weightSum="3"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_totalIncomes_Monthly"
@@ -284,12 +284,9 @@
         android:id="@+id/rv_Transactions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ll_detailsReport_Transactions"
+        app:layout_constraintStart_toStartOf="@+id/ll_detailsReport_Transactions"
         app:layout_constraintTop_toBottomOf="@+id/ll_detailsReport_Transactions" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

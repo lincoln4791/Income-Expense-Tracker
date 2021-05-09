@@ -1,51 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
+    android:layout_weight="5"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     android:layout_marginTop="1dp"
+    android:orientation="horizontal"
     android:layout_marginBottom="1dp"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            style="@style/tv_data_Transactions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="31/12/21 12:24" />
+                <TextView
+                    android:id="@+id/tv_dateTime_SampleTransactions"
+                    style="@style/tv_data_Transactions"
+                    android:layout_weight="2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="31/12/21 12:24"
+                    android:textAlignment="viewStart" />
 
-        <TextView
-            style="@style/tv_data_Transactions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Expenses" />
 
-        <TextView
-            style="@style/tv_data_Transactions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/Transport" />
+                <TextView
+                    android:id="@+id/tv_type_SampleTransactions"
+                    style="@style/tv_data_Transactions"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Expenses"
+                    android:textAlignment="viewStart" />
 
-        <TextView
-            style="@style/tv_data_Transactions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="500000" />
 
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_category_SampleTransactions"
+                    style="@style/tv_data_Transactions"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Transport"
+                  />
+
+
+
+                <TextView
+                    android:id="@+id/tv_amount_SampleTransactions"
+                    style="@style/tv_data_Transactions"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="500000"
+                />
+
+
+</LinearLayout>

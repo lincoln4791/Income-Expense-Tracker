@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         cv_expenses.setOnClickListener(v -> {
             Intent incomeIntent = new Intent(MainActivity.this,Transactions.class);
-            incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME);
+            incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE);
             startActivity(incomeIntent);
         });
 

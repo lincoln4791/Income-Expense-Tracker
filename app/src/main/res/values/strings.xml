@@ -64,6 +64,11 @@
     <string name="do_you_want_to_logout">Do you want to logout?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="AmontNeeded">Amount Needed</string>
+    <string name="Pleaseselectacatagory">Please select a category</string>
+    <string name="Success">Success</string>
+    <string name="YearWise">Year Wise</string>
+    <string name="year2021">2021</string>
 
 
     <string-array name="nullCategory"></string-array>
