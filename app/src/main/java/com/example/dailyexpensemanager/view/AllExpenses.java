@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.dailyexpensemanager.R;
@@ -60,7 +59,7 @@ public class AllExpenses extends AppCompatActivity {
         });
 
         cv_fullReport.setOnClickListener(v -> {
-            startActivity(new Intent(AllExpenses.this,Monthly.class));
+            startActivity(new Intent(AllExpenses.this, FullReport.class));
         });
 
 
@@ -71,13 +70,23 @@ public class AllExpenses extends AppCompatActivity {
 
 
         //*********************************************Initial Methods***************************************************
-        observe();
+
 
     }
 
-    private void observe() {
 
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
+
+
 
 
 }

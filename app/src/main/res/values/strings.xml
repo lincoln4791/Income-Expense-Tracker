@@ -16,7 +16,8 @@
     <string name="Deposit">Deposit</string>
     <string name="HouseRent">House Rent</string>
     <string name="EnterAmount">Enter Amount</string>
-    <string name="demoDate">23/12/21</string>
+    <string name="demoDate">23/12/2021</string>
+    <string name="demoDateTime">23/12/21 11:35 am </string>
     <string name="ChangeDate">ChangeDate</string>
     <string name="Save">Save</string>
     <string name="Back">Back</string>
@@ -69,6 +70,44 @@
     <string name="Success">Success</string>
     <string name="YearWise">Year Wise</string>
     <string name="year2021">2021</string>
+    <string name="digit01">01</string>
+    <string name="digit02">02</string>
+    <string name="digit03">03</string>
+    <string name="digit04">04</string>
+    <string name="digit05">05</string>
+    <string name="digit06">06</string>
+    <string name="digit07">07</string>
+    <string name="digit08">08</string>
+    <string name="digit09">09</string>
+    <string name="digit10">10</string>
+    <string name="digit11">11</string>
+    <string name="digit12">12</string>
+    <string name="digit13">13</string>
+    <string name="digit14">14</string>
+    <string name="digit15">15</string>
+    <string name="digit16">16</string>
+    <string name="digit17">17</string>
+    <string name="digit18">18</string>
+    <string name="digit19">19</string>
+    <string name="digit20">20</string>
+    <string name="digit21">21</string>
+    <string name="digit22">22</string>
+    <string name="digit23">23</string>
+    <string name="digit24">24</string>
+    <string name="digit26">26</string>
+    <string name="digit25">25</string>
+    <string name="digit27">27</string>
+    <string name="digit28">28</string>
+    <string name="digit29">29</string>
+    <string name="digit30">30</string>
+    <string name="digit31">31</string>
+    <string name="H_Rent">H.Rent</string>
+    <string name="T_Income">T.Income</string>
+    <string name="T_Expense">T.Expenses</string>
+    <string name="Description">Description</string>
+    <string name="Update">Update</string>
+    <string name="do_you_want_to_delete_the_file">Do you want to delete the file?</string>
+    <string name="do_you_want_to_exit">Do you want to exit?</string>
 
 
     <string-array name="nullCategory"></string-array>
@@ -112,13 +151,30 @@
     </string-array>
 
 
+
+    <string-array name="monthNames_MonthlyReport">
+        <item>JAN</item>
+        <item>FEB</item>
+        <item>MAR</item>
+        <item>APR</item>
+        <item>MAY</item>
+        <item>JUNE</item>
+        <item>JULY</item>
+        <item>AUG</item>
+        <item>SEP</item>
+        <item>OCT</item>
+        <item>NOV</item>
+        <item>DEC</item>
+    </string-array>
+
+
     <string-array name="year">
-        <item>2020</item>
         <item>2021</item>
         <item>2022</item>
         <item>2023</item>
         <item>2024</item>
         <item>2025</item>
+        <item>2026</item>
     </string-array>
 
     <string-array name="type">

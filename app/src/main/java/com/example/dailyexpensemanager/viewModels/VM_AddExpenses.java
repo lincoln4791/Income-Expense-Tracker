@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VM_AddExpenses extends ViewModel {
-    public String category="",amount="";
+    public String category="",amount="",dateTime="";
+    public String  time,day,month,year;
 
 
     public MutableLiveData<String > mutable_category = new MutableLiveData<>();

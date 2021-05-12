@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appBackground"
-    tools:context=".view.AddIncome">
-
+    tools:context=".view.EditDataExpense">
     <EditText
-        android:id="@+id/et_incomeDescription_AddIncome"
+        android:id="@+id/et_expenseDescription_EditDataExpense"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_margin="5dp"
-        android:maxLength="60"
         android:paddingStart="10dp"
-        android:drawableLeft="@drawable/ic_money_bag"
-        android:drawableRight="@drawable/ic_right_arrow"
+        android:drawableLeft="@drawable/ic_money_bag_red"
         android:drawablePadding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:hint="@string/IncomeDescription"
+        android:hint="@string/ExpenseDescription"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_typeTitle_EditDataExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="3dp"
+        android:text="@string/Category"
+        android:textColor="@color/pink"
+        android:textSize="15sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintStart_toStartOf="@+id/et_expenseDescription_EditDataExpense"
+        app:layout_constraintTop_toBottomOf="@+id/et_expenseDescription_EditDataExpense" />
+
     <HorizontalScrollView
-        android:id="@+id/horizontalScrollView2_AddIncome"
+        android:id="@+id/horizontalScrollView2_EditDataExpense"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_incomeDescription_AddIncome">
+        app:layout_constraintTop_toBottomOf="@+id/tv_typeTitle_EditDataExpense">
 
         <LinearLayout
-            android:id="@+id/ll_horizontalView_MainActivity"
+            android:id="@+id/ll_horizontalView_EditDataExpense"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_salary_AddIncome"
+                android:id="@+id/cv_food_EditDataExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -56,7 +64,7 @@
                         android:layout_width="120dp"
                         android:layout_height="0dp"
                         android:layout_weight="3"
-                        android:src="@drawable/salary" />
+                        android:src="@drawable/food" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
@@ -64,7 +72,7 @@
                         android:layout_height="14dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="1"
-                        android:text="@string/Salary"
+                        android:text="@string/Food"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="18sp"
@@ -76,7 +84,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_business_AddIncome"
+                android:id="@+id/cv_transport_EditDataExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -92,14 +100,14 @@
                         android:layout_width="120dp"
                         android:layout_height="0dp"
                         android:layout_weight="3"
-                        android:src="@drawable/business_profits" />
+                        android:src="@drawable/transport" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
                         android:layout_width="match_parent"
                         android:layout_height="14dp"
                         android:layout_weight="1"
-                        android:text="@string/Business"
+                        android:text="@string/Transport"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="18sp"
@@ -111,7 +119,42 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_houseRent_AddIncome"
+                android:id="@+id/cv_bills_EditDataExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/bills" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/Bills"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_houseRent_EditDataExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -146,7 +189,181 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_other_AddIncome"
+                android:id="@+id/cv_business_EditDataExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/business_profits" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/Business"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_medicine_EditDataExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/medicine" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/Medicine"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_cloths_EditDataExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/cloths" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/Cloths"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_education_EditDataExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/education" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/Education"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_lifeStyle_EditDataExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/life_style" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_weight="1"
+                        android:text="@string/LifeStyle"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_other_EditDataExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -179,12 +396,14 @@
 
 
             </com.google.android.material.card.MaterialCardView>
+
+
         </LinearLayout>
 
     </HorizontalScrollView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView2_AddIncome"
+        android:id="@+id/materialCardView2_EditDataExpense"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
@@ -194,18 +413,17 @@
         app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2_AddIncome"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2_EditDataExpense"
         app:strokeColor="@color/green"
         app:strokeWidth="1dp">
 
         <EditText
-            android:id="@+id/et_amount_AddIncome"
+            android:id="@+id/et_expenseAmount_EditDataExpense"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:inputType="numberDecimal"
             android:background="@color/transparent"
             android:drawableLeft="@drawable/ic_dollar"
+            android:drawableRight="@drawable/ic_right_arrow"
             android:drawablePadding="10dp"
             android:hint="@string/EnterAmount" />
 
@@ -213,7 +431,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <HorizontalScrollView
-        android:id="@+id/horizontalScrollView3_AddIncome"
+        android:id="@+id/horizontalScrollView3_EditDataExpense"
         android:layout_width="0dp"
         android:layout_height="65dp"
         android:layout_marginStart="10dp"
@@ -221,14 +439,14 @@
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView2_AddIncome">
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView2_EditDataExpense">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount500_AddIncome"
+                android:id="@+id/cv_amount500_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -242,7 +460,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount1000_AddIncome"
+                android:id="@+id/cv_amount1000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -256,7 +474,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount1500_AddIncome"
+                android:id="@+id/cv_amount1500_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -270,7 +488,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount2000_AddIncome"
+                android:id="@+id/cv_amount2000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -284,7 +502,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount2500_AddIncome"
+                android:id="@+id/cv_amount2500_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -298,7 +516,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount3000_AddIncome"
+                android:id="@+id/cv_amount3000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -312,7 +530,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount3500_AddIncome"
+                android:id="@+id/cv_amount3500_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -326,7 +544,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount4000_AddIncome"
+                android:id="@+id/cv_amount4000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -340,7 +558,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount5000_AddIncome"
+                android:id="@+id/cv_amount5000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -355,7 +573,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount10000_AddIncome"
+                android:id="@+id/cv_amount10000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -369,7 +587,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount15000_AddIncome"
+                android:id="@+id/cv_amount15000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -383,7 +601,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount20000_AddIncome"
+                android:id="@+id/cv_amount20000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -397,7 +615,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount30000_AddIncome"
+                android:id="@+id/cv_amount30000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -411,7 +629,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount40000_AddIncome"
+                android:id="@+id/cv_amount40000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -425,7 +643,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount50000_AddIncome"
+                android:id="@+id/cv_amount50000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -439,7 +657,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount100000_AddIncome"
+                android:id="@+id/cv_amount100000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -453,7 +671,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount200000_AddIncome"
+                android:id="@+id/cv_amount200000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -467,7 +685,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount300000_AddIncome"
+                android:id="@+id/cv_amount300000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -481,7 +699,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount400000_AddIncome"
+                android:id="@+id/cv_amount400000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -495,7 +713,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_amount500000_AddIncome"
+                android:id="@+id/cv_amount500000_EditDataExpense"
                 style="@style/CV_amounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -511,7 +729,7 @@
     </HorizontalScrollView>
 
     <TextView
-        android:id="@+id/tv_dateTime_AddIncome"
+        android:id="@+id/tv_dateTime_EditDataExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -521,31 +739,31 @@
         android:textStyle="bold"
         android:drawableLeft="@drawable/ic_schedule"
         android:drawablePadding="10dp"
-        app:layout_constraintStart_toStartOf="@+id/horizontalScrollView3_AddIncome"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_AddIncome" />
+        app:layout_constraintStart_toStartOf="@+id/horizontalScrollView3_EditDataExpense"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_EditDataExpense" />
 
     <TextView
-        android:id="@+id/tc_changeDate_AddIncome"
+        android:id="@+id/tv_changeDate_EditDataExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@string/ChangeDate"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView3_AddIncome"
-        app:layout_constraintTop_toTopOf="@+id/tv_dateTime_AddIncome"
+        app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView3_EditDataExpense"
+        app:layout_constraintTop_toTopOf="@+id/tv_dateTime_EditDataExpense"
         android:visibility="gone"/>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_save_AddIncome"
+        android:id="@+id/cv_save_EditDataExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_marginTop="60dp"
-        android:backgroundTint="@color/green"
+        android:backgroundTint="@color/pink"
         app:cardCornerRadius="25dp"
         app:cardElevation="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/tc_changeDate_AddIncome"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_AddIncome">
+        app:layout_constraintEnd_toEndOf="@+id/tv_changeDate_EditDataExpense"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_EditDataExpense">
 
         <TextView
             android:layout_width="match_parent"
@@ -563,15 +781,15 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_back_AddIncome"
+        android:id="@+id/cv_back_EditDataExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:backgroundTint="@color/gray"
         app:cardCornerRadius="25dp"
         app:cardElevation="16dp"
-        app:layout_constraintStart_toStartOf="@+id/tv_dateTime_AddIncome"
-        app:layout_constraintTop_toTopOf="@+id/cv_save_AddIncome">
+        app:layout_constraintStart_toStartOf="@+id/tv_dateTime_EditDataExpense"
+        app:layout_constraintTop_toTopOf="@+id/cv_save_EditDataExpense">
 
         <TextView
             android:layout_width="match_parent"
@@ -590,7 +808,7 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_calculator_AddIncome"
+        android:id="@+id/cv_calculator_EditDataExpense"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:clickable="true"
@@ -599,7 +817,7 @@
         app:cardCornerRadius="50dp"
         app:cardElevation="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/cv_save_AddIncome"
+        app:layout_constraintEnd_toEndOf="@+id/cv_save_EditDataExpense"
         app:strokeColor="@color/red"
         app:strokeWidth="1dp"
         android:focusable="true">
@@ -610,8 +828,5 @@
             android:src="@drawable/calculator_round" />
 
     </com.google.android.material.card.MaterialCardView>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

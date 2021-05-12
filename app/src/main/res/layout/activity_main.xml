@@ -9,7 +9,7 @@
     tools:context=".view.MainActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout_FullReport"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_marginTop="10dp"
@@ -64,13 +64,14 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
-                        android:text="@string/income"
+                        android:text="@string/TotalIncome"
                         android:textColor="@color/green"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/tv_totalIncomeValue_topBar_MainActivity"
                         style="@style/tv_topBar_MainActivity"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -103,13 +104,14 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
-                        android:text="@string/expense"
+                        android:text="@string/TotalExpense"
                         android:textColor="@color/red"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/tv_totalExpenseValue_topBar_MainActivity"
                         style="@style/tv_topBar_MainActivity"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -176,7 +178,7 @@
         android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_FullReport">
 
         <LinearLayout
             android:id="@+id/ll_horizontalView_MainActivity"
@@ -184,7 +186,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_today_MainActivity"
+                android:id="@+id/cv_daily_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
@@ -208,7 +210,43 @@
                         android:layout_height="13dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="1"
-                        android:text="@string/Today"
+                        android:text="@string/Daily"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_monthly_MainActivity"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="4">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:layout_width="120dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:src="@drawable/monthly" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:layout_width="match_parent"
+                        android:layout_height="13dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/Monthly"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="18sp"

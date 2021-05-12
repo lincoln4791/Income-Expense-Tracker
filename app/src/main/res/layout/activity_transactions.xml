@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_totalIncomes_Monthly"
+            android:id="@+id/cv_totalIncomes_transactions"
             style="@style/cv_topBar_MonthlyExpenses"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_totalIncome_MonthlyExpenses"
+                    android:id="@+id/tv_totalIncome_transactions"
                     style="@style/tv_topBar_MonthlyExpenses"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -61,7 +61,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_totalExpenses_Monthly"
+            android:id="@+id/cv_totalExpenses_transactions"
             style="@style/cv_topBar_MonthlyExpenses"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_totalExpense_MonthlyExpenses"
+                    android:id="@+id/tv_totalExpense_transactions"
                     style="@style/tv_topBar_MonthlyExpenses"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -116,7 +116,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_totalBalance_MonthlyExpenses"
+                    android:id="@+id/tv_totalBalance_FullReport"
                     style="@style/tv_topBar_MonthlyExpenses"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -145,7 +145,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/linearLayout31_FullReport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -216,8 +216,8 @@
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
         android:text="@string/AllTransactions"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+        app:layout_constraintStart_toStartOf="@+id/linearLayout31_FullReport"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout31_FullReport" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_pieChart_Transactions"
@@ -246,33 +246,34 @@
         android:layout_marginEnd="10dp"
         android:background="@color/gray"
         android:weightSum="5"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_Transactions">
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Date-Time" />
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Type" />
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Category" />
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

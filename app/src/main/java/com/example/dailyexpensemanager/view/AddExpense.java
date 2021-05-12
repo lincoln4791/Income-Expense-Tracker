@@ -5,10 +5,14 @@ import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +24,7 @@ import com.example.dailyexpensemanager.model.MC_Posts;
 import com.example.dailyexpensemanager.viewModels.VM_AddExpenses;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class AddExpense extends AppCompatActivity implements View.OnClickListener {
@@ -31,7 +36,11 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
     TextView tv_changeDate,tv_dateTime;
     EditText et_amount,et_expenseDescription;
 
+    private int hour, minute,year,month,day;
+    String am_pm,hourInString;
+
     VM_AddExpenses vm_addExpenses;
+
 
 
     @Override
@@ -84,6 +93,16 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
 
         //*************************************************Initializations*******************************************
         vm_addExpenses = ViewModelProviders.of(this).get(VM_AddExpenses.class);
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        SimpleDateFormat simpleHourFormat = new SimpleDateFormat("hh");
+        SimpleDateFormat simpleMinuteFormat = new SimpleDateFormat("mm");
+
+        hour = Integer.parseInt(simpleHourFormat.format(System.currentTimeMillis()));
+        minute = Integer.parseInt(simpleMinuteFormat.format(System.currentTimeMillis()));
 
 
 
@@ -120,12 +139,10 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
         cv_transport.setOnClickListener(this);
         cv_other.setOnClickListener(this);
 
-        cv_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveData();
-            }
-        });
+        cv_save.setOnClickListener(v -> saveData());
+
+
+        tv_dateTime.setOnClickListener(v -> changeDate());
 
 
 
@@ -136,8 +153,19 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
     }
 
     private void setDateTime() {
-            SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault());
-            tv_dateTime.setText(simpleDateTimeFormat.format(System.currentTimeMillis()));
+        SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault());
+        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+        SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("MM", Locale.getDefault());
+        SimpleDateFormat simpleYearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh-mm a", Locale.getDefault());
+
+        vm_addExpenses.day = simpleDayFormat.format(System.currentTimeMillis());
+        vm_addExpenses.month = simpleMonthFormat.format(System.currentTimeMillis());
+        vm_addExpenses.year = simpleYearFormat.format(System.currentTimeMillis());
+        vm_addExpenses.time = simpleTimeFormat.format(System.currentTimeMillis());
+        vm_addExpenses.dateTime = simpleDateTimeFormat.format(System.currentTimeMillis());
+
+        tv_dateTime.setText(vm_addExpenses.dateTime);
     }
 
 
@@ -152,20 +180,6 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
         }
 
         else{
-
-            //dd-MM-yyyy
-            SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault());
-            SimpleDateFormat simpleDayFormat = new SimpleDateFormat("dd", Locale.getDefault());
-            SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("MM", Locale.getDefault());
-            SimpleDateFormat simpleYearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-            SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh-mm a", Locale.getDefault());
-
-            String day = simpleDayFormat.format(System.currentTimeMillis());
-            String month = simpleMonthFormat.format(System.currentTimeMillis());
-            String year = simpleYearFormat.format(System.currentTimeMillis());
-            String time = simpleTimeFormat.format(System.currentTimeMillis());
-            String dateTime = simpleDateTimeFormat.format(System.currentTimeMillis());
-
             String amount = et_amount.getText().toString();
             String expenseDescription="";
 
@@ -173,15 +187,16 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
                 expenseDescription = et_expenseDescription.getText().toString();
             }
 
-            MC_Posts posts = new MC_Posts(expenseDescription,vm_addExpenses.category,Constants.TYPE_EXPENSE,amount,year,
-                    month,day,time,String.valueOf(System.currentTimeMillis()),dateTime);
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            MC_Posts posts = new MC_Posts(expenseDescription,vm_addExpenses.category,Constants.TYPE_EXPENSE,amount,vm_addExpenses.year,
+                    vm_addExpenses.month,vm_addExpenses.day,vm_addExpenses.time,String.valueOf(System.currentTimeMillis()),vm_addExpenses.dateTime);
+
 
 
 
             SQLiteHelper helper = new SQLiteHelper(AddExpense.this);
             long flag =  helper.saveData(posts);
-            Toast.makeText(this, "Flag "+flag, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(AddExpense.this,MainActivity.class));
 
         }
     }
@@ -612,5 +627,117 @@ public class AddExpense extends AppCompatActivity implements View.OnClickListene
         cv_lifeStyle.setCardBackgroundColor(getColor(R.color.white));
         cv_medicine.setCardBackgroundColor(getColor(R.color.white));
         cv_other.setCardBackgroundColor(getColor(R.color.white));
+    }
+
+
+
+
+
+
+
+    private void changeDate() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddExpense.this, (view, hourOfDay, minute) -> {
+            vm_addExpenses.time = String.valueOf(hourOfDay)+" : "+String.valueOf(minute);
+            Log.d("tag","hour"+String.valueOf(hourOfDay));
+            if(hourOfDay>=12){
+                am_pm="pm";
+                hourInString = String.valueOf(hourOfDay-12);
+            }
+            else{
+                am_pm="am";
+                hourInString = String.valueOf(hourOfDay);
+            }
+
+            vm_addExpenses.dateTime=vm_addExpenses.day+"-"+vm_addExpenses.month+"-"+vm_addExpenses.year+"  "+hourInString+":"+String.valueOf(minute)+" "+am_pm;
+            //Log.d("tag","year"+vm_addIncome.year+" month "+vm_addIncome.month+" day "+vm_addIncome.day+" hour "+hourOfDay+"min "+minute+" "+am_pm);
+            tv_dateTime.setText(vm_addExpenses.dateTime);
+        }, hour, minute, true);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddExpense.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                setDay(dayOfMonth);
+                setMonth(month+1);
+                timePickerDialog.show();
+            }
+        }, year, month, day);
+        datePickerDialog.show();
+
+
+    }
+
+    private void setDay(int day) {
+        if(day==1){
+            vm_addExpenses.day=getString(R.string.digit01);
+        }
+        else if(day==2){
+            vm_addExpenses.day=getString(R.string.digit02);
+        }
+        else if(day==3){
+            vm_addExpenses.day=getString(R.string.digit03);
+        }
+        else if(day==4){
+            vm_addExpenses.day=getString(R.string.digit04);
+        }
+        else if(day==5){
+            vm_addExpenses.day=getString(R.string.digit05);
+        }
+        else if(day==6){
+            vm_addExpenses.day=getString(R.string.digit06);
+        }
+        else if(day==7){
+            vm_addExpenses.day=getString(R.string.digit07);
+        }
+        else if(day==8){
+            vm_addExpenses.day=getString(R.string.digit08);
+        }
+        else if(day==9){
+            vm_addExpenses.day=getString(R.string.digit09);
+        }
+        else {
+            vm_addExpenses.day=String.valueOf(day);
+        }
+
+    }
+
+    private void setMonth(int month) {
+
+        if(month==1){
+            vm_addExpenses.month= getString(R.string.digit01);
+        }
+        else if(month==2){
+            vm_addExpenses.month= getString(R.string.digit02);
+        }
+        else if(month==3){
+            vm_addExpenses.month= getString(R.string.digit03);
+        }
+        else if(month==4){
+            vm_addExpenses.month= getString(R.string.digit04);
+        }
+        else if(month==5){
+            vm_addExpenses.month= getString(R.string.digit05);
+        }
+        else if(month==6){
+            vm_addExpenses.month= getString(R.string.digit06);
+        }
+        else if(month==7){
+            vm_addExpenses.month= getString(R.string.digit07);
+        }
+        else if(month==8){
+            vm_addExpenses.month= getString(R.string.digit08);
+        }
+        else if(month==9){
+            vm_addExpenses.month= getString(R.string.digit09);
+        }
+        else{
+            vm_addExpenses.month=String.valueOf(month);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

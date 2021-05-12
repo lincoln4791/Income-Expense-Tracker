@@ -1,6 +1,7 @@
 package com.example.dailyexpensemanager.common;
 
 public class NodeName {
+    public static String ID = "ID";
     public static String POST_DESCRIPTION = "postDescription";
     public static String POST_CATEGORY = "postCategory";
     public static String POST_TYPE = "postType";

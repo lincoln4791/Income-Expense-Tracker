@@ -6,9 +6,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,7 +26,10 @@ import com.example.dailyexpensemanager.model.MC_Posts;
 import com.example.dailyexpensemanager.viewModels.VM_AddIncome;
 
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.SimpleTimeZone;
 
 public class AddIncome extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +39,11 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
             cv_amount400000, cv_amount500000;
     TextView tv_changeDate,tv_dateTime;
     EditText et_amount,et_incomeDescription;
+
+    private int hour, minute,year,month,day;
+    String am_pm,hourInString;
+
+
 
     private VM_AddIncome vm_addIncome;
 
@@ -80,6 +91,18 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
 
         //*************************************************Initializations*******************************************
         vm_addIncome = ViewModelProviders.of(this).get(VM_AddIncome.class);
+        Calendar calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        SimpleDateFormat simpleHourFormat = new SimpleDateFormat("hh");
+        SimpleDateFormat simpleMinuteFormat = new SimpleDateFormat("mm");
+
+        hour = Integer.parseInt(simpleHourFormat.format(System.currentTimeMillis()));
+        minute = Integer.parseInt(simpleMinuteFormat.format(System.currentTimeMillis()));
+
+
 
 
 
@@ -122,7 +145,7 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
         tv_dateTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getDateTime();
+               changeDate();
             }
         });
 
@@ -141,7 +164,20 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
 
     private void setDateTime() {
         SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault());
-        tv_dateTime.setText(simpleDateTimeFormat.format(System.currentTimeMillis()));
+        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+        SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("MM", Locale.getDefault());
+        SimpleDateFormat simpleYearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh-mm a", Locale.getDefault());
+
+        vm_addIncome.day = simpleDayFormat.format(System.currentTimeMillis());
+        vm_addIncome.month = simpleMonthFormat.format(System.currentTimeMillis());
+        vm_addIncome.year = simpleYearFormat.format(System.currentTimeMillis());
+        vm_addIncome.time = simpleTimeFormat.format(System.currentTimeMillis());
+        vm_addIncome.dateTime = simpleDateTimeFormat.format(System.currentTimeMillis());
+
+        tv_dateTime.setText(vm_addIncome.dateTime);
+
+
     }
 
     private void addIncome() {
@@ -155,20 +191,6 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
             }
 
             else{
-
-                //dd-MM-yyyy
-                SimpleDateFormat simpleDateTimeFormat = new SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault());
-                SimpleDateFormat simpleDayFormat = new SimpleDateFormat("dd", Locale.getDefault());
-                SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("MM", Locale.getDefault());
-                SimpleDateFormat simpleYearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
-                SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh-mm a", Locale.getDefault());
-
-                String day = simpleDayFormat.format(System.currentTimeMillis());
-                String month = simpleMonthFormat.format(System.currentTimeMillis());
-                String year = simpleYearFormat.format(System.currentTimeMillis());
-                String time = simpleTimeFormat.format(System.currentTimeMillis());
-                String dateTime = simpleDateTimeFormat.format(System.currentTimeMillis());
-
                 String amount = et_amount.getText().toString();
                 String expenseDescription="";
 
@@ -176,15 +198,14 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
                     expenseDescription = et_incomeDescription.getText().toString();
                 }
 
-                MC_Posts posts = new MC_Posts(expenseDescription,vm_addIncome.category,Constants.TYPE_INCOME,amount,year,
-                        month,day,time,String.valueOf(System.currentTimeMillis()),dateTime);
-                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-
+                MC_Posts posts = new MC_Posts(expenseDescription,vm_addIncome.category,Constants.TYPE_INCOME,amount,vm_addIncome.year,
+                        vm_addIncome.month,vm_addIncome.day,vm_addIncome.time,String.valueOf(System.currentTimeMillis()),vm_addIncome.dateTime);
 
 
                 SQLiteHelper helper = new SQLiteHelper(AddIncome.this);
                 long flag =  helper.saveData(posts);
-                Toast.makeText(this, "Flag "+flag, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Success ", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddIncome.this,MainActivity.class));
 
             }
 
@@ -460,24 +481,121 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
 
 
 
-    private String getDate() {
-        DatePicker datePicker = new DatePicker(this);
-        int currentDay = datePicker.getDayOfMonth();
-        int currentMonth = (datePicker.getMonth()+1);
-        int currentYear = datePicker.getYear();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        vm_addIncome.dateTime = String.valueOf(currentDay)+"/"+String.valueOf(currentMonth)+"/"+currentYear;
-                        tv_dateTime.setText(vm_addIncome.dateTime);
-                        //Log.d("tag",requiredDate);
-                    }
-                },currentDay, currentMonth,currentYear
-        );
+    private void changeDate() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddIncome.this, (view, hourOfDay, minute) -> {
+            vm_addIncome.time = String.valueOf(hourOfDay)+" : "+String.valueOf(minute);
+            Log.d("tag","hour"+String.valueOf(hourOfDay));
+            if(hourOfDay>=12){
+                am_pm="pm";
+                hourInString = String.valueOf(hourOfDay-12);
+            }
+            else{
+                am_pm="am";
+                hourInString = String.valueOf(hourOfDay);
+            }
+
+            vm_addIncome.dateTime=vm_addIncome.day+"-"+vm_addIncome.month+"-"+vm_addIncome.year+"  "+hourInString+":"+String.valueOf(minute)+" "+am_pm;
+            //Log.d("tag","year"+vm_addIncome.year+" month "+vm_addIncome.month+" day "+vm_addIncome.day+" hour "+hourOfDay+"min "+minute+" "+am_pm);
+            tv_dateTime.setText(vm_addIncome.dateTime);
+        }, hour, minute, true);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddIncome.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                setDay(dayOfMonth);
+                setMonth(month+1);
+                /*vm_addIncome.year = String.valueOf(year);
+                vm_addIncome.month = String.valueOf(month+1);
+                vm_addIncome.day = String.valueOf(dayOfMonth);*/
+                timePickerDialog.show();
+
+            }
+        }, year, month, day);
         datePickerDialog.show();
-        return vm_addIncome.dateTime;
+
+
     }
+
+    private void setDay(int day) {
+        if(day==1){
+            vm_addIncome.day=getString(R.string.digit01);
+        }
+        else if(day==2){
+            vm_addIncome.day=getString(R.string.digit02);
+        }
+        else if(day==3){
+            vm_addIncome.day=getString(R.string.digit03);
+        }
+        else if(day==4){
+            vm_addIncome.day=getString(R.string.digit04);
+        }
+        else if(day==5){
+            vm_addIncome.day=getString(R.string.digit05);
+        }
+        else if(day==6){
+            vm_addIncome.day=getString(R.string.digit06);
+        }
+        else if(day==7){
+            vm_addIncome.day=getString(R.string.digit07);
+        }
+        else if(day==8){
+            vm_addIncome.day=getString(R.string.digit08);
+        }
+        else if(day==9){
+            vm_addIncome.day=getString(R.string.digit09);
+        }
+        else {
+            vm_addIncome.day=String.valueOf(day);
+        }
+
+    }
+
+    private void setMonth(int month) {
+
+        if(month==1){
+            vm_addIncome.month= getString(R.string.digit01);
+        }
+        else if(month==2){
+            vm_addIncome.month= getString(R.string.digit02);
+        }
+        else if(month==3){
+            vm_addIncome.month= getString(R.string.digit03);
+        }
+        else if(month==4){
+            vm_addIncome.month= getString(R.string.digit04);
+        }
+        else if(month==5){
+            vm_addIncome.month= getString(R.string.digit05);
+        }
+        else if(month==6){
+            vm_addIncome.month= getString(R.string.digit06);
+        }
+        else if(month==7){
+            vm_addIncome.month= getString(R.string.digit07);
+        }
+        else if(month==8){
+            vm_addIncome.month= getString(R.string.digit08);
+        }
+        else if(month==9){
+            vm_addIncome.month= getString(R.string.digit09);
+        }
+        else{
+            vm_addIncome.month=String.valueOf(month);
+        }
+    }
+
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
 
 
 

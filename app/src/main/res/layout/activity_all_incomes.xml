@@ -276,28 +276,28 @@
         app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_AllIncomes">
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Date-Time" />
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Type" />
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/Category" />
 
         <TextView
-            style="@style/tv_data_Transactions"
+            style="@style/tv_data_FullReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

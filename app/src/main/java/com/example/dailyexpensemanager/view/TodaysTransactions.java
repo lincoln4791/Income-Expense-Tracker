@@ -13,4 +13,16 @@ public class TodaysTransactions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todays_transactions);
     }
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
 }

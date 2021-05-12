@@ -1,6 +1,10 @@
 package com.example.dailyexpensemanager.common;
 
 public class Constants {
+    public static final String MONTH_NULL = "null";
+    public static final String CATEGORY_NULL = "null";
+    public static final String DAY_NULL = "null";
+    public static final String YEAR_DEFAULT = "2021";
     public static String TYPE_INCOME = "income";
     public static String TYPE_EXPENSE = "expense";
     public static String TYPE_ALL = "all";

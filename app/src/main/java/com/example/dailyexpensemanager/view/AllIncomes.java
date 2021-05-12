@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.example.dailyexpensemanager.R;
@@ -60,7 +59,7 @@ public class AllIncomes extends AppCompatActivity {
         });
 
         cv_fullReport.setOnClickListener(v -> {
-            startActivity(new Intent(AllIncomes.this,Monthly.class));
+            startActivity(new Intent(AllIncomes.this, FullReport.class));
         });
 
         cv_pieChart.setOnClickListener(v -> {
@@ -72,4 +71,18 @@ public class AllIncomes extends AppCompatActivity {
         //*********************************************Initial Methods***************************************************
 
     }
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
+
+
 }

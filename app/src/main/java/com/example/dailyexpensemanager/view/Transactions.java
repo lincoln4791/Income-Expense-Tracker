@@ -6,11 +6,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dailyexpensemanager.Adapters.Adapter_Transactions;
 import com.example.dailyexpensemanager.R;
@@ -24,6 +28,7 @@ public class Transactions extends AppCompatActivity {
     private CardView cv_today,cv_home,cv_fullReport,cv_pieChart;
     private TextView tv_incomeValue_topBar,tv_expenseValue_topBar,tv_balanceValue_topBar,tv_typeTitle;
     private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
     private VM_Transactions vm_transactions;
     private Adapter_Transactions adapter_transactions;
@@ -48,7 +53,9 @@ public class Transactions extends AppCompatActivity {
 
 
         //***********************************************Initializations*****************************************
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         vm_transactions = ViewModelProviders.of(this).get(VM_Transactions.class);
         adapter_transactions = new Adapter_Transactions(vm_transactions.postsList,this);
 
@@ -66,7 +73,7 @@ public class Transactions extends AppCompatActivity {
         });
 
         cv_fullReport.setOnClickListener(v -> {
-            startActivity(new Intent(Transactions.this,Monthly.class));
+            startActivity(new Intent(Transactions.this, FullReport.class));
         });
 
 
@@ -94,23 +101,15 @@ public class Transactions extends AppCompatActivity {
            new AllExpensesTask().execute();
         }
 
-        else if(getIntent().getStringExtra(Extras.TYPE).equals(Constants.TYPE_ALL)){
+        else {
             new AllTransactionsTask().execute();
-
         }
 
+
     }
 
 
 
-
-
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        super.onBackPressed();
-    }
 
 
 
@@ -226,7 +225,7 @@ public class Transactions extends AppCompatActivity {
         @Override
         protected Object doInBackground(Object[] objects) {
 
-            //fetchYearType;
+            fetchYearTypeWise();
             return null;
         }
 
@@ -484,6 +483,7 @@ public class Transactions extends AppCompatActivity {
         Cursor cursor = sqLiteHelper.loadAllTransactions();
 
         while(cursor.moveToNext()){
+            int ID = cursor.getInt(0);
             String postDescription = cursor.getString(1);
             String postCategory = cursor.getString(2);
             String postType = cursor.getString(3);
@@ -495,7 +495,7 @@ public class Transactions extends AppCompatActivity {
             String postDateTime = cursor.getString(9);
             String timeStamp = cursor.getString(10);
 
-            MC_Posts post = new MC_Posts(postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
+            MC_Posts post = new MC_Posts(ID,postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
             vm_transactions.postsList.add(post);
         }
 
@@ -889,6 +889,7 @@ public class Transactions extends AppCompatActivity {
         Cursor cursor = sqLiteHelper.loadYearMonthDayTypeCategoryWise("2021","05","09",Constants.TYPE_INCOME,Constants.CATEGORY_SALARY);
 
         while(cursor.moveToNext()){
+            int ID = cursor.getInt(0);
             String postDescription = cursor.getString(1);
             String postCategory = cursor.getString(2);
             String postType = cursor.getString(3);
@@ -900,12 +901,69 @@ public class Transactions extends AppCompatActivity {
             String postDateTime = cursor.getString(9);
             String timeStamp = cursor.getString(10);
 
-            MC_Posts post = new MC_Posts(postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
+            MC_Posts post = new MC_Posts(ID,postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
             vm_transactions.postsList.add(post);
         }
 
         cursor.close();
 
+    }
+
+
+
+
+
+    public void deleteData(int id){
+        SQLiteHelper sqLiteHelper = new SQLiteHelper(Transactions.this);
+        Toast.makeText(this, "ID"+id, Toast.LENGTH_SHORT).show();
+       sqLiteHelper.deleteData(id);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void confirmDelete(int id) {
+        Dialog dialog = new Dialog(Transactions.this);
+        View view = LayoutInflater.from(Transactions.this).inflate(R.layout.dialog_delete,null);
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        dialog.show();
+
+        view.findViewById(R.id.btn_yes_alertImage_dialog_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                deleteData(id);
+
+            }
+        });
+
+        view.findViewById(R.id.btn_no_alertImage_dialog_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 
 

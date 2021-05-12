@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,22 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dailyexpensemanager.R;
 import com.example.dailyexpensemanager.common.Constants;
-import com.example.dailyexpensemanager.common.Extras;
 import com.example.dailyexpensemanager.common.NodeName;
 import com.example.dailyexpensemanager.model.MC_Posts;
+import com.example.dailyexpensemanager.view.Daily;
 import com.example.dailyexpensemanager.view.EditDataExpense;
 import com.example.dailyexpensemanager.view.EditDataIncome;
 import com.example.dailyexpensemanager.view.Transactions;
 
 import java.util.List;
 
-public class Adapter_Transactions extends RecyclerView.Adapter<Adapter_Transactions.MyViewHolder> {
-
+public class Adapter_Daily extends RecyclerView.Adapter<Adapter_Daily.MyViewHolder> {
     private List<MC_Posts> postList;
     private Context context;
-    private CardView cv_Temp;
+    private CardView cv_Temp=null,cv_new;
+    private int i=0;
 
-    public Adapter_Transactions(List<MC_Posts> postList, Context context) {
+    public Adapter_Daily(List<MC_Posts> postList, Context context) {
         this.postList = postList;
         this.context = context;
     }
@@ -45,6 +44,8 @@ public class Adapter_Transactions extends RecyclerView.Adapter<Adapter_Transacti
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+
         if(postList.get(position).getPostType().equals(Constants.TYPE_INCOME)){
             Log.d("tag","color green"+postList.get(position).getPostType());
             holder.cv_typeHolder.setCardBackgroundColor(context.getColor(R.color.green));
@@ -69,6 +70,7 @@ public class Adapter_Transactions extends RecyclerView.Adapter<Adapter_Transacti
             cv_Temp.setVisibility(View.VISIBLE);
             return false;
         });
+
 
 
         holder.iv_editData.setOnClickListener(v -> {
@@ -103,12 +105,12 @@ public class Adapter_Transactions extends RecyclerView.Adapter<Adapter_Transacti
 
 
         holder.iv_deleteData.setOnClickListener(v -> {
-            ((Transactions)context).confirmDelete(postList.get(position).getID());
+            ((Daily)context).confirmDelete(postList.get(position).getID());
         });
 
-
-        holder.iv_closeEdtDltLayout.setOnClickListener(v -> holder.cv_editDltLayout.setVisibility(View.GONE));
-
+        holder.iv_closeEdtDltLayout.setOnClickListener(v -> {
+            holder.cv_editDltLayout.setVisibility(View.GONE);
+        });
 
     }
 
@@ -116,27 +118,27 @@ public class Adapter_Transactions extends RecyclerView.Adapter<Adapter_Transacti
     public int getItemCount() {
         return postList.size();
     }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_dateTime,tv_category,tv_amount,tv_description;
         private CardView cv_typeHolder,cv_mainLayout,cv_editDltLayout;
         private ImageView iv_editData, iv_deleteData, iv_closeEdtDltLayout;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            tv_description = itemView.findViewById(R.id.tv_description_sample_transactions);
+            tv_dateTime = itemView.findViewById(R.id.tv_dateTime_sample_transactions);
+            tv_category = itemView.findViewById(R.id.tv_category_sample_transactions);
+            tv_amount = itemView.findViewById(R.id.tv_amount_sample_transactions);
             iv_editData = itemView.findViewById(R.id.iv_edit_sampleTransactions);
             iv_deleteData = itemView.findViewById(R.id.iv_delete_sampleTransactions);
             iv_closeEdtDltLayout = itemView.findViewById(R.id.iv_closeEditDlt_sampleTransactions);
             cv_editDltLayout = itemView.findViewById(R.id.cv_editDltHolder_sampleTransactions);
             cv_typeHolder = itemView.findViewById(R.id.cv_type_sample_transactions);
             cv_mainLayout = itemView.findViewById(R.id.cv_MainLayout_sampleTransaction);
-            tv_description = itemView.findViewById(R.id.tv_description_sample_transactions);
-            tv_dateTime = itemView.findViewById(R.id.tv_dateTime_sample_transactions);
-            tv_category = itemView.findViewById(R.id.tv_category_sample_transactions);
-            tv_amount = itemView.findViewById(R.id.tv_amount_sample_transactions);
+
         }
     }
-
-
-
 
 
 

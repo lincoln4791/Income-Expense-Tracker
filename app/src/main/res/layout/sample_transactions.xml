@@ -1,57 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/cv_MainLayout_sampleTransaction"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_weight="5"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginTop="1dp"
-    android:orientation="horizontal"
-    android:layout_marginBottom="1dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:cardElevation="16dp"
+    app:cardCornerRadius="20dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_postHolder_sampleTransactions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cv_editDltHolder_sampleTransactions">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_type_sample_transactions"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/pink"
+                app:cardCornerRadius="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cv_editDltHolder_sampleTransactions"
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <TextView
-                    android:id="@+id/tv_dateTime_SampleTransactions"
-                    style="@style/tv_data_Transactions"
+                    android:id="@+id/tv_category_sample_transactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/H_Rent"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:weightSum="3"
+                app:layout_constraintBottom_toBottomOf="@+id/cv_type_sample_transactions"
+                app:layout_constraintEnd_toStartOf="@+id/tv_amount_sample_transactions"
+                app:layout_constraintStart_toEndOf="@+id/cv_type_sample_transactions"
+                app:layout_constraintTop_toTopOf="@+id/cv_type_sample_transactions">
+
+                <TextView
+                    android:id="@+id/tv_dateTime_sample_transactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center|bottom"
+                    android:text="date"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/tv_description_sample_transactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="31/12/21 12:24"
-                    android:textAlignment="viewStart" />
+                    android:gravity="center"
+                    android:text="@string/Description"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_amount_sample_transactions"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="@string/value"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cv_type_sample_transactions"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cv_type_sample_transactions" />
 
-                <TextView
-                    android:id="@+id/tv_type_SampleTransactions"
-                    style="@style/tv_data_Transactions"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_editDltHolder_sampleTransactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardElevation="24dp"
+            app:cardCornerRadius="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cv_type_sample_transactions"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/ll_editDltLayout_sampleTransactions"
+                android:weightSum="3"
+                android:gravity="center"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cv_type_sample_transactions">
+
+                <ImageView
+                    android:id="@+id/iv_closeEditDlt_sampleTransactions"
                     android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/Expenses"
-                    android:textAlignment="viewStart" />
+                    android:src="@drawable/back32"/>
 
 
-
-                <TextView
-                    android:id="@+id/tv_category_SampleTransactions"
-                    style="@style/tv_data_Transactions"
+                <ImageView
+                    android:id="@+id/iv_edit_sampleTransactions"
                     android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:layout_marginStart="8dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/Transport"
-                  />
+                    android:src="@drawable/edit_32"/>
 
-
-
-                <TextView
-                    android:id="@+id/tv_amount_SampleTransactions"
-                    style="@style/tv_data_Transactions"
+                <ImageView
+                    android:id="@+id/iv_delete_sampleTransactions"
                     android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:layout_marginStart="12dp"
                     android:layout_height="wrap_content"
-                    android:text="500000"
-                />
+                    android:src="@drawable/delete_32"/>
 
 
-</LinearLayout>
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+</com.google.android.material.card.MaterialCardView>

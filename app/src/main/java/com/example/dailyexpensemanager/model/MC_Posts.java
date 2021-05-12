@@ -1,7 +1,8 @@
 package com.example.dailyexpensemanager.model;
 
 public class MC_Posts {
-   public String postDescription;
+    public int ID;
+    public String postDescription;
    public String postCategory;
    public String postType;
    public String postAmount;
@@ -14,6 +15,22 @@ public class MC_Posts {
 
     public MC_Posts(String postDescription, String postCategory, String postType, String postAmount, String postYear,
                     String postMonth, String postDay, String postTime, String timeStamp, String postDateTime) {
+        this.postDescription = postDescription;
+        this.postCategory = postCategory;
+        this.postType = postType;
+        this.postAmount = postAmount;
+        this.postYear = postYear;
+        this.postMonth = postMonth;
+        this.postDay = postDay;
+        this.postTime = postTime;
+        this.timeStamp = timeStamp;
+        this.postDateTime = postDateTime;
+    }
+
+
+    public MC_Posts(int ID, String postDescription, String postCategory, String postType, String postAmount, String postYear,
+                    String postMonth, String postDay, String postTime, String timeStamp, String postDateTime) {
+        this.ID = ID;
         this.postDescription = postDescription;
         this.postCategory = postCategory;
         this.postType = postType;
@@ -104,5 +121,13 @@ public class MC_Posts {
 
     public void setPostDateTime(String postDateTime) {
         this.postDateTime = postDateTime;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 }

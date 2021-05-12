@@ -2,14 +2,18 @@ package com.example.dailyexpensemanager.common;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.solver.state.State;
 
 import com.example.dailyexpensemanager.model.MC_Posts;
+import com.example.dailyexpensemanager.view.Transactions;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "MyDatabase";
@@ -19,7 +23,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     private Context context;
 
-    public final static String QUERY_CREATE_TABLE = "CREATE TABLE " + MY_TABLE + " (ID integer primary Key autoincrement, postDescription varchar, postCategory varchar, postType varchar, postAmount varchar," +
+    public final static String QUERY_CREATE_TABLE = "CREATE TABLE " + MY_TABLE + " (ID integer primary Key autoincrement, postDescription varchar, postCategory varchar," +
+            " postType varchar, postAmount varchar," +
             "postTime varchar, postDay varchar, postMonth varchar, postYear varchar, dateTime varchar, timeStamp varchar) ";
 
 
@@ -53,12 +58,32 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         contentValues.put(NodeName.POST_DAY,posts.getPostDay());
         contentValues.put(NodeName.POST_DATE_TIME,posts.getPostDateTime());
         contentValues.put(NodeName.TIME_STAMP,posts.getTimeStamp());
-
         Log.d("tag","amount "+posts.getPostAmount());
-
-
         return sqLiteDatabase.insert(MY_TABLE, null, contentValues);
     }
+
+
+
+
+
+    public boolean updateData(String  ID, MC_Posts posts){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NodeName.POST_DESCRIPTION,posts.getPostDescription());
+        contentValues.put(NodeName.POST_TYPE,posts.getPostType());
+        contentValues.put(NodeName.POST_CATEGORY,posts.getPostCategory());
+        contentValues.put(NodeName.POST_AMOUNT,posts.getPostAmount());
+        contentValues.put(NodeName.POST_TIME,posts.getPostTime());
+        contentValues.put(NodeName.POST_YEAR,posts.getPostYear());
+        contentValues.put(NodeName.POST_MONTH,posts.getPostMonth());
+        contentValues.put(NodeName.POST_DAY,posts.getPostDay());
+        contentValues.put(NodeName.POST_DATE_TIME,posts.getPostDateTime());
+        contentValues.put(NodeName.TIME_STAMP,posts.getTimeStamp());
+        sqLiteDatabase.update(MY_TABLE,contentValues,"ID=?",new String[]{ID});
+        return true;
+    }
+
+
 
 
     public Cursor loadAllTransactions(){
@@ -106,7 +131,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
     public Cursor loadYearTypeWise(String year, String type){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postType '"+type+"'";
+        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postType= '"+type+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
         return cursor;
@@ -115,7 +140,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
     public Cursor loadYearCategoryWise(String year, String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postCategory '"+category+"'";
+        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postCategory= '"+category+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
         return cursor;
@@ -123,7 +148,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
     public Cursor loadYearTypeCategoryWise(String year, String type ,String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postCategory '"+category+"' AND postType= '"+type+"'";
+        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postCategory= '"+category+"' AND postType= '"+type+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
         return cursor;
@@ -135,17 +160,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public Cursor loadYearMonthWise(String year,String month){
         String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+        return sqLiteDatabase.rawQuery(query,null);
     }
 
 
 
     public Cursor loadYearMonthTypeWise(String year,String month, String type){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postType='"+type+"'";
+        Log.d("tag","in sql year "+year);
+        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear = '"+year+"' AND postMonth = '"+month+"' AND postType ='"+type+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+        return sqLiteDatabase.rawQuery(query,null);
     }
 
 
@@ -154,8 +178,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public Cursor loadYearMonthCategoryWise(String year,String month, String category){
         String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postCategory='"+category+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+        return sqLiteDatabase.rawQuery(query,null);
     }
 
 
@@ -165,8 +188,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public Cursor loadYearMonthTypeCategoryWise(String year,String month,String type, String category){
         String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postCategory='"+category+"' AND postType='"+type+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+        return sqLiteDatabase.rawQuery(query,null);
     }
 
 
@@ -176,8 +198,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public Cursor loadYearMonthDayWise(String year,String month,String day){
         String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postDay='"+day+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+        return sqLiteDatabase.rawQuery(query,null);
     }
 
 
@@ -185,8 +206,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public Cursor loadYearMonthDayTypeWise(String year,String month,String day,String type){
         String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postDay='"+day+"' AND postType= '"+type+"'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+        return sqLiteDatabase.rawQuery(query,null);
     }
 
 
@@ -211,7 +231,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
 
-
+    public void deleteData(int id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(MY_TABLE,"ID = ? ",new String[]{String.valueOf(id)});
+        Intent intent = new Intent(context,Transactions.class);
+        intent.putExtra(Extras.TYPE, Constants.TYPE_ALL);
+        context.startActivity(intent);
+    }
 
 
 
