@@ -242,6 +242,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 
 
+    public void deleteDataAll(){
+        //String query = "DELETE from "+MY_TABLE;
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(MY_TABLE,null,null);
+        sqLiteDatabase.close();
+    }
+
+
+
+
 
 
 

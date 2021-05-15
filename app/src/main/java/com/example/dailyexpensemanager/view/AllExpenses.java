@@ -38,6 +38,8 @@ public class AllExpenses extends AppCompatActivity {
 
 
 
+
+
         //*************************************************Initializations*********************************************
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -64,7 +66,7 @@ public class AllExpenses extends AppCompatActivity {
 
 
         cv_pieChart.setOnClickListener(v -> {
-           startActivity(new Intent(AllExpenses.this,PieChart.class));
+           startActivity(new Intent(AllExpenses.this, PieChartActivity.class));
         });
 
 

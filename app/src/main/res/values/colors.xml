@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="other">#FFBB86FC</color>
+    <color name="houseRent">#FF6200EE</color>
+    <color name="bills">#FF03DAC5</color>
+    <color name="education">#FFFF00</color>
+    <color name="cloths">#FF00FF</color>
+    <color name="salary">#F50057</color>
+    <color name="business">#4CAF50</color>
+    <color name="lifestyle">#F39309 </color>
+    <color name="medicine">#706E6E</color>
+    <color name="transport">#800080</color>
+    <color name="food">#FF1744</color>
+    <color name="toolbarBackground">#AD63BA</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

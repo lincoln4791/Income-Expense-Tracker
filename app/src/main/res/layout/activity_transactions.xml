@@ -5,23 +5,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
     tools:context=".view.Transactions">
 
 
-    <LinearLayout
-        android:id="@+id/ll_topBar_transactions"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_Transactions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:weightSum="3"
+        android:layout_height="50dp"
+        android:background="@color/toolbarBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+
+        <ImageView
+            android:id="@+id/iv_home_toolbar_Transactions"
+            style="@style/iv_toolBar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_Transactions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar_Transactions" />
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_Transactions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_Transactions"
+            app:layout_constraintStart_toEndOf="@+id/iv_home_toolbar_Transactions"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/Transactions"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_Transactions"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_Transactions"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_Transactions"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_topBar_transactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toStartOf="@id/iv_reloadTransactions_Transactions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_Transactions">
+
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_totalIncomes_transactions"
+            android:id="@+id/cv_totalIncomes_topBar_transactions"
             style="@style/cv_topBar_MonthlyExpenses"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -61,7 +125,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_totalExpenses_transactions"
+            android:id="@+id/cv_totalExpenses_topBar_transactions"
             style="@style/cv_topBar_MonthlyExpenses"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -101,48 +165,22 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/cv_topBar_MonthlyExpenses"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/yellow">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_totalBalance_FullReport"
-                    style="@style/tv_topBar_MonthlyExpenses"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/balance"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_totalBalanceValue_topBar_Transactions"
-                    style="@style/tv_topBar_MonthlyExpenses"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
 
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_reloadTransactions_Transactions"
+        android:layout_width="20dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/selectior_all"
+        android:src="@drawable/refresh24"
+        app:layout_constraintStart_toEndOf="@id/ll_topBar_transactions"
+        app:layout_constraintTop_toTopOf="@id/ll_topBar_transactions"
+        app:layout_constraintBottom_toBottomOf="@id/ll_topBar_transactions"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:id="@+id/linearLayout31_FullReport"
@@ -157,7 +195,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_topBar_transactions">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_home_Transactions"
+            android:id="@+id/cv_daily_Transactions"
             style="@style/CV_horizontalScroll_MainActivity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -167,13 +205,13 @@
                 style="@style/tv_topBar_Transactions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/Home"
-                android:drawableStart="@drawable/ic_house"/>
+                android:text="@string/Daily"
+                android:drawableStart="@drawable/daily24"/>
 
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_today_Transactions"
+            android:id="@+id/cv_Monthly_Transactions"
             style="@style/CV_horizontalScroll_MainActivity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -183,8 +221,8 @@
                 style="@style/tv_topBar_Transactions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/Today"
-                android:drawableStart="@drawable/ic_daily"/>
+                android:text="@string/Monthly"
+                android:drawableStart="@drawable/ic_monthly"/>
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -230,10 +268,11 @@
         android:focusable="true">
 
         <ImageView
+            android:id="@+id/iv_deleteAll_Transactions"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/pie_chart" />
+            android:src="@drawable/delete_32" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -284,6 +323,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_Transactions"
         android:layout_width="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ll_detailsReport_Transactions"

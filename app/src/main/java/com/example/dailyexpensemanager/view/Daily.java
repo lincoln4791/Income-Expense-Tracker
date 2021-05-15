@@ -15,13 +15,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dailyexpensemanager.Adapters.Adapter_Daily;
 import com.example.dailyexpensemanager.R;
 import com.example.dailyexpensemanager.common.Constants;
+import com.example.dailyexpensemanager.common.Extras;
 import com.example.dailyexpensemanager.common.SQLiteHelper;
+import com.example.dailyexpensemanager.common.UtilDB;
 import com.example.dailyexpensemanager.model.MC_Posts;
 
 import java.text.SimpleDateFormat;
@@ -32,9 +35,10 @@ import java.util.Locale;
 
 public class Daily extends AppCompatActivity {
 
-    private CardView cv_home,cv_monthly,cv_transactions,cv_date;
+    private CardView cv_fullReport,cv_monthly,cv_transactions,cv_date;
     private ImageButton ib_previous,ib_next;
-    private TextView tv_totalIncome,tv_totalExpense,tv_date;
+    private TextView tv_totalIncome,tv_totalExpense,tv_date,tv_currentBalance_toolbar;
+    private ImageView iv_home;
 
     private Adapter_Daily adapterDaily;
     private RecyclerView recyclerView;
@@ -51,7 +55,7 @@ public class Daily extends AppCompatActivity {
 
 
         //************************************************** View Bindings **********************************************
-        cv_home=findViewById(R.id.cv_Home_DailyReport);
+        cv_fullReport =findViewById(R.id.cv_FullReport_DailyReport);
         cv_monthly=findViewById(R.id.cv_monthlyTransactions_DailyReport);
         cv_transactions=findViewById(R.id.cv_transactions_DailyReport);
         cv_date=findViewById(R.id.cv_date_DailyReport);
@@ -83,6 +87,13 @@ public class Daily extends AppCompatActivity {
         tempYear = calendar.get(Calendar.YEAR);
         tempDay = calendar.get(Calendar.DAY_OF_MONTH);
 
+        tv_currentBalance_toolbar = findViewById(R.id.tv_currentBalanceValue_toolBar_DailyActivity);
+        iv_home = findViewById(R.id.iv_home_toolbar_DailyActivity);
+
+
+
+        //***************************************************Initializations****************************************
+        getSupportActionBar().hide();
 
 
 
@@ -96,17 +107,28 @@ public class Daily extends AppCompatActivity {
 
         ib_previous.setOnClickListener(v -> loadPreviousDateData());
 
-        cv_home.setOnClickListener(v -> startActivity(new Intent(Daily.this,MainActivity.class)));
+        cv_fullReport.setOnClickListener(v -> startActivity(new Intent(Daily.this,MainActivity.class)));
 
         cv_monthly.setOnClickListener(v -> startActivity(new Intent(Daily.this,MonthlyReport.class)));
 
-        cv_transactions.setOnClickListener(v -> startActivity(new Intent(Daily.this,Transactions.class)));
+        cv_transactions.setOnClickListener(v -> {
+            Intent intent = new Intent(Daily.this,Transactions.class);
+            intent.putExtra(Extras.TYPE, Constants.TYPE_ALL);
+            startActivity(intent);
+        });
+
+        iv_home.setOnClickListener(v -> {
+            startActivity(new Intent(Daily.this,FullReport.class));
+        });
+
+
+
 
 
 
         //************************************************* Starting Methods *****************************************
         setDate();
-
+        tv_currentBalance_toolbar.setText(String.valueOf(UtilDB.currentBalance));
         new YearMonthDayTask().execute();
 
 

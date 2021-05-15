@@ -178,4 +178,59 @@
         <item name="android:textAlignment">gravity</item>
     </style>
 
+
+    <style name="tv_monthlyCategoryWiseReport_MonthlyReport">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+    <style name="tv_pieChartDetails_PieChart">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginStart">10dp</item>
+    </style>
+
+    <style name="iv_pieChartColorIndicator_PieChart">
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:padding">1dp</item>
+    </style>
+
+
+    <style name="tv_splashActivityText">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">45sp</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">@font/redressed_regular</item>
+    </style>
+
+    <style name="tv_toolBar">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="ll_toolBar">
+       <item name="android:layout_width">130dp</item>
+       <item name="android:layout_height">match_parent</item>
+    </style>
+
+
+    <style name="iv_toolBar">
+       <item name="android:layout_width">60dp</item>
+       <item name="android:layout_height">match_parent</item>
+        <item name="android:backgroundTint">@color/toolbarBackground</item>
+        <item name="android:padding">11dp</item>
+        <item name="android:src">@drawable/home32</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/selectior_all</item>
+
+    </style>
+
+
 </resources>

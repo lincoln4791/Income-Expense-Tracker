@@ -63,7 +63,7 @@ public class AllIncomes extends AppCompatActivity {
         });
 
         cv_pieChart.setOnClickListener(v -> {
-            startActivity(new Intent(AllIncomes.this,PieChart.class));
+            startActivity(new Intent(AllIncomes.this, PieChartActivity.class));
         });
 
 

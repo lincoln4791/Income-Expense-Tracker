@@ -193,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/Today"
-                    android:drawableStart="@drawable/ic_daily"/>
+                    android:drawableStart="@drawable/daily24"/>
 
             </com.google.android.material.card.MaterialCardView>
 

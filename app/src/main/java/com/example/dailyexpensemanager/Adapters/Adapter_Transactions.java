@@ -103,7 +103,8 @@ public class Adapter_Transactions extends RecyclerView.Adapter<Adapter_Transacti
 
 
         holder.iv_deleteData.setOnClickListener(v -> {
-            ((Transactions)context).confirmDelete(postList.get(position).getID());
+            ((Transactions)context).confirmDelete(postList.get(position).getID(),Integer.parseInt(postList.get(position).getPostAmount()),
+                    postList.get(position).getPostType());
         });
 
 

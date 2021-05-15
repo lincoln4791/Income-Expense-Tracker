@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,17 +17,20 @@ import com.example.dailyexpensemanager.R;
 import com.example.dailyexpensemanager.common.Constants;
 import com.example.dailyexpensemanager.common.Extras;
 import com.example.dailyexpensemanager.common.SQLiteHelper;
+import com.example.dailyexpensemanager.common.UtilDB;
 
 public class MainActivity extends AppCompatActivity {
     private CardView cv_addIncome,cv_addExpense,cv_transactions,cv_fullReport,cv_incomes,cv_expenses,cv_incomesTopBar, cv_expensesTopBar, cv_daily,cv_monthly;
-    private TextView tv_totalIncome,tv_totalExpense,tv_balance;
-    private int totalIncome=0,totalExpenses=0,balance=0;
+    private TextView tv_totalIncome,tv_totalExpense,tv_balance,tv_currentBalance_toolbar;
+    private int totalIncome=0,totalExpenses=0;
     private Spinner spinner;
+    private ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         //************************************************* View Bindings***************************************
@@ -43,11 +47,16 @@ public class MainActivity extends AppCompatActivity {
         tv_totalIncome = findViewById(R.id.tv_totalIncomeValue_topBar_MainActivity);
         tv_totalExpense = findViewById(R.id.tv_totalExpenseValue_topBar_MainActivity);
         tv_balance = findViewById(R.id.tv_balanceValue_topBar_MainActivity);
+        tv_currentBalance_toolbar = findViewById(R.id.tv_currentBalanceValue_toolBar_MainActivity);
+
+
 
 
 
 
         //**********************************************Initializations****************************************
+        getSupportActionBar().hide();
+
 
 
 
@@ -114,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         //**********************************************Starting Methods***************************************
         setIncomeExpenseValues();
 
@@ -134,11 +145,13 @@ public class MainActivity extends AppCompatActivity {
                 totalExpenses = totalExpenses+amount;
             }
         }
-        balance = totalIncome - totalExpenses;
+
+        UtilDB.currentBalance = totalIncome-totalExpenses;
 
         tv_totalIncome.setText(String.valueOf(totalIncome));
         tv_totalExpense.setText(String.valueOf(totalExpenses));
-        tv_balance.setText(String.valueOf(balance));
+        tv_balance.setText(String.valueOf(UtilDB.currentBalance));
+        tv_currentBalance_toolbar.setText(String.valueOf(UtilDB.currentBalance));
         cursor.close();
     }
 
@@ -174,6 +187,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+
 
 
 

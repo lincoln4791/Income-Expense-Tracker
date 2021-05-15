@@ -1,9 +1,521 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.PieChart">
+    tools:context=".view.PieChartActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_PieChart"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/toolbarBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <ImageView
+            android:id="@+id/iv_home_toolbar_PieChart"
+            style="@style/iv_toolBar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_PieChart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar_PieChart"/>
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_PieChart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_PieChart"
+            app:layout_constraintStart_toEndOf="@+id/iv_home_toolbar_PieChart"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/PieChart"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_PieChart"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_PieChart"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_PieChart"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:weightSum="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_PieChart">
+        <LinearLayout
+            android:weightSum="2"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <org.eazegraph.lib.charts.PieChart
+                    android:id="@+id/pieChart_Income"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp">
+
+                    <org.eazegraph.lib.charts.PieChart
+                        android:id="@+id/pieChart_Expense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:weightSum="2"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:gravity="center"
+                android:layout_height="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageView"
+                        style="@style/iv_pieChartColorIndicator_PieChart"
+                        android:src="@color/salary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_salaryIncomePercentValue_PieChart"
+                        style="@style/tv_pieChartDetails_PieChart"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/Salary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageView_business"
+                        style="@style/iv_pieChartColorIndicator_PieChart"
+                        android:src="@color/business"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_businessIncomePercentValue_PieChart"
+                        style="@style/tv_pieChartDetails_PieChart"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/Business"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView_business"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageView_houseRent"
+                        style="@style/iv_pieChartColorIndicator_PieChart"
+                        android:src="@color/houseRent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_houseRentIncomePercentValue_PieChart"
+                        style="@style/tv_pieChartDetails_PieChart"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/HouseRent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView_houseRent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageView_other"
+                        style="@style/iv_pieChartColorIndicator_PieChart"
+                        android:src="@color/other"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_otherIncomePercentValue_PieChart"
+                        style="@style/tv_pieChartDetails_PieChart"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/Other"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView_other"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_foodExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/food"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_foodExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Food"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_foodExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_businessExpense_Piechart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/business"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_businessExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Business"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_businessExpense_Piechart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_transportExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/transport"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_transportExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Transport"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_transportExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_houseRentExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/houseRent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_houseRentExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/HouseRent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_houseRentExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_billsExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/bills"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_billsExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Bills"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_billsExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_educationExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/education"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_educationExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Education"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_educationExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_medicineExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/medicine"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_medicineExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Medicine"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_medicineExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_clothsExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/cloths"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_clothsExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Cloths"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_clothsExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_lifeStyleExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/lifestyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_lifeStyleExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/LifeStyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_lifeStyleExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/imageView_otherExpense_PieChart"
+                            style="@style/iv_pieChartColorIndicator_PieChart"
+                            android:src="@color/other"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_otherExpensePercentValue_PieChart"
+                            style="@style/tv_pieChartDetails_PieChart"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:text="@string/Other"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/imageView_otherExpense_PieChart"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

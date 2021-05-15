@@ -9,15 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyExpenseManager">
-        <activity android:name=".view.MonthlyReport"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".view.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
-        <activity android:name=".view.EditDataExpense"
-            android:screenOrientation="portrait"/>
+        </activity>
 
-        <activity android:name=".view.EditDataIncome"
-            android:screenOrientation="portrait"/>
-
+        <activity android:name=".view.MonthlyCategoryWiseDetails" />
+        <activity
+            android:name=".view.MonthlyReport"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.EditDataExpense"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.EditDataIncome"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.TodaysTransactions"
             android:screenOrientation="portrait" />
@@ -28,7 +38,7 @@
             android:name=".view.AllIncomes"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.PieChart"
+            android:name=".view.PieChartActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.FullReport"
@@ -48,11 +58,6 @@
         <activity
             android:name=".view.MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

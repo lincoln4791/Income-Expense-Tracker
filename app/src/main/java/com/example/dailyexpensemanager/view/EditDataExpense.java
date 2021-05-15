@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.example.dailyexpensemanager.R;
 import com.example.dailyexpensemanager.common.Constants;
 import com.example.dailyexpensemanager.common.NodeName;
 import com.example.dailyexpensemanager.common.SQLiteHelper;
+import com.example.dailyexpensemanager.common.UtilDB;
 import com.example.dailyexpensemanager.model.MC_Posts;
 import com.example.dailyexpensemanager.viewModels.VM_EditDataExpense;
 
@@ -33,8 +35,9 @@ public class EditDataExpense extends AppCompatActivity implements View.OnClickLi
     CardView cv_amount500,cv_amount1000,cv_amount1500,cv_amount2000,cv_amount2500, cv_amount3000,cv_amount3500,cv_amount4000,cv_amount5000,
             cv_amount10000,cv_amount20000,cv_amount30000,cv_amount40000,cv_amount50000,cv_amount100000,cv_amount200000,cv_amount300000,
             cv_amount400000, cv_amount500000;
-    TextView tv_changeDate,tv_dateTime;
+    TextView tv_changeDate,tv_dateTime,tv_currentBalance_toolbar;
     EditText et_amount,et_expenseDescription;
+    private ImageView iv_back;
 
     String expenseDescription,amount;
     private String ID;
@@ -88,10 +91,13 @@ public class EditDataExpense extends AppCompatActivity implements View.OnClickLi
         cv_amount400000 = findViewById(R.id.cv_amount400000_EditDataExpense);
         cv_amount500000 = findViewById(R.id.cv_amount500000_EditDataExpense);
 
+        tv_currentBalance_toolbar = findViewById(R.id.tv_currentBalanceValue_toolBar_EditDataExpense);
+        iv_back = findViewById(R.id.iv_home_toolbar_EditDataExpense);
 
 
 
         //*************************************************Initializations*******************************************
+        getSupportActionBar().hide();
         vm_EditDataExpense = ViewModelProviders.of(this).get(VM_EditDataExpense.class);
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -146,14 +152,17 @@ public class EditDataExpense extends AppCompatActivity implements View.OnClickLi
 
         tv_dateTime.setOnClickListener(v -> changeDate());
 
+        iv_back.setOnClickListener(v -> {
+            startActivity(new Intent(EditDataExpense.this,MainActivity.class));
+        });
+
 
 
 
 
         //************************************************Starting Methods*****************************************
-
+        tv_currentBalance_toolbar.setText(String.valueOf(UtilDB.currentBalance));
         observe();
-
         getIntentData();
         setViewWIthIntentData();
 

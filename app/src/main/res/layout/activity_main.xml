@@ -8,17 +8,74 @@
     android:background="@color/appBackground"
     tools:context=".view.MainActivity">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_MainActivity"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/toolbarBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_MainActivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/Home"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_MainActivity"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_MainActivity"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
     <LinearLayout
         android:id="@+id/linearLayout_FullReport"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:weightSum="4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_MainActivity">
 
         <androidx.cardview.widget.CardView
             style="@style/CV_horizontalScroll_MainActivity"

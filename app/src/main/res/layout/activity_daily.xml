@@ -7,6 +7,71 @@
     android:layout_height="match_parent"
     tools:context=".view.Daily">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_DailyActivity"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/toolbarBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <ImageView
+            android:id="@+id/iv_home_toolbar_DailyActivity"
+            style="@style/iv_toolBar"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_DailyActivity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar_DailyActivity" />
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_DailyActivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_DailyActivity"
+            app:layout_constraintStart_toEndOf="@+id/iv_home_toolbar_DailyActivity"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/Daily"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_DailyActivity"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_DailyActivity"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_DailyActivity"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout3_DailyReport"
         android:layout_width="match_parent"
@@ -17,23 +82,7 @@
         android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_Home_DailyReport"
-            style="@style/CV_horizontalScroll_MainActivity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                style="@style/tv_topBar_Transactions"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/Home"
-                android:drawableStart="@drawable/ic_house"/>
-
-        </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_DailyActivity">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_monthlyTransactions_DailyReport"
@@ -47,7 +96,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/Monthly"
-                android:drawableStart="@drawable/ic_daily"/>
+                android:drawableStart="@drawable/daily24"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_FullReport_DailyReport"
+            style="@style/CV_horizontalScroll_MainActivity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/tv_topBar_Transactions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/Full_Report"
+                android:drawableStart="@drawable/ic_report"/>
 
         </com.google.android.material.card.MaterialCardView>
 

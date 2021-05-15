@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,21 +14,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.dailyexpensemanager.R;
 import com.example.dailyexpensemanager.common.Constants;
 import com.example.dailyexpensemanager.common.SQLiteHelper;
+import com.example.dailyexpensemanager.common.UtilDB;
 import com.example.dailyexpensemanager.model.MC_Posts;
 import com.example.dailyexpensemanager.viewModels.VM_AddIncome;
 
 import java.text.SimpleDateFormat;
-import java.time.Clock;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
 
 public class AddIncome extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,8 +35,9 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
     CardView cv_amount500,cv_amount1000,cv_amount1500,cv_amount2000,cv_amount2500, cv_amount3000,cv_amount3500,cv_amount4000,cv_amount5000,
             cv_amount10000,cv_amount20000,cv_amount30000,cv_amount40000,cv_amount50000,cv_amount100000,cv_amount200000,cv_amount300000,
             cv_amount400000, cv_amount500000;
-    TextView tv_changeDate,tv_dateTime;
+    TextView tv_changeDate,tv_dateTime,tv_currentBalance_toolbar;
     EditText et_amount,et_incomeDescription;
+    private ImageView iv_home;
 
     private int hour, minute,year,month,day;
     String am_pm,hourInString;
@@ -86,10 +85,14 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
         cv_amount400000 = findViewById(R.id.cv_amount400000_AddIncome);
         cv_amount500000 = findViewById(R.id.cv_amount500000_AddIncome);
 
+        tv_currentBalance_toolbar = findViewById(R.id.tv_currentBalanceValue_toolBar_AddIncome);
+        iv_home = findViewById(R.id.iv_home_toolbar_AddIncome);
+
 
 
 
         //*************************************************Initializations*******************************************
+        getSupportActionBar().hide();
         vm_addIncome = ViewModelProviders.of(this).get(VM_AddIncome.class);
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -149,6 +152,10 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
             }
         });
 
+        iv_home.setOnClickListener(v -> {
+            startActivity(new Intent(AddIncome.this,MainActivity.class));
+        });
+
 
 
 
@@ -157,6 +164,7 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
 
         observe();
         setDateTime();
+        tv_currentBalance_toolbar.setText(String.valueOf(UtilDB.currentBalance));
 
 
 
@@ -201,19 +209,15 @@ public class AddIncome extends AppCompatActivity implements View.OnClickListener
                 MC_Posts posts = new MC_Posts(expenseDescription,vm_addIncome.category,Constants.TYPE_INCOME,amount,vm_addIncome.year,
                         vm_addIncome.month,vm_addIncome.day,vm_addIncome.time,String.valueOf(System.currentTimeMillis()),vm_addIncome.dateTime);
 
-
                 SQLiteHelper helper = new SQLiteHelper(AddIncome.this);
-                long flag =  helper.saveData(posts);
+                helper.saveData(posts);
+                UtilDB.currentBalance = UtilDB.currentBalance+Integer.parseInt(amount);
                 Toast.makeText(this, "Success ", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(AddIncome.this,MainActivity.class));
+                startActivity(new Intent(AddIncome.this,AddIncome.class));
 
             }
 
     }
-
-
-
-
 
 
 

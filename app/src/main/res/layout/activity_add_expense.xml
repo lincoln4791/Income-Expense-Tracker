@@ -7,6 +7,72 @@
     android:layout_height="match_parent"
     tools:context=".view.AddExpense">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_AddExpense"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/toolbarBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <ImageView
+            style="@style/iv_toolBar"
+            android:id="@+id/iv_home_toolbar_AddExpense"
+            android:background="@drawable/selectior_all"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar_AddExpense"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/toolbar_AddExpense" />
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_AddExpense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_AddExpense"
+            app:layout_constraintStart_toEndOf="@+id/iv_home_toolbar_AddExpense"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/AddExpense"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_AddExpense"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_AddExpense"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_AddExpense"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <EditText
         android:id="@+id/et_expenseDescription_AddExpense"
         android:layout_width="match_parent"
@@ -18,7 +84,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:hint="@string/ExpenseDescription"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar_AddExpense" />
 
     <TextView
         android:id="@+id/tv_typeTitle_AddExpenses"
