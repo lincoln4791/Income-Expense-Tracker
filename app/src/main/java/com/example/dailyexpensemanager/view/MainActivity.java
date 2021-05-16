@@ -20,7 +20,7 @@ import com.example.dailyexpensemanager.common.SQLiteHelper;
 import com.example.dailyexpensemanager.common.UtilDB;
 
 public class MainActivity extends AppCompatActivity {
-    private CardView cv_addIncome,cv_addExpense,cv_transactions,cv_fullReport,cv_incomes,cv_expenses,cv_incomesTopBar, cv_expensesTopBar, cv_daily,cv_monthly;
+    private CardView cv_addIncome,cv_addExpense,cv_transactions,cv_fullReport,cv_incomes,cv_expenses,cv_incomesTopBar, cv_expensesTopBar, cv_daily,cv_monthly,cv_about;
     private TextView tv_totalIncome,tv_totalExpense,tv_balance,tv_currentBalance_toolbar;
     private int totalIncome=0,totalExpenses=0;
     private Spinner spinner;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         tv_totalExpense = findViewById(R.id.tv_totalExpenseValue_topBar_MainActivity);
         tv_balance = findViewById(R.id.tv_balanceValue_topBar_MainActivity);
         tv_currentBalance_toolbar = findViewById(R.id.tv_currentBalanceValue_toolBar_MainActivity);
-
+        cv_about = findViewById(R.id.cv_about_MainActivity);
 
 
 
@@ -118,6 +118,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(expenseIntent);
         });
 
+        cv_about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAbout();
+            }
+        });
+
 
 
 
@@ -130,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
 
     private void setIncomeExpenseValues() {
         SQLiteHelper sqLiteHelper = new SQLiteHelper(MainActivity.this);
@@ -186,10 +196,34 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+
+
     }
 
 
 
+
+
+
+
+
+    private void openAbout() {
+        Dialog dialog = new Dialog(MainActivity.this);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_about,null);
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        dialog.show();
+
+        view.findViewById(R.id.btn_ok_dilogue_about).setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        view.findViewById(R.id.btn_rateApp_dilogue_about).setOnClickListener(v -> {
+            dialog.dismiss();
+
+        });
+    }
 
 
 

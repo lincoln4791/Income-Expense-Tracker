@@ -273,6 +273,7 @@ public class Transactions extends AppCompatActivity {
         Cursor cursor = sqLiteHelper.loadTypeWise(Constants.TYPE_EXPENSE);
 
         while(cursor.moveToNext()){
+            int ID = cursor.getInt(0);
             String postDescription = cursor.getString(1);
             String postCategory = cursor.getString(2);
             String postType = cursor.getString(3);
@@ -284,7 +285,7 @@ public class Transactions extends AppCompatActivity {
             String postDateTime = cursor.getString(9);
             String timeStamp = cursor.getString(10);
 
-            MC_Posts post = new MC_Posts(postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
+            MC_Posts post = new MC_Posts(ID,postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
             vm_transactions.postsList.add(post);
 
            totalExpense=totalExpense+Integer.parseInt(postAmount);
@@ -307,6 +308,7 @@ public class Transactions extends AppCompatActivity {
         Cursor cursor = sqLiteHelper.loadTypeWise(Constants.TYPE_INCOME);
 
         while(cursor.moveToNext()){
+            int ID = cursor.getInt(0);
             String postDescription = cursor.getString(1);
             String postCategory = cursor.getString(2);
             String postType = cursor.getString(3);
@@ -317,7 +319,7 @@ public class Transactions extends AppCompatActivity {
             String postYear = cursor.getString(8);
             String postDateTime = cursor.getString(9);
             String timeStamp = cursor.getString(10);
-            MC_Posts post = new MC_Posts(postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
+            MC_Posts post = new MC_Posts(ID,postDescription,postCategory,postType,postAmount,postYear,postMonth,postDay,postTime,timeStamp,postDateTime);
             vm_transactions.postsList.add(post);
 
             totalIncome = totalIncome+Integer.parseInt(postAmount);

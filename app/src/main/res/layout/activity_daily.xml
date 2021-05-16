@@ -206,7 +206,7 @@
         android:textColor="@color/black"
         android:paddingBottom="3dp"
         android:layout_marginEnd="10dp"
-        android:text="@string/TotalIncome"
+        android:text="@string/TotalExpense"
         app:layout_constraintEnd_toStartOf="@+id/tv_totalExpenseValue_Daily"
         app:layout_constraintTop_toTopOf="@+id/tv_totalIncome_Daily" />
 

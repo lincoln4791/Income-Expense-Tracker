@@ -269,7 +269,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/black"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             android:background="@color/transparent"
             android:drawableLeft="@drawable/ic_dollar"
             android:drawablePadding="10dp"

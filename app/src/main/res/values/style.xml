@@ -204,9 +204,9 @@
 
     <style name="tv_splashActivityText">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">45sp</item>
+        <item name="android:textSize">60sp</item>
         <item name="android:gravity">center</item>
-        <item name="fontFamily">@font/redressed_regular</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="tv_toolBar">

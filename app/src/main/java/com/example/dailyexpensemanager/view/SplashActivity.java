@@ -5,10 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.dailyexpensemanager.R;
 
 public class SplashActivity extends AppCompatActivity {
+    private Animation animation_iv,animation_tv;
+    private ImageView imageView;
+    private TextView tv1,tv2,tv3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,13 +24,43 @@ public class SplashActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        imageView = findViewById(R.id.iv_splash);
+        tv1 = findViewById(R.id.tv1_splash);
+        tv2 = findViewById(R.id.tv2_splash);
+        tv3 = findViewById(R.id.tv3_splash);
+
+
+        animation_iv = AnimationUtils.loadAnimation(this,R.anim.splash_animation);
+        animation_iv.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void run() {
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
                 startActivity(new Intent(SplashActivity.this,MainActivity.class));
             }
-        },1000);
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+
+
+        imageView.startAnimation(animation_iv);
+
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
 
     }
 }

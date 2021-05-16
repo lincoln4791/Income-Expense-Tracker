@@ -81,7 +81,7 @@ public class MonthlyCategoryWiseDetails extends AppCompatActivity {
 
 
         //******************************************** Starting Methods **********************************
-        tv_currentBalance_toolbar.setText(UtilDB.currentBalance);
+        tv_currentBalance_toolbar.setText(String.valueOf(UtilDB.currentBalance));
         getIntentData();
         setCategoryAndType();
        new YearMonthTypeCategoryTask().execute();

@@ -107,7 +107,7 @@ public class Daily extends AppCompatActivity {
 
         ib_previous.setOnClickListener(v -> loadPreviousDateData());
 
-        cv_fullReport.setOnClickListener(v -> startActivity(new Intent(Daily.this,MainActivity.class)));
+        cv_fullReport.setOnClickListener(v -> startActivity(new Intent(Daily.this,FullReport.class)));
 
         cv_monthly.setOnClickListener(v -> startActivity(new Intent(Daily.this,MonthlyReport.class)));
 
@@ -118,7 +118,7 @@ public class Daily extends AppCompatActivity {
         });
 
         iv_home.setOnClickListener(v -> {
-            startActivity(new Intent(Daily.this,FullReport.class));
+            startActivity(new Intent(Daily.this,MainActivity.class));
         });
 
 

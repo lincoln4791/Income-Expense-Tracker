@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.wifi.hotspot2.pps.HomeSp;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +30,7 @@ import com.example.dailyexpensemanager.viewModels.VM_FullReport;
 
 public class FullReport extends AppCompatActivity {
     private Spinner spinnerYear, spinnerMonth, spinnerDay, spinnerCategory, spinnerType;
-    private CardView cv_monthlyTransactions, cv_allTransactions, cv_home, cv_totalIncomes, cv_totalExpenses, cv_search;
+    private CardView cv_monthlyTransactions, cv_allTransactions, cv_daily, cv_totalIncomes, cv_totalExpenses, cv_search;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
@@ -39,7 +40,7 @@ public class FullReport extends AppCompatActivity {
                         ,tv_expenseValue_business,tv_expenseValue_medicine,tv_expenseValue_cloths,tv_expenseValue_education,
                         tv_expenseValue_lifestyle,tv_expenseValue_other,tv_totalExpenseValue;
     private TextView tv_currentBalance_toolbar;
-    private ImageView iv_daily;
+    private ImageView iv_home;
 
     private int totalIncome,totalExpense,balance,transportExpense,foodExpense,billsExpense,houseRentExpense,businessExpense,
                 medicineExpense,clothsExpense,educationExpense,lifeStyleExpense,otherExpense,salaryIncome,businessIncome,houseRentIncome,otherIncome;
@@ -58,7 +59,7 @@ public class FullReport extends AppCompatActivity {
         spinnerDay = findViewById(R.id.spinner_day_FullReport);
         spinnerYear = findViewById(R.id.spinner_year_FullReport);
         spinnerType = findViewById(R.id.spinner_type_FullReport);
-        cv_home = findViewById(R.id.cv_daily_FullReport);
+        cv_daily = findViewById(R.id.cv_daily_FullReport);
         cv_monthlyTransactions = findViewById(R.id.cv_monthlyTransactions_FullReport);
         cv_allTransactions = findViewById(R.id.cv_transactions_FullReport);
         cv_totalIncomes = findViewById(R.id.cv_totalIncomes_FullReport);
@@ -86,7 +87,7 @@ public class FullReport extends AppCompatActivity {
         tv_totalExpenseValue = findViewById(R.id.tv_totalExpenseValue_topBar_FullReport);
 
         tv_currentBalance_toolbar = findViewById(R.id.tv_currentBalanceValue_toolBar_FullReport);
-        iv_daily = findViewById(R.id.iv_home_toolbar_FullReport);
+        iv_home = findViewById(R.id.iv_home_toolbar_FullReport);
 
 
 
@@ -102,8 +103,8 @@ public class FullReport extends AppCompatActivity {
 
 
         //***************************************************Click Listeners*****************************************
-        cv_home.setOnClickListener(v -> {
-            startActivity(new Intent(FullReport.this, MainActivity.class));
+        cv_daily.setOnClickListener(v -> {
+            startActivity(new Intent(FullReport.this, Daily.class));
         });
 
         cv_monthlyTransactions.setOnClickListener(v -> startActivity(new Intent(FullReport.this, MonthlyReport.class)));
@@ -130,8 +131,8 @@ public class FullReport extends AppCompatActivity {
             selectQuery();
         });
 
-        iv_daily.setOnClickListener(v -> {
-            startActivity(new Intent(FullReport.this,Daily.class));
+        iv_home.setOnClickListener(v -> {
+            startActivity(new Intent(FullReport.this, MainActivity.class));
         });
 
 

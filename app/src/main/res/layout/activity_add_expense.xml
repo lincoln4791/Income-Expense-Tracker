@@ -490,6 +490,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"
+            android:inputType="number"
             android:drawableLeft="@drawable/ic_dollar"
             android:drawableRight="@drawable/ic_right_arrow"
             android:drawablePadding="10dp"

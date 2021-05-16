@@ -119,6 +119,7 @@
     <string name="FilterdTransactions">Filtered Transactions</string>
     <string name="Filter">Filter</string>
     <string name="PieChart">Pie Chart</string>
+    <string name="Expense">Expense</string>
 
 
     <string-array name="nullCategory"></string-array>
@@ -297,6 +298,15 @@
         <item>27</item>
         <item>28</item>
     </string-array>
+
+
+
+
+    <string name="about">
+
+        Contact Me: \n\nMahmudul Karim Lincoln\nB.Sc in Computer Science And Engineering\nSonargaon University, Dhaka, Bangladesh\n\nPhone : +8801670878110\nEmail : mahmuduulkarim@gmail.com
+
+    </string>
 
 
 </resources>

@@ -20,6 +20,7 @@ import com.example.dailyexpensemanager.common.Constants;
 import com.example.dailyexpensemanager.common.Extras;
 import com.example.dailyexpensemanager.common.NodeName;
 import com.example.dailyexpensemanager.common.SQLiteHelper;
+import com.example.dailyexpensemanager.common.UtilDB;
 import com.example.dailyexpensemanager.model.MC_Posts;
 
 import java.text.DecimalFormat;
@@ -180,6 +181,7 @@ public class MonthlyReport extends AppCompatActivity implements View.OnClickList
 
 
         //*********************************************Starting Methods*******************************************
+        tv_currentBalance_toolbar.setText(String.valueOf(UtilDB.currentBalance));
         initMonthSpinner();
         initYearSpinner();
 
