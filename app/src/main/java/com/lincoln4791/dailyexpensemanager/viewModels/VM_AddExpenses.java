@@ -1,0 +1,14 @@
+package com.lincoln4791.dailyexpensemanager.viewModels;
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+public class VM_AddExpenses extends ViewModel {
+    public String category="",amount="",dateTime="";
+    public String  time,day,month,year;
+
+
+    public MutableLiveData<String > mutable_category = new MutableLiveData<>();
+    public MutableLiveData<String> mutable_amount = new MutableLiveData<>();
+
+}

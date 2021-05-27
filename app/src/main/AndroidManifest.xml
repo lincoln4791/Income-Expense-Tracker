@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.dailyexpensemanager">
+    package="com.lincoln4791.dailyexpensemanager">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -9,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyExpenseManager">
-        <activity android:name=".view.SplashActivity"
+        <activity android:name="com.lincoln4791.dailyexpensemanager.view.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,36 +21,36 @@
 
         </activity>
 
-        <activity android:name=".view.MonthlyCategoryWiseDetails" />
+        <activity android:name="com.lincoln4791.dailyexpensemanager.view.MonthlyCategoryWiseDetails" />
         <activity
-            android:name=".view.MonthlyReport"
+            android:name="com.lincoln4791.dailyexpensemanager.view.MonthlyReport"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.EditDataExpense"
+            android:name="com.lincoln4791.dailyexpensemanager.view.EditDataExpense"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.EditDataIncome"
+            android:name="com.lincoln4791.dailyexpensemanager.view.EditDataIncome"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.PieChartActivity"
+            android:name="com.lincoln4791.dailyexpensemanager.view.PieChartActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.FullReport"
+            android:name="com.lincoln4791.dailyexpensemanager.view.FullReport"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.Daily"
+            android:name="com.lincoln4791.dailyexpensemanager.view.Daily"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.Transactions"
+            android:name="com.lincoln4791.dailyexpensemanager.view.Transactions"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.AddExpense"
+            android:name="com.lincoln4791.dailyexpensemanager.view.AddExpense"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.AddIncome"
+            android:name="com.lincoln4791.dailyexpensemanager.view.AddIncome"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.MainActivity"
+            android:name="com.lincoln4791.dailyexpensemanager.view.MainActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>
