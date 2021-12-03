@@ -72,7 +72,7 @@ public class MonthlyCategoryWiseDetails extends AppCompatActivity {
 
         //*****************************************Click Listener********************************************
         iv_home.setOnClickListener(v -> {
-            startActivity(new Intent(MonthlyCategoryWiseDetails.this,MainActivity.class));
+            startActivity(new Intent(MonthlyCategoryWiseDetails.this, MainActivity.class));
         });
 
 

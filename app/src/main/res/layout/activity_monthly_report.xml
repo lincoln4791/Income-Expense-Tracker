@@ -304,7 +304,8 @@
                 android:weightSum="3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_topBarValues_MonthlyReport">
+                app:layout_constraintTop_toBottomOf="@id/ll_topBarValues_MonthlyReport"
+                android:visibility="gone">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cv_daily_MonthlyReport"
@@ -361,6 +362,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:weightSum="2"
                 app:layout_constraintEnd_toStartOf="@+id/cv_search_MonthlyReport"
                 app:layout_constraintStart_toStartOf="parent"

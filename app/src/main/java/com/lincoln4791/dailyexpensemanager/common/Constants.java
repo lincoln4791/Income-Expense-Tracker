@@ -41,4 +41,6 @@ public class Constants {
     public static String AMOUNT_300000 = "300000";
     public static String AMOUNT_400000 = "400000";
     public static String AMOUNT_500000 = "500000";
+
+    public static String PLAY_STORE_APP_LINK = "https://play.google.com/store/apps/details?id=com.lincoln4791.dailyexpensemanager";
 }

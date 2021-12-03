@@ -1,12 +1,5 @@
 package com.lincoln4791.dailyexpensemanager.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions;
 import com.lincoln4791.dailyexpensemanager.R;
@@ -96,7 +96,7 @@ public class Transactions extends AppCompatActivity {
         });
 
         iv_home.setOnClickListener((View v) -> {
-            startActivity(new Intent(Transactions.this,MainActivity.class));
+            startActivity(new Intent(Transactions.this, MainActivity.class));
         });
 
         cv_totalIncome.setOnClickListener(v -> {

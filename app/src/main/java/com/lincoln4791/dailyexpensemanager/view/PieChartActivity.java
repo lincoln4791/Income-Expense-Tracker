@@ -72,7 +72,7 @@ public class PieChartActivity extends AppCompatActivity {
 
         //****************************************************** Click Listeners ******************************************
         iv_home.setOnClickListener(v -> {
-            startActivity(new Intent(PieChartActivity.this,MainActivity.class));
+            startActivity(new Intent(PieChartActivity.this, MainActivity.class));
         });
 
 

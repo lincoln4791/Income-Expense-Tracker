@@ -79,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
         android:weightSum="2"
         app:layout_constraintEnd_toStartOf="@id/iv_reloadTransactions_Transactions"
         app:layout_constraintStart_toStartOf="parent"
@@ -192,7 +193,8 @@
         android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_topBar_transactions">
+        app:layout_constraintTop_toBottomOf="@+id/ll_topBar_transactions"
+        android:visibility="gone">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_daily_Transactions"
@@ -251,10 +253,11 @@
         android:textStyle="bold|italic"
         android:textSize="15sp"
         android:textColor="@color/pink"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="3dp"
+        android:layout_marginStart="10dp"
         android:text="@string/AllTransactions"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout31_FullReport"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout31_FullReport" />
 
     <com.google.android.material.card.MaterialCardView

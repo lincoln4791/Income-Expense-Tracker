@@ -176,7 +176,7 @@ public class MonthlyReport extends AppCompatActivity implements View.OnClickList
         cv_otherExpense.setOnClickListener(this);
 
         iv_home.setOnClickListener(v -> {
-            startActivity(new Intent(MonthlyReport.this,MainActivity.class));
+            startActivity(new Intent(MonthlyReport.this, MainActivity.class));
         });
 
 

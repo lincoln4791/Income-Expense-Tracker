@@ -82,7 +82,9 @@
         android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_DailyActivity">
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_DailyActivity"
+        android:visibility="gone"
+       >
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_monthlyTransactions_DailyReport"
@@ -140,7 +142,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:src="@drawable/left_arrow24"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout3_DailyReport"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3_DailyReport" />
 
     <com.google.android.material.card.MaterialCardView
@@ -149,8 +151,8 @@
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         app:cardBackgroundColor="@color/purple_200"
         app:cardCornerRadius="10dp"
         app:cardElevation="25dp"
@@ -178,7 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:src="@drawable/right_arrow24"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout3_DailyReport"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3_DailyReport" />
 
 
