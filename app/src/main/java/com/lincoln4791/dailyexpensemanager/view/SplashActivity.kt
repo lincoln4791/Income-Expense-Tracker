@@ -1,65 +1,41 @@
-package com.lincoln4791.dailyexpensemanager.view;
+package com.lincoln4791.dailyexpensemanager.view
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
+import android.view.animation.Animation
+import android.widget.TextView
+import android.os.Bundle
+import com.lincoln4791.dailyexpensemanager.R
+import android.content.Intent
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import com.lincoln4791.dailyexpensemanager.databinding.ActivitySplashBinding
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
+class SplashActivity : AppCompatActivity() {
+    private var animation_iv: Animation? = null
+    private val animation_tv: Animation? = null
 
-import com.lincoln4791.dailyexpensemanager.R;
-
-public class SplashActivity extends AppCompatActivity {
-    private Animation animation_iv,animation_tv;
-    private ImageView imageView;
-    private TextView tv1,tv2,tv3;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-
-        getSupportActionBar().hide();
-
-        imageView = findViewById(R.id.iv_splash);
-        tv1 = findViewById(R.id.tv1_splash);
-        tv2 = findViewById(R.id.tv2_splash);
-        tv3 = findViewById(R.id.tv3_splash);
+    private lateinit var binding : ActivitySplashBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        supportActionBar!!.hide()
 
 
-        animation_iv = AnimationUtils.loadAnimation(this,R.anim.splash_animation);
-        animation_iv.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
+        animation_iv = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
+        animation_iv!!.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-
-
-        imageView.startAnimation(animation_iv);
-
-
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+        binding.ivSplash.startAnimation(animation_iv)
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-
+    override fun onStart() {
+        super.onStart()
     }
 }

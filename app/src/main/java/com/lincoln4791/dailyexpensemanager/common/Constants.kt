@@ -1,46 +1,44 @@
-package com.lincoln4791.dailyexpensemanager.common;
+package com.lincoln4791.dailyexpensemanager.common
 
-public class Constants {
-    public static final String MONTH_NULL = "null";
-    public static final String CATEGORY_NULL = "null";
-    public static final String DAY_NULL = "null";
-    public static final String YEAR_DEFAULT = "2021";
-    public static String TYPE_INCOME = "income";
-    public static String TYPE_EXPENSE = "expense";
-    public static String TYPE_ALL = "all";
+object Constants {
+        const val MONTH_NULL = "null"
+        const val CATEGORY_NULL = "null"
+        const val DAY_NULL = "null"
+        const val YEAR_DEFAULT = "2021"
+        const val TYPE_INCOME = "income"
+        const val TYPE_EXPENSE = "expense"
+        const val TYPE_ALL = "all"
+        const val CATEGORY_SALARY = "salary"
+        const val CATEGORY_BUSINESS = "business"
+        const val CATEGORY_HOUSE_RENT = "house_rent"
+        const val CATEGORY_OTHER = "other"
+        const val CATEGORY_FOOD = "food"
+        const val CATEGORY_TRANSPORT = "transport"
+        const val CATEGORY_BILLS = "bills"
+        const val CATEGORY_MEDICINE = "medicine"
+        const val CATEGORY_CLOTHS = "cloths"
+        const val CATEGORY_EDUCATION = "education"
+        const val CATEGORY_LIFESTYLE = "lifestyle"
+        const val AMOUNT_500 = "500"
+        const val AMOUNT_1000 = "1000"
+        const val AMOUNT_1500 = "1500"
+        const val AMOUNT_2000 = "2000"
+        const val AMOUNT_2500 = "2500"
+        const val AMOUNT_3000 = "3000"
+        const val AMOUNT_3500 = "3500"
+        const val AMOUNT_4000 = "4000"
+        const val AMOUNT_5000 = "5000"
+        const val AMOUNT_10000 = "10000"
+        const val AMOUNT_20000 = "20000"
+        const val AMOUNT_30000 = "30000"
+        const val AMOUNT_40000 = "40000"
+        const val AMOUNT_50000 = "50000"
+        const val AMOUNT_100000 = "100000"
+        const val AMOUNT_200000 = "200000"
+        const val AMOUNT_300000 = "300000"
+        const val AMOUNT_400000 = "400000"
+        const val AMOUNT_500000 = "500000"
+        const val PLAY_STORE_APP_LINK =
+            "https://play.google.com/store/apps/details?id=com.lincoln4791.dailyexpensemanager"
 
-    public static String CATEGORY_SALARY = "salary";
-    public static String CATEGORY_BUSINESS = "business";
-    public static String CATEGORY_HOUSE_RENT = "house_rent";
-    public static String CATEGORY_OTHER = "other";
-
-    public static String CATEGORY_FOOD = "food";
-    public static String CATEGORY_TRANSPORT = "transport";
-    public static String CATEGORY_BILLS = "bills";
-    public static String CATEGORY_MEDICINE = "medicine";
-    public static String CATEGORY_CLOTHS = "cloths";
-    public static String CATEGORY_EDUCATION = "education";
-    public static String CATEGORY_LIFESTYLE = "lifestyle";
-
-    public static String AMOUNT_500 = "500";
-    public static String AMOUNT_1000 = "1000";
-    public static String AMOUNT_1500 = "1500";
-    public static String AMOUNT_2000 = "2000";
-    public static String AMOUNT_2500 = "2500";
-    public static String AMOUNT_3000 = "3000";
-    public static String AMOUNT_3500 = "3500";
-    public static String AMOUNT_4000 = "4000";
-    public static String AMOUNT_5000 = "5000";
-    public static String AMOUNT_10000 = "10000";
-    public static String AMOUNT_20000 = "20000";
-    public static String AMOUNT_30000 = "30000";
-    public static String AMOUNT_40000 = "40000";
-    public static String AMOUNT_50000 = "50000";
-    public static String AMOUNT_100000 = "100000";
-    public static String AMOUNT_200000 = "200000";
-    public static String AMOUNT_300000 = "300000";
-    public static String AMOUNT_400000 = "400000";
-    public static String AMOUNT_500000 = "500000";
-
-    public static String PLAY_STORE_APP_LINK = "https://play.google.com/store/apps/details?id=com.lincoln4791.dailyexpensemanager";
 }

@@ -1,14 +1,16 @@
-package com.lincoln4791.dailyexpensemanager.viewModels;
+package com.lincoln4791.dailyexpensemanager.viewModels
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
 
-public class VM_AddIncome extends ViewModel {
-    public String category="",amount="",dateTime="";
-    public String  time,day,month,year;
-
-
-
-    public MutableLiveData<String > mutable_category = new MutableLiveData<>();
-    public MutableLiveData<String> mutable_amount = new MutableLiveData<>();
+class VM_AddIncome : ViewModel() {
+    var category = ""
+    var amount = ""
+    var dateTime = ""
+    var time: String? = null
+    var day: String? = null
+    var month: String? = null
+    var year: String? = null
+    var mutable_category = MutableLiveData<String>()
+    var mutable_amount = MutableLiveData<String>()
 }

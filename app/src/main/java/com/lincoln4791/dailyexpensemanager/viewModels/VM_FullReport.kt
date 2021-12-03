@@ -1,33 +1,39 @@
-package com.lincoln4791.dailyexpensemanager.viewModels;
+package com.lincoln4791.dailyexpensemanager.viewModels
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel
+import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import androidx.lifecycle.MutableLiveData
+import com.lincoln4791.dailyexpensemanager.common.Constants
+import java.util.ArrayList
 
-import com.lincoln4791.dailyexpensemanager.common.Constants;
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class VM_FullReport extends ViewModel {
-    public List<MC_Posts> postsList = new ArrayList<>();
-    public String year = Constants.YEAR_DEFAULT;
-    public String month = Constants.MONTH_NULL;
-    public String day = Constants.DAY_NULL;
-    public String type = Constants.TYPE_ALL;
-    public String category = Constants.CATEGORY_NULL;
-    public int income_salary,income=0,income_business=0,income_house_rent=0,income_other=0,total_income=0;
-    public int expense_food=0,expense_transport=0,expense_bills=0,expense_houseRent=0,expense_business=0,
-            expense_medicine=0,expense_cloths=0,expense_education=0,expense_lifestyle=0,expense_other=0,total_expense=0;
-
-
-    public MutableLiveData<List<MC_Posts>> mutablePostsList = new MutableLiveData<>();
-    public MutableLiveData<String > mutableYear = new MutableLiveData<>();
-    public MutableLiveData<String > mutableMonth = new MutableLiveData<>();
-    public MutableLiveData<String > mutableDay = new MutableLiveData<>();
-    public MutableLiveData<String > mutableType = new MutableLiveData<>();
-    public MutableLiveData<String > mutableCategory = new MutableLiveData<>();
-
-
-
+class VM_FullReport : ViewModel() {
+    var postsList: MutableList<MC_Posts> = mutableListOf()
+    var year = Constants.YEAR_DEFAULT
+    var month = Constants.MONTH_NULL
+    var day = Constants.DAY_NULL
+    var type = Constants.TYPE_ALL
+    var category = Constants.CATEGORY_NULL
+    var income_salary = 0
+    var income = 0
+    var income_business = 0
+    var income_house_rent = 0
+    var income_other = 0
+    var total_income = 0
+    var expense_food = 0
+    var expense_transport = 0
+    var expense_bills = 0
+    var expense_houseRent = 0
+    var expense_business = 0
+    var expense_medicine = 0
+    var expense_cloths = 0
+    var expense_education = 0
+    var expense_lifestyle = 0
+    var expense_other = 0
+    var total_expense = 0
+    var mutablePostsList = MutableLiveData<List<MC_Posts>>()
+    var mutableYear = MutableLiveData<String>()
+    var mutableMonth = MutableLiveData<String>()
+    var mutableDay = MutableLiveData<String>()
+    var mutableType = MutableLiveData<String>()
+    var mutableCategory = MutableLiveData<String>()
 }

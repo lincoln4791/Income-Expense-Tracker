@@ -27,9 +27,9 @@ import java.util.*
 
 class EditDataExpense : AppCompatActivity(), View.OnClickListener {
 
-    var expenseDescription: String? = null
-    var amount: String? = null
-    private var ID: String? = null
+    lateinit var expenseDescription: String
+    lateinit var amount: String
+    private lateinit var ID: String
     private var hour = 0
     private var minute = 0
     private var year = 0
@@ -137,11 +137,11 @@ class EditDataExpense : AppCompatActivity(), View.OnClickListener {
 
     private val intentData: Unit
         private get() {
-            ID = intent.getStringExtra(NodeName.ID)
-            expenseDescription = intent.getStringExtra(NodeName.POST_DESCRIPTION)
-            amount = intent.getStringExtra(NodeName.POST_AMOUNT)
-            vm_EditDataExpense!!.dateTime = intent.getStringExtra(NodeName.POST_DATE_TIME)
-            vm_EditDataExpense!!.category = intent.getStringExtra(NodeName.POST_CATEGORY)
+            ID = intent.getStringExtra(NodeName.ID)!!
+            expenseDescription = intent.getStringExtra(NodeName.POST_DESCRIPTION)!!
+            amount = intent.getStringExtra(NodeName.POST_AMOUNT)!!
+            vm_EditDataExpense!!.dateTime = intent.getStringExtra(NodeName.POST_DATE_TIME)!!
+            vm_EditDataExpense!!.category = intent.getStringExtra(NodeName.POST_CATEGORY)!!
             vm_EditDataExpense!!.year = intent.getStringExtra(NodeName.POST_YEAR)
             vm_EditDataExpense!!.month = intent.getStringExtra(NodeName.POST_MONTH)
             vm_EditDataExpense!!.day = intent.getStringExtra(NodeName.POST_DAY)
@@ -164,10 +164,10 @@ class EditDataExpense : AppCompatActivity(), View.OnClickListener {
                 vm_EditDataExpense!!.category,
                 Constants.TYPE_EXPENSE,
                 amount,
-                vm_EditDataExpense!!.year,
-                vm_EditDataExpense!!.month,
-                vm_EditDataExpense!!.day,
-                vm_EditDataExpense!!.time,
+                vm_EditDataExpense!!.year!!,
+                vm_EditDataExpense!!.month!!,
+                vm_EditDataExpense!!.day!!,
+                vm_EditDataExpense!!.time!!,
                 System.currentTimeMillis().toString(),
                 vm_EditDataExpense!!.dateTime)
             val helper = SQLiteHelper(this@EditDataExpense)

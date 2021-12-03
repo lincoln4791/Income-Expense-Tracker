@@ -130,10 +130,10 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
                 vm_addIncome!!.category,
                 Constants.TYPE_INCOME,
                 amount,
-                vm_addIncome!!.year,
-                vm_addIncome!!.month,
-                vm_addIncome!!.day,
-                vm_addIncome!!.time,
+                vm_addIncome!!.year!!,
+                vm_addIncome!!.month!!,
+                vm_addIncome!!.day!!,
+                vm_addIncome!!.time!!,
                 System.currentTimeMillis().toString(),
                 vm_addIncome!!.dateTime)
             val helper = SQLiteHelper(this@AddIncome)

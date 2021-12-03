@@ -1365,71 +1365,71 @@ class FullReport : AppCompatActivity() {
     private fun calculateAll() {
         resetPreviousCalculatedValues()
         for (i in vm_fullReport!!.postsList.indices) {
-            if (vm_fullReport!!.postsList[i].getPostType() == Constants.TYPE_INCOME) {
+            if (vm_fullReport!!.postsList[i].postType == Constants.TYPE_INCOME) {
                 if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_SALARY) {
                     vm_fullReport!!.income_salary =
-                        vm_fullReport!!.income_salary + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.income_salary + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_BUSINESS) {
                     vm_fullReport!!.income_business =
-                        vm_fullReport!!.income_business + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.income_business + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_HOUSE_RENT) {
                     vm_fullReport!!.income_house_rent =
-                        vm_fullReport!!.income_house_rent + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.income_house_rent + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_OTHER) {
                     vm_fullReport!!.income_other =
-                        vm_fullReport!!.income_other + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.income_other + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 }
                 vm_fullReport!!.total_income =
-                    vm_fullReport!!.total_income + vm_fullReport!!.postsList[i].getPostAmount()
+                    vm_fullReport!!.total_income + vm_fullReport!!.postsList[i].postAmount
                         .toInt()
             } else {
                 if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_FOOD) {
                     vm_fullReport!!.expense_food =
-                        vm_fullReport!!.expense_food + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_food + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_TRANSPORT) {
                     vm_fullReport!!.expense_transport =
-                        vm_fullReport!!.expense_transport + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_transport + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_BILLS) {
                     vm_fullReport!!.expense_bills =
-                        vm_fullReport!!.expense_bills + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_bills + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_HOUSE_RENT) {
                     vm_fullReport!!.expense_houseRent =
-                        vm_fullReport!!.expense_houseRent + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_houseRent + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_BUSINESS) {
                     vm_fullReport!!.expense_business =
-                        vm_fullReport!!.expense_business + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_business + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_MEDICINE) {
                     vm_fullReport!!.expense_medicine =
-                        vm_fullReport!!.expense_medicine + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_medicine + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_CLOTHS) {
                     vm_fullReport!!.expense_cloths =
-                        vm_fullReport!!.expense_cloths + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_cloths + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_EDUCATION) {
                     vm_fullReport!!.expense_education =
-                        vm_fullReport!!.expense_education + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_education + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_LIFESTYLE) {
                     vm_fullReport!!.expense_lifestyle =
-                        vm_fullReport!!.expense_lifestyle + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_lifestyle + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 } else if (vm_fullReport!!.postsList[i].postCategory == Constants.CATEGORY_OTHER) {
                     vm_fullReport!!.expense_other =
-                        vm_fullReport!!.expense_other + vm_fullReport!!.postsList[i].getPostAmount()
+                        vm_fullReport!!.expense_other + vm_fullReport!!.postsList[i].postAmount
                             .toInt()
                 }
                 vm_fullReport!!.total_expense =
-                    vm_fullReport!!.total_expense + vm_fullReport!!.postsList[i].getPostAmount()
+                    vm_fullReport!!.total_expense + vm_fullReport!!.postsList[i].postAmount
                         .toInt()
             }
         }

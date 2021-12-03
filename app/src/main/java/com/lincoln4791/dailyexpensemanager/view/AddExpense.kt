@@ -136,10 +136,10 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
                 vm_addExpenses!!.category,
                 Constants.TYPE_EXPENSE,
                 amount,
-                vm_addExpenses!!.year,
-                vm_addExpenses!!.month,
-                vm_addExpenses!!.day,
-                vm_addExpenses!!.time,
+                vm_addExpenses!!.year!!,
+                vm_addExpenses!!.month!!,
+                vm_addExpenses!!.day!!,
+                vm_addExpenses!!.time!!,
                 System.currentTimeMillis().toString(),
                 vm_addExpenses!!.dateTime)
             val helper = SQLiteHelper(this@AddExpense)

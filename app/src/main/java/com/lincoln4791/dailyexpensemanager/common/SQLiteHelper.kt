@@ -1,256 +1,218 @@
-package com.lincoln4791.dailyexpensemanager.common;
+package com.lincoln4791.dailyexpensemanager.common
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.database.sqlite.SQLiteOpenHelper
+import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
+import android.database.sqlite.SQLiteDatabase
+import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import android.content.ContentValues
+import android.content.Context
+import com.lincoln4791.dailyexpensemanager.common.NodeName
+import android.content.Intent
+import android.database.Cursor
+import android.util.Log
+import com.lincoln4791.dailyexpensemanager.view.Transactions
+import com.lincoln4791.dailyexpensemanager.common.Extras
 
-import androidx.annotation.Nullable;
-
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts;
-import com.lincoln4791.dailyexpensemanager.view.Transactions;
-
-public class SQLiteHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "MyDatabase";
-    public static final String MY_TABLE = "MyTable";
-    private static final String QUERY_LOAD_ALL_TRANSACTIONS = "SELECT * from "+MY_TABLE+"";
-
-
-    private Context context;
-
-    public final static String QUERY_CREATE_TABLE = "CREATE TABLE " + MY_TABLE + " (ID integer primary Key autoincrement, postDescription varchar, postCategory varchar," +
-            " postType varchar, postAmount varchar," +
-            "postTime varchar, postDay varchar, postMonth varchar, postYear varchar, dateTime varchar, timeStamp varchar) ";
-
-
-    public SQLiteHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 1);
-        this.context = context;
+class SQLiteHelper(private val context: Context?) : SQLiteOpenHelper(
+    context, DATABASE_NAME, null, 1) {
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(QUERY_CREATE_TABLE)
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-           db.execSQL(QUERY_CREATE_TABLE);
-
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    fun saveData(posts: MC_Posts): Long {
+        val sqLiteDatabase = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(NodeName.POST_DESCRIPTION, posts.postDescription)
+        contentValues.put(NodeName.POST_TYPE, posts.postType)
+        contentValues.put(NodeName.POST_CATEGORY, posts.postCategory)
+        contentValues.put(NodeName.POST_AMOUNT, posts.postAmount)
+        contentValues.put(NodeName.POST_TIME, posts.postTime)
+        contentValues.put(NodeName.POST_YEAR, posts.postYear)
+        contentValues.put(NodeName.POST_MONTH, posts.postMonth)
+        contentValues.put(NodeName.POST_DAY, posts.postDay)
+        contentValues.put(NodeName.POST_DATE_TIME, posts.postDateTime)
+        contentValues.put(NodeName.TIME_STAMP, posts.timeStamp)
+        Log.d("tag", "amount " + posts.postAmount)
+        return sqLiteDatabase.insert(MY_TABLE, null, contentValues)
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    fun updateData(ID: String, posts: MC_Posts): Boolean {
+        val sqLiteDatabase = writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(NodeName.POST_DESCRIPTION, posts.postDescription)
+        contentValues.put(NodeName.POST_TYPE, posts.postType)
+        contentValues.put(NodeName.POST_CATEGORY, posts.postCategory)
+        contentValues.put(NodeName.POST_AMOUNT, posts.postAmount)
+        contentValues.put(NodeName.POST_TIME, posts.postTime)
+        contentValues.put(NodeName.POST_YEAR, posts.postYear)
+        contentValues.put(NodeName.POST_MONTH, posts.postMonth)
+        contentValues.put(NodeName.POST_DAY, posts.postDay)
+        contentValues.put(NodeName.POST_DATE_TIME, posts.postDateTime)
+        contentValues.put(NodeName.TIME_STAMP, posts.timeStamp)
+        sqLiteDatabase.update(MY_TABLE, contentValues, "ID=?", arrayOf(ID))
+        return true
     }
 
-
-    public long saveData(MC_Posts posts){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NodeName.POST_DESCRIPTION,posts.getPostDescription());
-        contentValues.put(NodeName.POST_TYPE,posts.getPostType());
-        contentValues.put(NodeName.POST_CATEGORY,posts.getPostCategory());
-        contentValues.put(NodeName.POST_AMOUNT,posts.getPostAmount());
-        contentValues.put(NodeName.POST_TIME,posts.getPostTime());
-        contentValues.put(NodeName.POST_YEAR,posts.getPostYear());
-        contentValues.put(NodeName.POST_MONTH,posts.getPostMonth());
-        contentValues.put(NodeName.POST_DAY,posts.getPostDay());
-        contentValues.put(NodeName.POST_DATE_TIME,posts.getPostDateTime());
-        contentValues.put(NodeName.TIME_STAMP,posts.getTimeStamp());
-        Log.d("tag","amount "+posts.getPostAmount());
-        return sqLiteDatabase.insert(MY_TABLE, null, contentValues);
+    fun loadAllTransactions(): Cursor {
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(QUERY_LOAD_ALL_TRANSACTIONS, null)
     }
 
-
-
-
-
-    public boolean updateData(String  ID, MC_Posts posts){
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NodeName.POST_DESCRIPTION,posts.getPostDescription());
-        contentValues.put(NodeName.POST_TYPE,posts.getPostType());
-        contentValues.put(NodeName.POST_CATEGORY,posts.getPostCategory());
-        contentValues.put(NodeName.POST_AMOUNT,posts.getPostAmount());
-        contentValues.put(NodeName.POST_TIME,posts.getPostTime());
-        contentValues.put(NodeName.POST_YEAR,posts.getPostYear());
-        contentValues.put(NodeName.POST_MONTH,posts.getPostMonth());
-        contentValues.put(NodeName.POST_DAY,posts.getPostDay());
-        contentValues.put(NodeName.POST_DATE_TIME,posts.getPostDateTime());
-        contentValues.put(NodeName.TIME_STAMP,posts.getTimeStamp());
-        sqLiteDatabase.update(MY_TABLE,contentValues,"ID=?",new String[]{ID});
-        return true;
+    fun loadTypeWise(type: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postType='" + type + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-    public Cursor loadAllTransactions(){
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(QUERY_LOAD_ALL_TRANSACTIONS,null);
-        return cursor;
+    fun loadCategoryWise(category: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postCategory= '" + category + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-    public Cursor loadTypeWise(String type){
-        String query = "SELECT * from "+MY_TABLE+" WHERE postType='"+type+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadTypeAndCategoryWise(
+        type: String,
+        category: String
+    ): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postType= '" + type + "' AND postCategory= '" + category + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-    public Cursor loadCategoryWise(String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postCategory= '" +category+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadYearWise(year: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-    public Cursor loadTypeAndCategoryWise(String type, String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postType= '" + type + "' AND postCategory= '" +category+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadYearTypeWise(year: String, type: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postType= '" + type + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-
-    public Cursor loadYearWise(String year){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadYearCategoryWise(
+        year: String,
+        category: String
+    ): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postCategory= '" + category + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-    public Cursor loadYearTypeWise(String year, String type){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postType= '"+type+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadYearTypeCategoryWise(
+        year: String,
+        type: String,
+        category: String
+    ): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postCategory= '" + category + "' AND postType= '" + type + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-    public Cursor loadYearCategoryWise(String year, String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postCategory= '"+category+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadYearMonthWise(year: String, month: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-    public Cursor loadYearTypeCategoryWise(String year, String type ,String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postCategory= '"+category+"' AND postType= '"+type+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun loadYearMonthTypeWise(year: String, month: String, type: String): Cursor {
+        Log.d("tag", "in sql year $year")
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear = '" + year + "' AND postMonth = '" + month + "' AND postType ='" + type + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-    public Cursor loadYearMonthWise(String year,String month){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        return sqLiteDatabase.rawQuery(query,null);
+    fun loadYearMonthCategoryWise(year: String, month: String, category: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "' AND postCategory='" + category + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-    public Cursor loadYearMonthTypeWise(String year,String month, String type){
-        Log.d("tag","in sql year "+year);
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear = '"+year+"' AND postMonth = '"+month+"' AND postType ='"+type+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        return sqLiteDatabase.rawQuery(query,null);
+    fun loadYearMonthTypeCategoryWise(
+        year: String,
+        month: String,
+        type: String,
+        category: String
+    ): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "' AND postCategory='" + category + "' AND postType='" + type + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-    public Cursor loadYearMonthCategoryWise(String year,String month, String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postCategory='"+category+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        return sqLiteDatabase.rawQuery(query,null);
+    fun loadYearMonthDayWise(year: String, month: String, day: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "' AND postDay='" + day + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-
-    public Cursor loadYearMonthTypeCategoryWise(String year,String month,String type, String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postCategory='"+category+"' AND postType='"+type+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        return sqLiteDatabase.rawQuery(query,null);
+    fun loadYearMonthDayTypeWise(year: String, month: String, day: String, type: String): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "' AND postDay='" + day + "' AND postType= '" + type + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-
-    public Cursor loadYearMonthDayWise(String year,String month,String day){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postDay='"+day+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        return sqLiteDatabase.rawQuery(query,null);
+    fun loadYearMonthDayCategoryWise(
+        year: String,
+        month: String,
+        day: String,
+        category: String
+    ): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "' AND postDay='" + day + "' AND postCategory= '" + category + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-    public Cursor loadYearMonthDayTypeWise(String year,String month,String day,String type){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postDay='"+day+"' AND postType= '"+type+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        return sqLiteDatabase.rawQuery(query,null);
+    fun loadYearMonthDayTypeCategoryWise(
+        year: String,
+        month: String,
+        day: String,
+        type: String,
+        category: String
+    ): Cursor {
+        val query =
+            "SELECT * from " + MY_TABLE + " WHERE postYear= '" + year + "' AND postMonth= '" + month + "' AND postDay='" + day + "' AND postType= '" + type + "' AND postCategory= '" + category + "'"
+        val sqLiteDatabase = this.readableDatabase
+        return sqLiteDatabase.rawQuery(query, null)
     }
 
-
-
-
-    public Cursor loadYearMonthDayCategoryWise(String year,String month,String day,String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postDay='"+day+"' AND postCategory= '"+category+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
+    fun deleteData(id: Int) {
+        val sqLiteDatabase = this.writableDatabase
+        sqLiteDatabase.delete(MY_TABLE, "ID = ? ", arrayOf(id.toString()))
+        val intent = Intent(context, Transactions::class.java)
+        intent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
+        context!!.startActivity(intent)
     }
 
-
-
-
-    public Cursor loadYearMonthDayTypeCategoryWise(String year,String month,String day,String type,String category){
-        String query = "SELECT * from "+MY_TABLE+ " WHERE postYear= '" +year+"' AND postMonth= '"+month+"' AND postDay='"+day+"' AND postType= '"+type+"' AND postCategory= '"+category+"'";
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-        return cursor;
-    }
-
-
-
-    public void deleteData(int id){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.delete(MY_TABLE,"ID = ? ",new String[]{String.valueOf(id)});
-        Intent intent = new Intent(context,Transactions.class);
-        intent.putExtra(Extras.TYPE, Constants.TYPE_ALL);
-        context.startActivity(intent);
-    }
-
-
-
-
-    public void deleteDataAll(){
+    fun deleteDataAll() {
         //String query = "DELETE from "+MY_TABLE;
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.delete(MY_TABLE,null,null);
-        sqLiteDatabase.close();
+        val sqLiteDatabase = this.writableDatabase
+        sqLiteDatabase.delete(MY_TABLE, null, null)
+        sqLiteDatabase.close()
     }
 
-
-
-
-
-
-
+    companion object {
+        private const val DATABASE_NAME = "MyDatabase"
+        const val MY_TABLE = "MyTable"
+        private const val QUERY_LOAD_ALL_TRANSACTIONS = "SELECT * from " + MY_TABLE + ""
+        const val QUERY_CREATE_TABLE =
+            "CREATE TABLE " + MY_TABLE + " (ID integer primary Key autoincrement, postDescription varchar, postCategory varchar," +
+                    " postType varchar, postAmount varchar," +
+                    "postTime varchar, postDay varchar, postMonth varchar, postYear varchar, dateTime varchar, timeStamp varchar) "
+    }
 }

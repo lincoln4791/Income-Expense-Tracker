@@ -1,42 +1,37 @@
-package com.lincoln4791.dailyexpensemanager.common;
+package com.lincoln4791.dailyexpensemanager.common
 
-public class Extras {
-    public static String TYPE = "type";
+object Extras {
+        const val TYPE = "type"
+        const val TOTAL_INCOME = "total_expense"
+        const val SALARY_INCOME = "salary_income"
+        const val BUSINESS_INCOME = "business_income"
+        const val HOUSE_RENT_INCOME = "house_rent_income"
+        const val OTHER_INCOME = "other_income"
+        const val TOTAL_EXPENSE = "total_Expense"
+        const val FOOD_EXPENSE = "food_expense"
+        const val TRANSPORT_EXPENSE = "transport_expense"
+        const val BUSINESS_EXPENSE = "business_expense"
+        const val HOUSE_RENT_EXPENSE = "house_rent_expense"
+        const val BILLS_EXPENSE = "bills_expense"
+        const val EDUCATION_EXPENSE = "education_expense"
+        const val CLOTHS_EXPENSE = "cloths_expense"
+        const val MEDICINE_EXPENSE = "medicine_expense"
+        const val LIFESTYLE_EXPENSE = "lifestyle_expense"
+        const val OTHER_EXPENSE = "other_expense"
+        const val SALARY_INCOME_PERCENT = "salary_income_percent"
+        const val BUSINESS_INCOME_PERCENT = "business_income_percent"
+        const val HOUSE_RENT_INCOME_PERCENT = "house_rent_income_percent"
+        const val OTHER_INCOME_PERCENT = "other_income_percent"
+        const val FOOD_EXPENSE_PERCENT = "food_expense_percent"
+        const val TRANSPORT_EXPENSE_PERCENT = "transport_expense_percent"
+        const val BUSINESS_EXPENSE_PERCENT = "business_expense_percent"
+        const val HOUSE_RENT_EXPENSE_PERCENT = "house_rent_expense_percent"
+        const val BILLS_EXPENSE_PERCENT = "bills_expense_percent"
+        const val EDUCATION_EXPENSE_PERCENT = "education_expense_percent"
+        const val CLOTHS_EXPENSE_PERCENT = "cloths_expense_percent"
+        const val MEDICINE_EXPENSE_PERCENT = "medicine_expense_percent"
+        const val LIFESTYLE_EXPENSE_PERCENT = "lifestyle_expense_percent"
+        const val OTHER_EXPENSE_PERCENT = "other_expense_percent"
 
-    public static String TOTAL_INCOME = "total_expense";
-    public static String SALARY_INCOME = "salary_income";
-    public static String BUSINESS_INCOME = "business_income";
-    public static String HOUSE_RENT_INCOME = "house_rent_income";
-    public static String OTHER_INCOME = "other_income";
-
-    public static String TOTAL_EXPENSE = "total_Expense";
-    public static String FOOD_EXPENSE="food_expense";
-    public static String TRANSPORT_EXPENSE = "transport_expense";
-    public static String BUSINESS_EXPENSE = "business_expense";
-    public static String HOUSE_RENT_EXPENSE = "house_rent_expense";
-    public static String BILLS_EXPENSE = "bills_expense";
-    public static String EDUCATION_EXPENSE = "education_expense";
-    public static String CLOTHS_EXPENSE = "cloths_expense";
-    public static String MEDICINE_EXPENSE = "medicine_expense";
-    public static String LIFESTYLE_EXPENSE = "lifestyle_expense";
-    public static String OTHER_EXPENSE = "other_expense";
-
-
-    public static String SALARY_INCOME_PERCENT = "salary_income_percent";
-    public static String BUSINESS_INCOME_PERCENT = "business_income_percent";
-    public static String HOUSE_RENT_INCOME_PERCENT = "house_rent_income_percent";
-    public static String OTHER_INCOME_PERCENT = "other_income_percent";
-
-
-    public static String FOOD_EXPENSE_PERCENT="food_expense_percent";
-    public static String TRANSPORT_EXPENSE_PERCENT = "transport_expense_percent";
-    public static String BUSINESS_EXPENSE_PERCENT = "business_expense_percent";
-    public static String HOUSE_RENT_EXPENSE_PERCENT = "house_rent_expense_percent";
-    public static String BILLS_EXPENSE_PERCENT = "bills_expense_percent";
-    public static String EDUCATION_EXPENSE_PERCENT = "education_expense_percent";
-    public static String CLOTHS_EXPENSE_PERCENT = "cloths_expense_percent";
-    public static String MEDICINE_EXPENSE_PERCENT = "medicine_expense_percent";
-    public static String LIFESTYLE_EXPENSE_PERCENT = "lifestyle_expense_percent";
-    public static String OTHER_EXPENSE_PERCENT = "other_expense_percent";
 
 }

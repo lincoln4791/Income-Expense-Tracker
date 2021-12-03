@@ -55,7 +55,7 @@ class Daily : AppCompatActivity() {
         linearLayoutManager!!.reverseLayout = true
         linearLayoutManager!!.stackFromEnd = true
         postList = ArrayList()
-        adapterDaily = Adapter_Daily(postList, this)
+        adapterDaily = Adapter_Daily(postList!!, this)
         binding.rvDailyReport.setLayoutManager(linearLayoutManager)
         binding.rvDailyReport.setAdapter(adapterDaily)
         val calendar = Calendar.getInstance()
@@ -330,7 +330,7 @@ class Daily : AppCompatActivity() {
         postList!!.clear()
         //tv_typeTitle.setText(getString(R.string.Category));
         val sqLiteHelper = SQLiteHelper(this)
-        val cursor = sqLiteHelper.loadYearMonthDayWise(year, month, day)
+        val cursor = sqLiteHelper.loadYearMonthDayWise(year!!, month!!, day!!)
         while (cursor.moveToNext()) {
             val ID = cursor.getInt(0)
             val postDescription = cursor.getString(1)
@@ -365,10 +365,10 @@ class Daily : AppCompatActivity() {
         totalExpense = 0
         Log.d("tag", "list size : " + postList!!.size)
         for (i in postList!!.indices) {
-            if (postList!![i].getPostType() == Constants.TYPE_INCOME) {
-                totalIncome = totalIncome + postList!![i].getPostAmount().toInt()
-            } else if (postList!![i].getPostType() == Constants.TYPE_EXPENSE) {
-                totalExpense = totalExpense + postList!![i].getPostAmount().toInt()
+            if (postList!![i].postType == Constants.TYPE_INCOME) {
+                totalIncome = totalIncome + postList!![i].postAmount.toInt()
+            } else if (postList!![i].postType == Constants.TYPE_EXPENSE) {
+                totalExpense = totalExpense + postList!![i].postAmount.toInt()
             }
         }
     }

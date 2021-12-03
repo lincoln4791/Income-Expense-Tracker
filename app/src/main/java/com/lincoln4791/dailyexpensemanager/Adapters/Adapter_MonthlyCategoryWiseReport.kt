@@ -1,58 +1,38 @@
-package com.lincoln4791.dailyexpensemanager.Adapters;
+package com.lincoln4791.dailyexpensemanager.Adapters
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.content.Context
+import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import androidx.recyclerview.widget.RecyclerView
+import android.view.ViewGroup
+import android.view.LayoutInflater
+import android.view.View
+import com.lincoln4791.dailyexpensemanager.R
+import android.widget.TextView
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.lincoln4791.dailyexpensemanager.R;
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts;
-
-import java.util.List;
-
-public class Adapter_MonthlyCategoryWiseReport extends RecyclerView.Adapter<Adapter_MonthlyCategoryWiseReport.MyViewHolder> {
-    private List<MC_Posts> postList;
-    private Context context;
-
-    public Adapter_MonthlyCategoryWiseReport(List<MC_Posts> postList, Context context) {
-        this.postList = postList;
-        this.context = context;
+class Adapter_MonthlyCategoryWiseReport(
+    private val postList: List<MC_Posts>,
+    private val context: Context
+) : RecyclerView.Adapter<Adapter_MonthlyCategoryWiseReport.MyViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val view = LayoutInflater.from(context)
+            .inflate(R.layout.sample_monthly_category_wise, parent, false)
+        return MyViewHolder(view)
     }
 
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.sample_monthly_category_wise,parent,false);
-        return new MyViewHolder(view);
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.tv_date.text = postList[position].postDateTime
+        holder.tv_description.text = postList[position].postDescription
+        holder.tv_amount.text = postList[position].postAmount
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-        holder.tv_date.setText(postList.get(position).getPostDateTime());
-        holder.tv_description.setText(postList.get(position).getPostDescription());
-        holder.tv_amount.setText(postList.get(position).getPostAmount());
-
+    override fun getItemCount(): Int {
+        return postList.size
     }
 
-    @Override
-    public int getItemCount() {
-        return postList.size();
-    }
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        internal val tv_date: TextView = itemView.findViewById(R.id.tv_dateValue_sampleMonthlyCategoryWiseReport)
+        internal val tv_description: TextView = itemView.findViewById(R.id.tv_descriptionValue_sampleMonthlyCategoryWiseReport)
+        internal val tv_amount: TextView = itemView.findViewById(R.id.tv_amountValue_sampleMonthlyCategoryWiseReport)
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_date,tv_time,tv_description,tv_amount;
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            tv_date = itemView.findViewById(R.id.tv_dateValue_sampleMonthlyCategoryWiseReport);
-            tv_description = itemView.findViewById(R.id.tv_descriptionValue_sampleMonthlyCategoryWiseReport);
-            tv_amount = itemView.findViewById(R.id.tv_amountValue_sampleMonthlyCategoryWiseReport);
-
-        }
     }
 }

@@ -27,17 +27,17 @@ import java.util.*
 
 class EditDataIncome : AppCompatActivity(), View.OnClickListener {
 
-    var incomeDescription: String? = null
-    var amount: String? = null
-    private var ID: String? = null
+    lateinit var incomeDescription: String
+    lateinit var amount: String
+    lateinit var ID: String
     private var hour = 0
     private var minute = 0
     private var year = 0
     private var month = 0
     private var day = 0
-    var am_pm: String? = null
-    var hourInString: String? = null
-    private var vm_EditDataIncome: VM_EditDataIncome? = null
+    private lateinit var am_pm: String
+    private lateinit var hourInString: String
+    private lateinit var vm_EditDataIncome: VM_EditDataIncome
 
     private lateinit var binding : ActivityEditDataIncomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,15 +119,15 @@ class EditDataIncome : AppCompatActivity(), View.OnClickListener {
 
     private val intentData: Unit
         get() {
-            ID = intent.getStringExtra(NodeName.ID)
-            incomeDescription = intent.getStringExtra(NodeName.POST_DESCRIPTION)
-            amount = intent.getStringExtra(NodeName.POST_AMOUNT)
-            vm_EditDataIncome!!.dateTime = intent.getStringExtra(NodeName.POST_DATE_TIME)
-            vm_EditDataIncome!!.category = intent.getStringExtra(NodeName.POST_CATEGORY)
-            vm_EditDataIncome!!.year = intent.getStringExtra(NodeName.POST_YEAR)
-            vm_EditDataIncome!!.month = intent.getStringExtra(NodeName.POST_MONTH)
-            vm_EditDataIncome!!.day = intent.getStringExtra(NodeName.POST_DAY)
-            vm_EditDataIncome!!.time = intent.getStringExtra(NodeName.POST_TIME)
+            ID = intent.getStringExtra(NodeName.ID)!!
+            incomeDescription = intent.getStringExtra(NodeName.POST_DESCRIPTION)!!
+            amount = intent.getStringExtra(NodeName.POST_AMOUNT)!!
+            vm_EditDataIncome.dateTime = intent.getStringExtra(NodeName.POST_DATE_TIME)!!
+            vm_EditDataIncome.category = intent.getStringExtra(NodeName.POST_CATEGORY)!!
+            vm_EditDataIncome.year = intent.getStringExtra(NodeName.POST_YEAR)!!
+            vm_EditDataIncome.month = intent.getStringExtra(NodeName.POST_MONTH)!!
+            vm_EditDataIncome.day = intent.getStringExtra(NodeName.POST_DAY)!!
+            vm_EditDataIncome.time = intent.getStringExtra(NodeName.POST_TIME)!!
         }
 
     private fun updateIncome() {
@@ -146,12 +146,12 @@ class EditDataIncome : AppCompatActivity(), View.OnClickListener {
                 vm_EditDataIncome!!.category,
                 Constants.TYPE_INCOME,
                 amount,
-                vm_EditDataIncome!!.year,
-                vm_EditDataIncome!!.month,
-                vm_EditDataIncome!!.day,
-                vm_EditDataIncome!!.time,
+                vm_EditDataIncome.year,
+                vm_EditDataIncome.month,
+                vm_EditDataIncome.day,
+                vm_EditDataIncome.time,
                 System.currentTimeMillis().toString(),
-                vm_EditDataIncome!!.dateTime)
+                vm_EditDataIncome.dateTime)
             val helper = SQLiteHelper(this@EditDataIncome)
             helper.updateData(ID, posts)
             Toast.makeText(this, "Success ", Toast.LENGTH_SHORT).show()
