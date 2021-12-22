@@ -1,36 +1,37 @@
-package com.lincoln4791.dailyexpensemanager.view
+package com.lincoln4791.dailyexpensemanager.fragments
 
-import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddIncome
-import android.os.Bundle
-import com.lincoln4791.dailyexpensemanager.R
-import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
-import android.text.TextUtils
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
-import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
+import android.app.TimePickerDialog
+import android.content.Intent
+import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.view.ViewGroup
+import android.widget.TimePicker
+import android.widget.Toast
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.databinding.ActivityAddIncomeBinding
+import com.lincoln4791.dailyexpensemanager.common.UtilDB
+import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
+import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddIncome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddIncome : AppCompatActivity(), View.OnClickListener {
-
+class AddIncomeFragment : Fragment(), View.OnClickListener {
     private var hour = 0
     private var minute = 0
     private var year = 0
@@ -38,32 +39,38 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
     private var day = 0
     var am_pm: String? = null
     var hourInString: String? = null
-    private var vm_addIncome: VM_AddIncome? = null
 
+    private lateinit var vm_addIncome : VM_AddIncome
+    private lateinit var binding : FragmentAddIncomeBinding
+    private lateinit var navCon : NavController
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        // Inflate the layout for this fragment
+        binding = FragmentAddIncomeBinding.inflate(layoutInflater,container,false)
+        return binding.root
+    }
 
-    private lateinit var binding : ActivityAddIncomeBinding
-    @SuppressLint("SimpleDateFormat")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAddIncomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        vm_addIncome = ViewModelProvider(this)[VM_AddIncome::class.java]
+        navCon = Navigation.findNavController(view)
 
-        //*************************************************Initializations*******************************************
-        supportActionBar!!.hide()
-        vm_addIncome = ViewModelProviders.of(this).get(VM_AddIncome::class.java)
-        /*val calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance()
         year = calendar[Calendar.YEAR]
         month = calendar[Calendar.MONTH]
         day = calendar[Calendar.DAY_OF_MONTH]
         val simpleHourFormat = SimpleDateFormat("hh")
         val simpleMinuteFormat = SimpleDateFormat("mm")
         hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
-        minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()*/
-
+        minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
 
         binding.cvBackAddIncome.setOnClickListener(View.OnClickListener { v: View? ->
-            startActivity(Intent(this@AddIncome,
-                MainActivity::class.java))
+           /* startActivity(Intent(this@AddIncome,
+                MainActivity::class.java))*/
+            val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
+            navCon.navigate(action)
         })
 
         binding.cvAmount500AddIncome.setOnClickListener(this)
@@ -91,15 +98,22 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
         binding.cvOtherAddIncome.setOnClickListener(this)
         binding.cvSaveAddIncome.setOnClickListener({ addIncome() })
         binding.tvDateTimeAddIncome.setOnClickListener({ changeDate() })
+
         binding.ivHomeToolbarAddIncome.setOnClickListener { v: View? ->
-            startActivity(Intent(this@AddIncome,
-                MainActivity::class.java))
+           /* startActivity(Intent(this@AddIncome,
+                MainActivity::class.java))*/
         }
 
         observe()
         setDateTime()
         binding.tvCurrentBalanceValueToolBarAddIncome.setText(UtilDB.currentBalance.toString())
+
+
+
     }
+
+
+
 
     private fun setDateTime() {
         val simpleDateTimeFormat = SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault())
@@ -119,7 +133,7 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
         if (TextUtils.isEmpty(binding.etAmountAddIncome.text)) {
             binding.etAmountAddIncome.error = getString(R.string.AmontNeeded)
         } else if (TextUtils.isEmpty(vm_addIncome!!.category)) {
-            Toast.makeText(this, getString(R.string.Pleaseselectacatagory), Toast.LENGTH_SHORT)
+            Toast.makeText(context, getString(R.string.Pleaseselectacatagory), Toast.LENGTH_SHORT)
                 .show()
         } else {
             val amount = binding.etAmountAddIncome.text.toString()
@@ -139,16 +153,17 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
                 vm_addIncome!!.dateTime)
             /*val helper = SQLiteHelper(this@AddIncome)
             helper.saveData(posts)*/
-            val db = AppDatabase.getInstance(applicationContext)
+            val db = AppDatabase.getInstance(requireContext().applicationContext)
             val dao = db.dbDao()
             CoroutineScope(Dispatchers.IO).launch {
                 dao.insertAll(posts)
                 CoroutineScope(Dispatchers.Main).launch {
                     UtilDB.currentBalance = UtilDB.currentBalance + amount.toInt()
                     Log.d("tag","Income added , Current Balance is ${UtilDB.currentBalance}")
-                    startActivity(Intent(this@AddIncome, MainActivity::class.java))
-                    finish()
-                    Toast.makeText(this@AddIncome, "Success ", Toast.LENGTH_SHORT).show()
+
+                   /* startActivity(Intent(this@AddIncome, MainActivity::class.java))
+                    finish()*/
+                    Toast.makeText(context, "Success ", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -157,7 +172,7 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun observe() {
-        vm_addIncome!!.mutable_category.observe(this, { s: String ->
+        vm_addIncome!!.mutable_category.observe(viewLifecycleOwner, { s: String ->
             if (s == Constants.CATEGORY_SALARY) {
                 markSalary()
             } else if (s == Constants.CATEGORY_BUSINESS) {
@@ -168,7 +183,7 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
                 markOther()
             }
         })
-        vm_addIncome!!.mutable_amount.observe(this, { s ->
+        vm_addIncome.mutable_amount.observe(viewLifecycleOwner, { s ->
             if (s == Constants.AMOUNT_500) {
                 binding.etAmountAddIncome.setText(Constants.AMOUNT_500)
             } else if (s == Constants.AMOUNT_1000) {
@@ -283,37 +298,37 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun markOther() {
-        binding.cvSalaryAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddIncome.setCardBackgroundColor(getColor(R.color.green))
+        binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvOtherAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
     }
 
     private fun markHouseRent() {
-        binding.cvSalaryAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddIncome.setCardBackgroundColor(getColor(R.color.green))
-        binding.cvOtherAddIncome.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
+        binding.cvOtherAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
     }
 
     private fun markBusiness() {
-        binding.cvSalaryAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddIncome.setCardBackgroundColor(getColor(R.color.green))
-        binding.cvHouseRentAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddIncome.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
+        binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvOtherAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
     }
 
     private fun markSalary() {
-        binding.cvSalaryAddIncome.setCardBackgroundColor(getColor(R.color.green))
-        binding.cvBusinessAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddIncome.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddIncome.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
+        binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
+        binding.cvOtherAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
     }
 
     private fun changeDate() {
         val timePickerDialog =
-            TimePickerDialog(this@AddIncome, { view: TimePicker?, hourOfDay: Int, minute: Int ->
-                vm_addIncome!!.time = "$hourOfDay : $minute"
+            TimePickerDialog(requireContext(), { view: TimePicker?, hourOfDay: Int, minute: Int ->
+                vm_addIncome.time = "$hourOfDay : $minute"
                 Log.d("tag", "hour$hourOfDay")
                 if (hourOfDay >= 12) {
                     am_pm = "pm"
@@ -322,12 +337,12 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
                     am_pm = "am"
                     hourInString = hourOfDay.toString()
                 }
-                vm_addIncome!!.dateTime =
-                    vm_addIncome!!.day + "-" + vm_addIncome!!.month + "-" + vm_addIncome!!.year + "  " + hourInString + ":" + minute.toString() + " " + am_pm
+                vm_addIncome.dateTime =
+                    vm_addIncome.day + "-" + vm_addIncome!!.month + "-" + vm_addIncome!!.year + "  " + hourInString + ":" + minute.toString() + " " + am_pm
                 //Log.d("tag","year"+vm_addIncome.year+" month "+vm_addIncome.month+" day "+vm_addIncome.day+" hour "+hourOfDay+"min "+minute+" "+am_pm);
-                binding.tvDateTimeAddIncome.text = vm_addIncome!!.dateTime
+                binding.tvDateTimeAddIncome.text = vm_addIncome.dateTime
             }, hour, minute, true)
-        val datePickerDialog = DatePickerDialog(this@AddIncome, { view, year, month, dayOfMonth ->
+        val datePickerDialog = DatePickerDialog(requireContext(), { view, year, month, dayOfMonth ->
             setDay(dayOfMonth)
             setMonth(month + 1)
             /*vm_addIncome.year = String.valueOf(year);
@@ -385,8 +400,7 @@ class AddIncome : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
+
+
+
 }

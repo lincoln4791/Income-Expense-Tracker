@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.NodeName
+import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.view.EditDataExpense
 import com.lincoln4791.dailyexpensemanager.view.EditDataIncome
@@ -82,7 +83,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
             }
         }
         holder.iv_deleteData.setOnClickListener { v: View? ->
-            (context as Transactions).confirmDelete(
+            (context as TransactionsFragment).confirmDelete(
                 postList[position].id, postList[position].postAmount.toInt(),
                 postList[position].postType)
         }

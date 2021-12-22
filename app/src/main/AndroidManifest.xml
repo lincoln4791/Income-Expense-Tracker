@@ -54,7 +54,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.lincoln4791.dailyexpensemanager.view.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

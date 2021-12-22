@@ -1,18 +1,47 @@
 package com.lincoln4791.dailyexpensemanager.model
 
-class MC_Posts {
-    var id = 0
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
+
+@Entity
+ class MC_Posts{
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+    @ColumnInfo
     var postDescription: String
+    @ColumnInfo
     var postCategory: String
+    @ColumnInfo
     var postType: String
+    @ColumnInfo
     var postAmount: String
+    @ColumnInfo
     var postYear: String
+    @ColumnInfo
     var postMonth: String
+    @ColumnInfo
     var postDay: String
+    @ColumnInfo
     var postTime: String
+    @ColumnInfo
     var timeStamp: String
+    @ColumnInfo
     var postDateTime: String
 
+    /*@ColumnInfo var postDescription: String
+    @ColumnInfo var postCategory: String
+    @ColumnInfo var postType: String
+    @ColumnInfo var postAmount: String
+    @ColumnInfo var postYear: String
+    @ColumnInfo var postMonth: String
+    @ColumnInfo var postDay: String
+    @ColumnInfo var postTime: String
+    @ColumnInfo var timeStamp: String
+    @ColumnInfo var postDateTime: String*/
+
+    @Ignore
     constructor(
         postDescription: String,
         postCategory: String,

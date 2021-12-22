@@ -302,11 +302,13 @@
 
     <string name="about">
 
-        Contact Me: \n\nMahmudul Karim Lincoln\nB.Sc in Computer Science And Engineering\nSonargaon University, Dhaka, Bangladesh\n\nPhone : +8801670878110\nEmail : mahmuduulkarim@gmail.com
+        Contact Me: \n\nMahmudul Karim Lincoln\nM.Sc in Computer Science And Engineering\nEast West University, Dhaka, Bangladesh\n\nPhone : +8801670878110\nEmail : mahmuduulkarim@gmail.com
 
     </string>
     <string name="BackupData">Backup Data</string>
     <string name="RestoreData">Restore Data</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

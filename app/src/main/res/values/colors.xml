@@ -54,4 +54,8 @@
     <color name="color1">#3ea3e3</color>
     <color name="color2">#53902c</color>
     <color name="color3">#e19270</color>
+    <color name="primary">#064635</color>
+    <color name="primary_varient">#519259</color>
+    <color name="secondary">#F0BB62</color>
+    <color name="secondary_varient">#F4EEA9</color>
 </resources>

@@ -1,82 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appBackground"
-    tools:context=".view.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.HomeFragment">
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_toolbar_MainActivity"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/toolbarBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_MainActivity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/Home"
-            app:titleTextColor="@color/white" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            style="@style/ll_toolBar"
-            android:orientation="vertical"
-            android:weightSum="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/tv_currentBalanceText_toolBar_MainActivity"
-                style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:textSize="16sp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/redressed_regular"
-                android:gravity="bottom|center"
-                android:textAlignment="gravity"
-                android:text="@string/CurrentBalance" />
-
-            <TextView
-                android:id="@+id/tv_currentBalanceValue_toolBar_MainActivity"
-                style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="top|center"
-                android:textAlignment="gravity"
-                android:text="@string/value" />
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
-
-<!--
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar_MainActivity"
         android:layout_width="match_parent"
@@ -84,7 +13,8 @@
         android:background="@color/toolbarBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone">
 
 
         <androidx.appcompat.widget.Toolbar
@@ -173,44 +103,44 @@
             android:weightSum="3">
 
             `<com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_totalIncomes_topBar_MainActivity"
-                style="@style/cv_topBar_MainActivity"
+            android:id="@+id/cv_totalIncomes_topBar_MainActivity"
+            style="@style/cv_topBar_MainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_income_topBar_MainActivity"
+                    style="@style/tv_topBar_MainActivity"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_marginStart="10dp"
+                    android:text="@string/TotalIncome"
+                    android:textColor="@color/green"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/tv_income_topBar_MainActivity"
-                        style="@style/tv_topBar_MainActivity"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="10dp"
-                        android:text="@string/TotalIncome"
-                        android:textColor="@color/green"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/tv_totalIncomeValue_topBar_MainActivity"
+                    style="@style/tv_topBar_MainActivity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/value"
+                    android:textColor="@color/green"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/tv_totalIncomeValue_topBar_MainActivity"
-                        style="@style/tv_topBar_MainActivity"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
-                        android:text="@string/value"
-                        android:textColor="@color/green"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_totalExpenses_topBar_MainActivity"
@@ -297,11 +227,12 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
+    <LinearLayout
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout_FullReport">
@@ -309,13 +240,14 @@
         <LinearLayout
             android:id="@+id/ll_horizontalView_MainActivity"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:weightSum="3">
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_transactions_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -338,8 +270,7 @@
                         android:text="@string/Transactions"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -349,8 +280,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_income_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -373,8 +305,7 @@
                         android:text="@string/Incomes"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -384,8 +315,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_expenses_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -408,19 +340,27 @@
                         android:text="@string/Expenses"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
 
             </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_horizontalView_MainActivity2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="3">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_fullReport_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -443,8 +383,7 @@
                         android:text="@string/Full_Report"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -454,8 +393,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_daily_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -476,11 +416,10 @@
                         android:layout_height="13dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="1"
-                        android:text="@string/Daily"
+                        android:text="Daily Report"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -490,8 +429,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_monthly_MainActivity"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -512,22 +452,21 @@
                         android:layout_height="13dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight="1"
-                        android:text="@string/Monthly"
+                        android:text="Monthly Report"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="16sp"
+                        />
 
                 </LinearLayout>
 
 
             </com.google.android.material.card.MaterialCardView>
 
-
         </LinearLayout>
 
 
-    </HorizontalScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -722,7 +661,7 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <androidx.recyclerview.widget.RecyclerView
+<!--    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -732,12 +671,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />-->
-
-
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

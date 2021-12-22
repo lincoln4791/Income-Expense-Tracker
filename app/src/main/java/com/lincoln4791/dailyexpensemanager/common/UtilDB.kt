@@ -1,5 +1,8 @@
 package com.lincoln4791.dailyexpensemanager.common
 
-object UtilDB {
-    var currentBalance = 0
+class UtilDB {
+    companion object{
+        var currentBalance = 0
+    }
+
 }

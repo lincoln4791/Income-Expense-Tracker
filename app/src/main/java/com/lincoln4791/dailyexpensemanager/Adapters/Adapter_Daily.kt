@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.NodeName
+import com.lincoln4791.dailyexpensemanager.fragments.DailyFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.view.Daily
 import com.lincoln4791.dailyexpensemanager.view.EditDataExpense
 import com.lincoln4791.dailyexpensemanager.view.EditDataIncome
 
-class Adapter_Daily(private val postList: List<MC_Posts>, private val context: Context) :
+class Adapter_Daily(private val postList: List<MC_Posts>, private val context: Context,private val fragment: DailyFragment) :
     RecyclerView.Adapter<Adapter_Daily.MyViewHolder>() {
     private var cv_Temp: CardView? = null
     private val cv_new: CardView? = null
@@ -83,8 +84,9 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val context: C
                 context.startActivity(editDataExpenseIntent)
             }
         }
-        holder.iv_deleteData.setOnClickListener { v: View? ->
-            (context as Daily).confirmDelete(
+        holder.iv_deleteData.setOnClickListener {
+
+            fragment.confirmDelete(
                 postList[position].id)
         }
         holder.iv_closeEdtDltLayout.setOnClickListener { v: View? ->

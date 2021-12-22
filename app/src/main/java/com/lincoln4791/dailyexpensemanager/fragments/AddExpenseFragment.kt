@@ -1,56 +1,67 @@
-package com.lincoln4791.dailyexpensemanager.view
+package com.lincoln4791.dailyexpensemanager.fragments
 
-import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
-import android.os.Bundle
-import com.lincoln4791.dailyexpensemanager.R
-import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
-import android.text.TextUtils
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
-import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
+import android.app.TimePickerDialog
+import android.content.Intent
+import androidx.lifecycle.ViewModelProvider
+import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.view.ViewGroup
+import android.widget.TimePicker
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.google.android.material.color.MaterialColors.getColor
+import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.ActivityAddExpenseBinding
+import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
+import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AddExpense : AppCompatActivity(), View.OnClickListener {
-
-/*    private var hour = 0
+class AddExpenseFragment : Fragment(), View.OnClickListener {
+    private var hour = 0
     private var minute = 0
     private var year = 0
     private var month = 0
     private var day = 0
     var am_pm: String? = null
     var hourInString: String? = null
-    var vm_addExpenses: VM_AddExpenses? = null*/
+    var vm_addExpenses: VM_AddExpenses? = null
 
+    private lateinit var viewModel: VM_AddExpenses
+    private lateinit var binding : AddExpenseFragmentBinding
+    private lateinit var navCon : NavController
 
-    private lateinit var binding : ActivityAddExpenseBinding
-    @SuppressLint("SimpleDateFormat")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAddExpenseBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        binding = AddExpenseFragmentBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
+        navCon = Navigation.findNavController(view)
 
-/*        supportActionBar!!.hide()
-        vm_addExpenses = ViewModelProviders.of(this).get(VM_AddExpenses::class.java)
+        vm_addExpenses = ViewModelProvider(this)[VM_AddExpenses::class.java]
         val calendar = Calendar.getInstance()
         year = calendar[Calendar.YEAR]
         month = calendar[Calendar.MONTH]
@@ -62,8 +73,8 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
 
 
         binding.cvBackAddExpense.setOnClickListener(View.OnClickListener { v: View? ->
-            startActivity(Intent(this@AddExpense,
-                MainActivity::class.java))
+         /*   startActivity(Intent(this@AddExpense,
+                MainActivity::class.java))*/
         })
         binding.cvAmount500AddExpense.setOnClickListener(this)
         binding.cvAmount1000AddExpense.setOnClickListener(this)
@@ -96,18 +107,20 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
         binding.cvOtherAddExpense.setOnClickListener(this)
         binding.cvSaveAddExpense.setOnClickListener { saveData() }
         binding.tvDateTimeAddExpense.setOnClickListener { changeDate() }
+
         binding.ivHomeToolbarAddExpense.setOnClickListener {
-            startActivity(Intent(this@AddExpense,
-                MainActivity::class.java))
+            /*startActivity(Intent(this@AddExpense,
+                MainActivity::class.java))*/
         }
 
 
         binding.tvCurrentBalanceValueToolBarAddExpense.setText(UtilDB.currentBalance.toString())
         observe()
-        setDateTime()*/
+        setDateTime()
+
     }
 
-/*    private fun setDateTime() {
+    private fun setDateTime() {
         val simpleDateTimeFormat = SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault())
         val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
         val simpleMonthFormat = SimpleDateFormat("MM", Locale.getDefault())
@@ -125,7 +138,7 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
         if (TextUtils.isEmpty(binding.etExpenseAmountAddExpense.text)) {
             binding.etExpenseAmountAddExpense.error = getString(R.string.AmontNeeded)
         } else if (TextUtils.isEmpty(vm_addExpenses!!.category)) {
-            Toast.makeText(this, getString(R.string.Pleaseselectacatagory), Toast.LENGTH_SHORT)
+            Toast.makeText(context, getString(R.string.Pleaseselectacatagory), Toast.LENGTH_SHORT)
                 .show()
         } else {
             val amount = binding.etExpenseAmountAddExpense.text.toString()
@@ -143,28 +156,28 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
                 vm_addExpenses!!.time!!,
                 System.currentTimeMillis().toString(),
                 vm_addExpenses!!.dateTime)
-           *//* val helper = SQLiteHelper(this@AddExpense)
-            helper.saveData(posts)*//*
+            /* val helper = SQLiteHelper(this@AddExpense)
+             helper.saveData(posts)*/
             try {
                 CoroutineScope(Dispatchers.IO).launch {
-                    AppDatabase.getInstance(applicationContext).dbDao().insertAll(posts)
+                    AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertAll(posts)
                     CoroutineScope(Dispatchers.Main).launch {
                         UtilDB.currentBalance = UtilDB.currentBalance - amount.toInt()
-                        startActivity(Intent(this@AddExpense, MainActivity::class.java))
-                        Toast.makeText(this@AddExpense, "Success", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(context, MainActivity::class.java))
+                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
                     }
                 }
 
             }
             catch (e:Exception){
-                Toast.makeText(this, "Failed ${e.message}::: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed ${e.message}::: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
             }
 
         }
     }
 
     private fun observe() {
-        vm_addExpenses!!.mutable_category.observe(this, { s: String ->
+        vm_addExpenses!!.mutable_category.observe(viewLifecycleOwner, { s: String ->
             if (s == Constants.CATEGORY_FOOD) {
                 markFood()
             } else if (s == Constants.CATEGORY_TRANSPORT) {
@@ -187,7 +200,7 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
                 markOther()
             }
         })
-        vm_addExpenses!!.mutable_amount.observe(this, { s ->
+        vm_addExpenses!!.mutable_amount.observe(viewLifecycleOwner, { s ->
             if (s == Constants.AMOUNT_500) {
                 binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_500)
             } else if (s == Constants.AMOUNT_1000) {
@@ -320,138 +333,138 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun markOther() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.pink))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
     }
 
     private fun markMedicine() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markLifeStyle() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markEducation() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markBills() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markCloths() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markTransport() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markHouseRent() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markBusiness() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun markFood() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(getColor(R.color.pink))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvBillsAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(getColor(R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(getColor(R.color.white))
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
     private fun changeDate() {
         val timePickerDialog =
-            TimePickerDialog(this@AddExpense, { view: TimePicker?, hourOfDay: Int, minute: Int ->
+            TimePickerDialog(requireContext(), { view: TimePicker?, hourOfDay: Int, minute: Int ->
                 vm_addExpenses!!.time = "$hourOfDay : $minute"
                 Log.d("tag", "hour$hourOfDay")
                 if (hourOfDay >= 12) {
@@ -466,7 +479,7 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
                 //Log.d("tag","year"+vm_addIncome.year+" month "+vm_addIncome.month+" day "+vm_addIncome.day+" hour "+hourOfDay+"min "+minute+" "+am_pm);
                 binding.tvDateTimeAddExpense.text = vm_addExpenses!!.dateTime
             }, hour, minute, true)
-        val datePickerDialog = DatePickerDialog(this@AddExpense, { view, year, month, dayOfMonth ->
+        val datePickerDialog = DatePickerDialog(requireContext(), { view, year, month, dayOfMonth ->
             setDay(dayOfMonth)
             setMonth(month + 1)
             timePickerDialog.show()
@@ -520,14 +533,6 @@ class AddExpense : AppCompatActivity(), View.OnClickListener {
         } else {
             vm_addExpenses!!.month = month.toString()
         }
-    }*/
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
     }
 
-    override fun onClick(p0: View?) {
-        TODO("Not yet implemented")
-    }
 }
