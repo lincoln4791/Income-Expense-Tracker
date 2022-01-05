@@ -10,28 +10,32 @@
         android:id="@+id/cl_toolbar_AddIncome"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/toolbarBackground"
+        android:background="@color/primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
 
-
-        <ImageView
-            android:id="@+id/iv_home_toolbar_AddIncome"
-            style="@style/iv_toolBar"
-            app:layout_constraintBottom_toBottomOf="@+id/toolbar_AddIncome"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_img"
+            style="@style/cv_backButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toolbar_AddIncome" />
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
+            <ImageView
+                android:id="@+id/iv_home_toolbar_MonthlyReport"
+                style="@style/iv_toolBar" />
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_AddIncome"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_AddIncome"
-            app:layout_constraintStart_toEndOf="@+id/iv_home_toolbar_AddIncome"
+            app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/AddIncome"
             app:titleTextColor="@color/white" />

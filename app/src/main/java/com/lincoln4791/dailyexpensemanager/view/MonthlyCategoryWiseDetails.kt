@@ -36,25 +36,22 @@ class MonthlyCategoryWiseDetails : AppCompatActivity() {
         binding = ActivityMonthlyCategoryWiseDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //**************************************************** Initializations *********************************
-        supportActionBar!!.hide()
+        //supportActionBar!!.hide()
         linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager!!.reverseLayout = true
-        linearLayoutManager!!.stackFromEnd = true
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
         postList = ArrayList()
         adapter_monthlyCategoryWiseReport = Adapter_MonthlyCategoryWiseReport(postList as ArrayList<MC_Posts>, this)
         binding.rvCategoryWiseReport.setLayoutManager(linearLayoutManager)
         binding.rvCategoryWiseReport.setAdapter(adapter_monthlyCategoryWiseReport)
 
 
-        //*****************************************Click Listener********************************************
         binding.ivHomeToolbarMonthlyCategoryWiseReport.setOnClickListener(View.OnClickListener { v: View? ->
             startActivity(Intent(this@MonthlyCategoryWiseDetails,
                 MainActivity::class.java))
         })
 
 
-        //******************************************** Starting Methods **********************************
         binding.tvCurrentBalanceValueToolBarMonthlyCategoryWiseReport.text = UtilDB.currentBalance.toString()
         intentData
         setCategoryAndType()

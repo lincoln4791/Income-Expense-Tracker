@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.lifecycle.ViewModelProviders
@@ -48,6 +49,21 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     private lateinit var binding : AddExpenseFragmentBinding
     private lateinit var navCon : NavController
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    Log.d("tag","OnBackPressCalled -> Monthly")
+                    //navCon.navigateUp()
+                    goBack()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -73,9 +89,13 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
 
         binding.cvBackAddExpense.setOnClickListener(View.OnClickListener { v: View? ->
-         /*   startActivity(Intent(this@AddExpense,
-                MainActivity::class.java))*/
+         goBack()
         })
+
+        binding.cvImg.setOnClickListener {
+            goBack()
+        }
+
         binding.cvAmount500AddExpense.setOnClickListener(this)
         binding.cvAmount1000AddExpense.setOnClickListener(this)
         binding.cvAmount1500AddExpense.setOnClickListener(this)
@@ -107,12 +127,6 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvOtherAddExpense.setOnClickListener(this)
         binding.cvSaveAddExpense.setOnClickListener { saveData() }
         binding.tvDateTimeAddExpense.setOnClickListener { changeDate() }
-
-        binding.ivHomeToolbarAddExpense.setOnClickListener {
-            /*startActivity(Intent(this@AddExpense,
-                MainActivity::class.java))*/
-        }
-
 
         binding.tvCurrentBalanceValueToolBarAddExpense.setText(UtilDB.currentBalance.toString())
         observe()
@@ -533,6 +547,11 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         } else {
             vm_addExpenses!!.month = month.toString()
         }
+    }
+
+
+    private fun goBack(){
+        navCon.navigateUp()
     }
 
 }

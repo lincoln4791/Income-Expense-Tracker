@@ -16,14 +16,6 @@ import com.lincoln4791.dailyexpensemanager.view.Transactions
 import com.lincoln4791.dailyexpensemanager.common.Extras
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearMonthDayTypeCategoryTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearMonthDayCategoryTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearMonthDayTypeTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearMonthTypeTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearMonthCategoryTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearTypeTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearTypeCategoryTask
-import com.lincoln4791.dailyexpensemanager.view.FullReport.YearTask
 import android.os.AsyncTask
 import android.util.Log
 import android.view.View
@@ -64,16 +56,14 @@ class FullReport : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        //***************************************************Initializations*****************************************
-        supportActionBar!!.hide()
+
+    /*    supportActionBar!!.hide()
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         vm_fullReport = ViewModelProviders.of(this).get(VM_FullReport::class.java)
         binding.rvReportDetailsFullReport.layoutManager = linearLayoutManager
         adapterFullReport = Adapter_FullReport(this@FullReport, vm_fullReport!!.postsList)
 
-
-        //***************************************************Click Listeners*****************************************
         binding.cvDailyFullReport.setOnClickListener(View.OnClickListener { v: View? ->
             startActivity(Intent(this@FullReport,
                 Daily::class.java))
@@ -104,14 +94,13 @@ class FullReport : AppCompatActivity() {
         })
 
 
-        //****************************************************Starting Methods***************************************
         binding.tvCurrentBalanceValueToolBarFullReport.setText(UtilDB.currentBalance.toString())
         initMonthSpinner()
         initYearSpinner()
-        initTypeSpinner()
+        initTypeSpinner()*/
     }
 
-    private fun selectQuery() {
+   /* private fun selectQuery() {
         if (vm_fullReport!!.month != Constants.MONTH_NULL &&
             vm_fullReport!!.day != Constants.DAY_NULL && vm_fullReport!!.type != Constants.TYPE_ALL &&
             vm_fullReport!!.category != Constants.CATEGORY_NULL
@@ -1471,7 +1460,7 @@ class FullReport : AppCompatActivity() {
         vm_fullReport!!.expense_lifestyle = 0
         vm_fullReport!!.expense_other = 0
         vm_fullReport!!.total_expense = 0
-    }
+    }*/
 
     override fun onBackPressed() {
         finish()

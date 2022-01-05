@@ -9,10 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions
@@ -39,7 +42,23 @@ class TransactionsFragment : Fragment() {
 
     private lateinit var binding : FragmentTransactionsBinding
     private var vm_transactions: VM_Transactions? = null
+    private lateinit var navCon : NavController
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    Log.d("tag","OnBackPressCalled -> MonthlyCategoryWise")
+                    //navCon.navigateUp()
+                    goBack()
+
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +71,8 @@ class TransactionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        navCon = Navigation.findNavController(view)
 
         toolbar = view.findViewById(R.id.toolbar_Transactions)
         transactionType = args.type
@@ -81,6 +102,7 @@ class TransactionsFragment : Fragment() {
         })
 
 
+
         binding.cvMonthlyTransactions.setOnClickListener(View.OnClickListener { v: View? ->
           /*  startActivity(Intent(this@Transactions,
                 MonthlyReport::class.java))*/
@@ -94,9 +116,8 @@ class TransactionsFragment : Fragment() {
                 FullReport::class.java))*/
         })
         binding.ivDeleteAllTransactions.setOnClickListener(View.OnClickListener { v: View? -> confirmDeleteAll() })
-        binding.ivHomeToolbarTransactions.setOnClickListener(View.OnClickListener { v: View? ->
-       /*     startActivity(Intent(this@Transactions,
-                MainActivity::class.java))*/
+        binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
+            goBack()
         })
         binding.cvTotalIncomesTopBarTransactions.setOnClickListener {
             vm_transactions!!.loadAllIncomes()
@@ -177,6 +198,12 @@ class TransactionsFragment : Fragment() {
             })
         view.findViewById<View>(R.id.btn_no_alertImage_dialog_deleteAll)
             .setOnClickListener { dialog.dismiss() }
+    }
+
+
+    private fun goBack(){
+        val homeAction = TransactionsFragmentDirections.actionTransactionsFragmentToHomeFragment()
+        navCon.navigateUp()
     }
 
 /*    override fun onBackPressed() {

@@ -95,6 +95,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
 
+    //nav comp
+    implementation "androidx.activity:activity-ktx:1.4.0"
+
  /*   implementation ("androidx.room:room-coroutines:$room_version")*/
 
   /*  implementation "androidx.room:room-runtime:2.3.0"

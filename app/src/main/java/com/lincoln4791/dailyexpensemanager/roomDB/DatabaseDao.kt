@@ -47,6 +47,8 @@ interface DatabaseDao{
     @Query("SELECT * FROM MC_Posts where postYear = :year and postMonth = :month and postDay =:day and  postType=:type ")
     fun loadYearMonthDayTypeWise(year: String,month:String,day:String,type:String): List<MC_Posts>
 
+    @Query("SELECT * FROM MC_Posts where postYear = :year and postMonth = :month and postDay =:day and  postType=:category ")
+    fun loadYearMonthDayCategoryWise(year: String,month:String,day:String,category:String): List<MC_Posts>
 
     @Query("SELECT * FROM MC_Posts where postYear = :year and postMonth = :month and postDay =:day and  postType=:type and postCategory=:category ")
     fun loadYearMonthDayTypeCategoryWise(year: String,month:String,day:String,type:String,category:String): List<MC_Posts>

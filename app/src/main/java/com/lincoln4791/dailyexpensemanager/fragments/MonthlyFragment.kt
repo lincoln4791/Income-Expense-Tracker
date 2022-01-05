@@ -6,16 +6,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.*
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
@@ -27,7 +30,7 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
 import java.text.DecimalFormat
 import java.util.*
 
-class MonthlyFragment : Fragment(),View.OnClickListener {
+class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private var totalIncome = 0.0
     private var totalExpense = 0.0
     private var balance = 0.0
@@ -70,6 +73,21 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
     private lateinit var binding : FragmentMonthlyBinding
     private lateinit var navCon : NavController
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    Log.d("tag","OnBackPressCalled -> Monthly")
+                    //navCon.navigateUp()
+                    goBack()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +103,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MonthlyReport::class.java]
+
+
 
 
         val calendar = Calendar.getInstance()
@@ -111,6 +131,11 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
             startActivity(intent)*/
         })
 
+
+        binding.cvImg.setOnClickListener {
+            goBack()
+        }
+
         binding.cvPieChartMonthlyReport.setOnClickListener(View.OnClickListener { v: View? -> goToPieChartActivity() })
         binding.cvTypeSalaryIncomeMonthlyReport.setOnClickListener(this)
         binding.cvTypeBusinessIncomeMonthlyReport.setOnClickListener(this)
@@ -127,10 +152,10 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
         binding.cvTypeLifeStyleExpenseMonthlyReport.setOnClickListener(this)
         binding.cvTypeOtherExpenseMonthlyReport.setOnClickListener(this)
 
-        binding.ivHomeToolbarMonthlyReport.setOnClickListener {
-           /* startActivity(Intent(this@MonthlyReport,
-                MainActivity::class.java))*/
-        }
+        /*binding.ivHomeToolbarMonthlyReport.setOnClickListener {
+           *//* startActivity(Intent(this@MonthlyReport,
+                MainActivity::class.java))*//*
+        }*/
 
 
         binding.tvCurrentBalanceValueToolBarMonthlyReport.setText(UtilDB.currentBalance.toString())
@@ -186,103 +211,131 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
 
     override fun onClick(v: View) {
         if (v.id == R.id.cv_type_salaryIncome_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_SALARY)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_INCOME)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_SALARY)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_businessIncome_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_BUSINESS)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_INCOME)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_BUSINESS)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_houseRentIncome_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_HOUSE_RENT)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_INCOME)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_HOUSE_RENT)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_otherIncome_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_OTHER)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_INCOME)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_OTHER)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_foodExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_FOOD)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_FOOD)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_transportExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_TRANSPORT)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_TRANSPORT)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_businessExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_BUSINESS)
+            navCon.navigate(action)
+           /* val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_BUSINESS)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_houseRentExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_HOUSE_RENT)
+            navCon.navigate(action)
+           /* val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_HOUSE_RENT)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_billsExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_BILLS)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_BILLS)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_medicineExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_MEDICINE)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_MEDICINE)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_clothsExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_CLOTHS)
+            navCon.navigate(action)
+           /* val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_CLOTHS)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_educationExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_EDUCATION)
+            navCon.navigate(action)
+           /* val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_EDUCATION)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_lifeStyleExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_LIFESTYLE)
+            navCon.navigate(action)
+           /* val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_LIFESTYLE)
-            startActivity(intent)
+            startActivity(intent)*/
         } else if (v.id == R.id.cv_type_otherExpense_MonthlyReport) {
-            val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
+            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_OTHER)
+            navCon.navigate(action)
+            /*val intent = Intent(context, MonthlyCategoryWiseDetails::class.java)
             intent.putExtra(NodeName.POST_YEAR, year)
             intent.putExtra(NodeName.POST_MONTH, month)
             intent.putExtra(NodeName.POST_TYPE, Constants.TYPE_EXPENSE)
             intent.putExtra(NodeName.POST_CATEGORY, Constants.CATEGORY_OTHER)
-            startActivity(intent)
+            startActivity(intent)*/
         }
     }
 
@@ -321,7 +374,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
-                id: Long
+                id: Long,
             ) {
                 if (position == 0) {
                     month = getString(R.string.digit01)
@@ -367,7 +420,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
-                id: Long
+                id: Long,
             ) {
                 if (position == 0) {
                     year = Constants.YEAR_DEFAULT
@@ -517,6 +570,15 @@ class MonthlyFragment : Fragment(),View.OnClickListener {
 
     companion object{
          val df2 = DecimalFormat("#.##")
+    }
+
+    override fun callMe() {
+        Log.d("tag","I have Called")
+    }
+
+    private fun goBack(){
+        val action = MonthlyFragmentDirections.actionMonthlyFragmentToHomeFragment()
+        navCon.navigate(action)
     }
 
 }

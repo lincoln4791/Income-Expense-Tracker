@@ -26,7 +26,9 @@
             app:destination="@id/dailyFragment" />
         <action
             android:id="@+id/action_homeFragment_to_monthlyFragment"
-            app:destination="@id/monthlyFragment" />
+            app:destination="@id/monthlyFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_fullReportFragment"
             app:destination="@id/fullReportFragment" />
@@ -76,10 +78,42 @@
         android:id="@+id/monthlyFragment"
         android:name="com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment"
         android:label="Monthly Report"
-        tools:layout="@layout/fragment_monthly" />
+        tools:layout="@layout/fragment_monthly" >
+        <action
+            android:id="@+id/action_monthlyFragment_to_monthlyCategoryWiseFragment"
+            app:destination="@id/monthlyCategoryWiseFragment" />
+        <action
+            android:id="@+id/action_monthlyFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/fullReportFragment"
         android:name="com.lincoln4791.dailyexpensemanager.fragments.FullReportFragment"
         android:label="Full Report"
         tools:layout="@layout/fragment_full_report" />
+    <fragment
+        android:id="@+id/monthlyCategoryWiseFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.fragments.MonthlyCategoryWiseFragment"
+        android:label="fragment_monthly_category_wise"
+        tools:layout="@layout/fragment_monthly_category_wise" >
+        <argument
+            android:name="year"
+            app:argType="string" />
+        <argument
+            android:name="month"
+            app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="category"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_monthlyCategoryWiseFragment_to_monthlyFragment"
+            app:destination="@id/monthlyFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

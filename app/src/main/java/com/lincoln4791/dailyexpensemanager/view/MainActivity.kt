@@ -36,8 +36,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.karumi.dexter.listener.PermissionRequest
+import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.databinding.ActivityMainBinding
+import com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import java.io.*
 import java.lang.Exception
@@ -56,13 +58,13 @@ class MainActivity() : AppCompatActivity() {
 
     //**********************************************Initializations****************************************
 
-        //supportActionBar!!.hide()
+        supportActionBar!!.hide()
 
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        setupActionBarWithNavController(navController)
+        //setupActionBarWithNavController(navController)
 
         /*viewModel = ViewModelProvider(this).get(VM_MainActivity::class.java)
 
@@ -176,8 +178,14 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
+/*    override fun onSupportNavigateUp(): Boolean {
+
+        Log.d("tag","Back Prressed")
+        val cl: calll = MonthlyFragment()
+        cl.callMe()
+
+        //return navController.navigateUp() || super.onSupportNavigateUp()
+        return  true
+    }*/
 
 }

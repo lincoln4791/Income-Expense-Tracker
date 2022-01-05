@@ -9,7 +9,6 @@ import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import android.os.Bundle
 import com.lincoln4791.dailyexpensemanager.R
 import android.content.Intent
-import com.lincoln4791.dailyexpensemanager.view.FullReport
 import com.lincoln4791.dailyexpensemanager.view.MonthlyReport
 import com.lincoln4791.dailyexpensemanager.view.Transactions
 import com.lincoln4791.dailyexpensemanager.common.Extras

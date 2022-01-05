@@ -129,6 +129,16 @@ class Repository(private val context: Context) {
         }
     }
 
+
+    fun loadYearMonthDayCategoryWise(year:String,month:String,day:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+        var value : Resource<List<MC_Posts>>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadYearMonthDayCategoryWise(year,month,day,category))
+            callback(value as Resource.Success<List<MC_Posts>>)
+        }
+    }
+
+
     fun loadYearMonthDayTypeCategoryWise(year:String,month:String,day:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {

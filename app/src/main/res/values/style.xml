@@ -224,12 +224,22 @@
     <style name="iv_toolBar">
        <item name="android:layout_width">60dp</item>
        <item name="android:layout_height">match_parent</item>
-        <item name="android:backgroundTint">@color/toolbarBackground</item>
+        <item name="android:backgroundTint">@color/primary</item>
         <item name="android:padding">11dp</item>
-        <item name="android:src">@drawable/home32</item>
-        <item name="android:clickable">true</item>
+        <item name="android:src">@drawable/ic_back24</item>
+        <item name="android:clickable">false</item>
         <item name="android:background">@drawable/selectior_all</item>
+        <item name="android:focusable">false</item>
 
+    </style>
+
+    <style name="cv_backButton">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="cardBackgroundColor">@color/primary</item>
+        <item name="android:clickable">true</item>
+        <item name="cardCornerRadius">100dp</item>
+        <item name="android:focusable">true</item>
     </style>
 
 

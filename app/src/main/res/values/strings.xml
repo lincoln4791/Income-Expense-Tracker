@@ -120,6 +120,11 @@
     <string name="Filter">Filter</string>
     <string name="PieChart">Pie Chart</string>
     <string name="Expense">Expense</string>
+    <string name="POST_YEAR">postYear</string>
+    <string name="POST_MONTH">postMonth</string>
+    <string name="POST_DAY">postDay</string>
+    <string name="POST_CATEGORY">postCategory</string>
+    <string name="POST_TYPE">postType</string>
 
 
     <string-array name="nullCategory"></string-array>

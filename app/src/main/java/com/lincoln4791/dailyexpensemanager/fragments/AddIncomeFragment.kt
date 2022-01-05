@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -43,6 +44,21 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     private lateinit var vm_addIncome : VM_AddIncome
     private lateinit var binding : FragmentAddIncomeBinding
     private lateinit var navCon : NavController
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    Log.d("tag","OnBackPressCalled -> Monthly")
+                    //navCon.navigateUp()
+                    goBack()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -73,6 +89,10 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             navCon.navigate(action)
         })
 
+        binding.cvImg.setOnClickListener {
+            goBack()
+        }
+
         binding.cvAmount500AddIncome.setOnClickListener(this)
         binding.cvAmount1000AddIncome.setOnClickListener(this)
         binding.cvAmount1500AddIncome.setOnClickListener(this)
@@ -99,10 +119,6 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         binding.cvSaveAddIncome.setOnClickListener({ addIncome() })
         binding.tvDateTimeAddIncome.setOnClickListener({ changeDate() })
 
-        binding.ivHomeToolbarAddIncome.setOnClickListener { v: View? ->
-           /* startActivity(Intent(this@AddIncome,
-                MainActivity::class.java))*/
-        }
 
         observe()
         setDateTime()
@@ -400,7 +416,10 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
-
+    private fun goBack() {
+        val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
+        navCon.navigate(action)
+    }
 
 
 }
