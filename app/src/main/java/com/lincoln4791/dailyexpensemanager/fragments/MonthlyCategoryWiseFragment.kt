@@ -34,9 +34,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
     private lateinit var month: String
     private lateinit var type: String
     private lateinit var category: String
-
     val args: MonthlyCategoryWiseFragmentArgs by navArgs()
-
     private lateinit var viewModel: VM_MonthlyCategoryWise
     private lateinit var binding : FragmentMonthlyCategoryWiseBinding
     private lateinit var navCon : NavController
@@ -57,10 +55,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
-                    Log.d("tag","OnBackPressCalled -> MonthlyCategoryWise")
-                    //navCon.navigateUp()
-                    val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment()
-                    navCon.navigate(action)
+                    goBack()
 
                 }
             }
@@ -75,11 +70,10 @@ class MonthlyCategoryWiseFragment : Fragment() {
 
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MonthlyCategoryWise::class.java]
@@ -89,14 +83,13 @@ class MonthlyCategoryWiseFragment : Fragment() {
         type = args.type
         category = args.category
 
-        linearLayoutManager = LinearLayoutManager(requireContext())
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-        binding.rvCategoryWiseReport.layoutManager = linearLayoutManager
-
+        Log.d("tag","year -> $year")
+        Log.d("tag","year -> $month")
+        Log.d("tag","year -> $type")
+        Log.d("tag","year -> $category")
 
         binding.cvImg.setOnClickListener {
-            navCon.navigateUp()
+           goBack()
         }
 
 
@@ -131,9 +124,19 @@ class MonthlyCategoryWiseFragment : Fragment() {
     private fun updateUI(postList:List<MC_Posts>){
         Log.d("tag", "listSIze " + postList!!.size)
         //Collections.reverse(vm_fullReport.postsList);
+        linearLayoutManager = LinearLayoutManager(requireContext())
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+        binding.rvCategoryWiseReport.layoutManager = linearLayoutManager
         adapter_monthlyCategoryWiseReport = Adapter_MonthlyCategoryWiseReport(postList,requireContext())
         binding.rvCategoryWiseReport.adapter = adapter_monthlyCategoryWiseReport
         adapter_monthlyCategoryWiseReport!!.notifyDataSetChanged()
+    }
+
+
+    private fun goBack() {
+       val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment()
+        navCon.navigate(action)
     }
 
 }

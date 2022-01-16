@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.Adapters
 
 import android.content.Context
+import android.util.Log
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
@@ -13,6 +14,11 @@ class Adapter_MonthlyCategoryWiseReport(
     private val postList: List<MC_Posts>,
     private val context: Context
 ) : RecyclerView.Adapter<Adapter_MonthlyCategoryWiseReport.MyViewHolder>() {
+
+    init {
+        Log.d("tag","List size in adapter is -> ${postList.size}")
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context)
             .inflate(R.layout.sample_monthly_category_wise, parent, false)

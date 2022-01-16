@@ -1,3 +1,4 @@
+/*
 package com.lincoln4791.dailyexpensemanager.view
 
 import androidx.appcompat.app.AppCompatActivity
@@ -120,4 +121,4 @@ class MonthlyCategoryWiseDetails : AppCompatActivity() {
         }
         cursor.close()
     }
-}
+}*/

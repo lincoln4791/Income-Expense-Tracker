@@ -106,7 +106,6 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
 
 
-
         val calendar = Calendar.getInstance()
         currentMonthPosition = calendar[Calendar.MONTH]
         currentMonth = currentMonthPosition + 1
@@ -116,7 +115,10 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
 
 
-        binding.cvSearchMonthlyReport.setOnClickListener(View.OnClickListener { v: View? -> viewModel.loadYearMonth(year,month) })
+        binding.cvSearchMonthlyReport.setOnClickListener {
+            Log.d("tag", "Year -> $year ::: Month -> $month")
+            viewModel.loadYearMonth(year, month)
+        }
         binding.cvDailyMonthlyReport.setOnClickListener(View.OnClickListener { v: View? ->
            /* startActivity(Intent(this@MonthlyReport,
                 Daily::class.java))*/
@@ -367,9 +369,9 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.monthNames_MonthlyReport))
-        binding.spinnerMonthMonthlyReport.setAdapter(spinnerAdapter)
+        binding.spinnerMonthMonthlyReport.adapter = spinnerAdapter
         binding.spinnerMonthMonthlyReport.setSelection(currentMonthPosition)
-        binding.spinnerMonthMonthlyReport.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        binding.spinnerMonthMonthlyReport.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
@@ -407,24 +409,55 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                 val calendar = Calendar.getInstance()
                 month = calendar[Calendar.MONTH].toString()
             }
-        })
+        }
     }
 
     private fun initYearSpinner() {
+        val spinnerArray = arrayListOf<String>((year.toInt()-1).toString(),year,((year.toInt()+1).toString()),((year.toInt()+2).toString()),
+            ((year.toInt()+3).toString()))
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.year))
-        binding.spinnerYearMonthlyReport.setAdapter(spinnerAdapter)
-        binding.spinnerYearMonthlyReport.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            spinnerArray)
+        var spinnerIndex = 0
+        if(year =="2021"){
+            spinnerIndex = 0
+        }
+        else if(year =="2022"){
+            spinnerIndex = 1
+        }
+        else if(year =="2023"){
+            spinnerIndex = 2
+        }
+        else if(year == "2024"){
+            spinnerIndex=4
+        }
+        else {
+            spinnerIndex=5
+        }
+        binding.spinnerYearMonthlyReport.adapter = spinnerAdapter
+        binding.spinnerYearMonthlyReport.setSelection(spinnerIndex)
+        binding.spinnerYearMonthlyReport.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long,
             ) {
-                if (position == 0) {
+                year = currentYear.toString()
+                if(position==0){
+                    year = "2021"
+                }
+                else if(position == 1){
+                    year = currentYear.toString()
+                }
+                else{
+                    year = (currentYear.toLong()+position).toString()
+                }
+
+               /* if (position == 0) {
                     year = Constants.YEAR_DEFAULT
-                } else if (position == 1) {
+                }
+                else if (position == 1) {
                     year = "2022"
                 } else if (position == 2) {
                     year = "2023"
@@ -434,14 +467,14 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                     year = "2025"
                 } else if (position == 5) {
                     year = "2026"
-                }
+                }*/
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 val calendar = Calendar.getInstance()
                 year = calendar[Calendar.YEAR].toString()
             }
-        })
+        }
     }
 
 

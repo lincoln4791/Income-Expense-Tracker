@@ -11,7 +11,6 @@ import com.lincoln4791.dailyexpensemanager.view.FullReport
 import com.lincoln4791.dailyexpensemanager.view.Transactions
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.view.PieChartActivity
-import com.lincoln4791.dailyexpensemanager.view.MonthlyCategoryWiseDetails
 import android.os.AsyncTask
 import android.util.Log
 import android.view.View
