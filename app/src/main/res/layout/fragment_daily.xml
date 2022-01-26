@@ -10,34 +10,40 @@
         android:id="@+id/cl_toolbar_DailyActivity"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/toolbarBackground"
+        android:background="@color/primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
-
-
-        <ImageView
-            android:id="@+id/iv_home_toolbar_DailyActivity"
-            style="@style/iv_toolBar"
-            app:layout_constraintBottom_toBottomOf="@+id/toolbar_DailyActivity"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_img"
+            style="@style/cv_backButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/toolbar_DailyActivity" />
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/iv_home_toolbar_MonthlyReport"
+                style="@style/iv_toolBar" />
+        </com.google.android.material.card.MaterialCardView>
+
+
 
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_DailyActivity"
+            android:id="@+id/toolbar_MonthlyReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_DailyActivity"
-            app:layout_constraintStart_toEndOf="@+id/iv_home_toolbar_DailyActivity"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
+            app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/Daily"
             app:titleTextColor="@color/white" />
 
         <LinearLayout
-            android:id="@+id/ll_currentBalance_DailyActivity"
+            android:id="@+id/ll_currentBalance_MonthlyReport"
             style="@style/ll_toolBar"
             android:orientation="vertical"
             android:weightSum="2"
@@ -46,7 +52,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_currentBalanceText_toolBar_DailyActivity"
+                android:id="@+id/tv_currentBalanceText_toolBar_MonthlyReport"
                 style="@style/tv_toolBar"
                 android:layout_width="match_parent"
                 android:textSize="16sp"
@@ -58,7 +64,7 @@
                 android:text="@string/CurrentBalance" />
 
             <TextView
-                android:id="@+id/tv_currentBalanceValue_toolBar_DailyActivity"
+                android:id="@+id/tv_currentBalanceValue_toolBar_MonthlyReport"
                 style="@style/tv_toolBar"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

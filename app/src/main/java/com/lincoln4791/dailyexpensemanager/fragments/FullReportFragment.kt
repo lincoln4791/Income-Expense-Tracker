@@ -89,9 +89,8 @@ class FullReportFragment : Fragment() {
         })
         binding.cvSearchFullReport.setOnClickListener({ selectQuery() })
 
-        binding.ivHomeToolbarFullReport.setOnClickListener(View.OnClickListener { v: View? ->
-           /* startActivity(Intent(this@FullReport,
-                MainActivity::class.java))*/
+        binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
+          navCon.navigateUp()
         })
 
         binding.tvCurrentBalanceValueToolBarFullReport.setText(UtilDB.currentBalance.toString())

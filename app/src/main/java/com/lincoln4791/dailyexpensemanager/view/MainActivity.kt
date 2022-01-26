@@ -44,6 +44,10 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import java.io.*
 import java.lang.Exception
 import java.util.ArrayList
+import android.os.Build
+
+
+
 
 class MainActivity() : AppCompatActivity() {
    /* private lateinit var viewModel : VM_MainActivity*/
@@ -52,18 +56,25 @@ class MainActivity() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
+/*        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)*/
         setContentView(binding.root)
 
     //**********************************************Initializations****************************************
 
         supportActionBar!!.hide()
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = resources.getColor(R.color.primary)
+        }
+        window.navigationBarColor = resources.getColor(R.color.primary)
+
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+          navController = navHostFragment.navController
         //setupActionBarWithNavController(navController)
 
         /*viewModel = ViewModelProvider(this).get(VM_MainActivity::class.java)

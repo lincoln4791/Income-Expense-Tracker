@@ -3,28 +3,37 @@ package com.lincoln4791.dailyexpensemanager.fragments
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
+import org.apache.commons.lang3.ClassUtils.getSimpleName
+
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding : FragmentHomeBinding
     private lateinit var viewModel: VM_MainActivity
     private lateinit var navCon : NavController
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +62,19 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window = requireActivity().window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = resources.getColor(R.color.primary)
+        }
+
+        firebaseAnalytics = Firebase.analytics
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,"home_fragment")
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "Main Activity")
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
@@ -115,7 +137,7 @@ class HomeFragment : Fragment() {
         binding.cvMonthlyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
            /* startActivity(Intent(this@MainActivity,
                 MonthlyReport::class.java))*/
-            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment()
+            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(null,null)
             navCon.navigate(action)
         })
         binding.cvTotalIncomesTopBarMainActivity.setOnClickListener(View.OnClickListener { v: View? ->

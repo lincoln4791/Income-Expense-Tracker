@@ -107,14 +107,13 @@ class DailyFragment : Fragment() {
             intent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
             startActivity(intent)*/
         })
-        binding.ivHomeToolbarDailyActivity.setOnClickListener(View.OnClickListener { v: View? ->
-        /*    startActivity(Intent(this@Daily,
-                MainActivity::class.java))*/
+        binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
+        navCon.navigateUp()
         })
 
 
         setDate()
-        binding.tvCurrentBalanceTextToolBarDailyActivity.text = UtilDB.currentBalance.toString()
+        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = UtilDB.currentBalance.toString()
        viewModel.loadDailyTransactions(year!!,month!!,day!!)
 
     }
@@ -133,7 +132,7 @@ class DailyFragment : Fragment() {
                 day = (day!!.toInt() - 1).toString()
             }
             date = "$day-$month-$year"
-            binding.tvCurrentBalanceValueToolBarDailyActivity.text = date
+            binding.tvCurrentBalanceValueToolBarMonthlyReport.text = date
             //YearMonthDayTask().execute()
             viewModel.loadDailyTransactions(year!!, month!!, day!!)
         } else if (monthValue == 5 || monthValue == 7 || monthValue == 10 || monthValue == 12) {

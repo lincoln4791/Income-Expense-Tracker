@@ -18,6 +18,9 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
@@ -43,6 +46,7 @@ class TransactionsFragment : Fragment() {
     private lateinit var binding : FragmentTransactionsBinding
     private var vm_transactions: VM_Transactions? = null
     private lateinit var navCon : NavController
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +58,6 @@ class TransactionsFragment : Fragment() {
                     Log.d("tag","OnBackPressCalled -> MonthlyCategoryWise")
                     //navCon.navigateUp()
                     goBack()
-
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -71,6 +74,13 @@ class TransactionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,"home_fragment")
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "Main Activity")
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
 
         navCon = Navigation.findNavController(view)
 

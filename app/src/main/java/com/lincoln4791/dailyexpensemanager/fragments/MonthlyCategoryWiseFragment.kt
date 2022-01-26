@@ -135,7 +135,8 @@ class MonthlyCategoryWiseFragment : Fragment() {
 
 
     private fun goBack() {
-       val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment()
+
+       val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment(year,month)
         navCon.navigate(action)
     }
 
