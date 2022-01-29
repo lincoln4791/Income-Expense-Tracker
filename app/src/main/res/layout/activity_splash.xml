@@ -45,7 +45,7 @@
             style="@style/tv_splashActivityText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/teal_700"
+            android:textColor="@color/teal"
             android:text="Manager"/>
 
     </LinearLayout>

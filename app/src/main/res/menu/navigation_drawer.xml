@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_profile"
+            android:icon="@drawable/profile64"
+            android:title="Profile"
+            android:checked="true" />
+        <item
+            android:id="@+id/menu_DarkTheme"
+            android:icon="@drawable/ic_darkmoon_24"
+            android:title="Dark Theme" />
+        <item
+            android:id="@+id/menu_facebookPage"
+            android:icon="@drawable/ic_facebook_icon"
+            android:title="Facebook Page" />
+
+        <item
+            android:id="@+id/menu_rateUs"
+            android:icon="@drawable/rate_us24"
+            android:title="RateUs" />
+
+        <item
+            android:id="@+id/menu_shareApp"
+            android:icon="@drawable/ic_share_24"
+            android:title="Share" />
+
+        <item
+            android:id="@+id/menu_aboutUs"
+            android:icon="@drawable/ic_info_24"
+            android:title="About Us" />
+
+        <item
+            android:id="@+id/menu_privacyPolicy"
+            android:icon="@drawable/ic_privacy_24"
+            android:title="Privacy Policy" />
+
+        <item
+            android:id="@+id/menu_loginLogout"
+            android:icon="@drawable/ic_login_24"
+            android:title="Login" />
+    </group>
+</menu>

@@ -6,17 +6,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -55,7 +54,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = FragmentHomeBinding.inflate(layoutInflater,container,false)
+        binding = FragmentHomeBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -158,6 +157,25 @@ class HomeFragment : Fragment() {
         }
         binding.cvRestoreDataMainActivity.setOnClickListener { Toast.makeText(context,"Coming Soon",Toast.LENGTH_SHORT).show() }
 
+        binding.ivNavMenu.setOnClickListener {
+            binding.drawerLayout.open()
+        }
+
+        binding.navigationView.setNavigationItemSelectedListener {
+            it.isChecked = true
+            binding.drawerLayout.close()
+
+            if (it.itemId == R.id.menu_profile){
+                val goToProfile = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
+                navCon.navigate(goToProfile)
+            }
+
+            true
+        }
+
+        binding.navigationView.itemIconTintList = null
+        //binding.navigationView.setNavigationItemSelectedListener(this)
+
 
         //**********************************************Starting Methods***************************************
         viewModel.getIncomeExpenseData()
@@ -204,4 +222,5 @@ class HomeFragment : Fragment() {
     companion object {
 
     }
+
 }
