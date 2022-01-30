@@ -96,6 +96,9 @@ class PieChartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Util.recordScreenEvent("pie_chart_fragment","MainActivity")
+
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_PieChart::class.java]
 

@@ -25,6 +25,7 @@ import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import com.lincoln4791.dailyexpensemanager.common.Util
 
 
 class MonthlyCategoryWiseFragment : Fragment() {
@@ -74,6 +75,8 @@ class MonthlyCategoryWiseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Util.recordScreenEvent("monthly_category_wise_fragment","MainActivity")
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MonthlyCategoryWise::class.java]

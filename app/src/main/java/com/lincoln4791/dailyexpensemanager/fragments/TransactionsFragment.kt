@@ -26,6 +26,7 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.Extras
+import com.lincoln4791.dailyexpensemanager.common.Util
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -75,7 +76,7 @@ class TransactionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        Util.recordScreenEvent("transactions_fragment","MainActivity")
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,"home_fragment")
         bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "Main Activity")

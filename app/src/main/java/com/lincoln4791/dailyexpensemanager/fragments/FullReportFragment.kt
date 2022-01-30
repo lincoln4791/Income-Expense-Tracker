@@ -20,10 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_FullReport
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
-import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.Extras
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.*
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
@@ -54,6 +51,8 @@ class FullReportFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Util.recordScreenEvent("fullReport_fragment","MainActivity")
 
         navCon = Navigation.findNavController(view)
         vm_fullReport = ViewModelProvider(this)[VM_FullReport::class.java]

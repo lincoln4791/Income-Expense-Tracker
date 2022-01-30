@@ -7,8 +7,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,8 +21,11 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.Util
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
@@ -32,7 +37,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
     private lateinit var viewModel: VM_MainActivity
     private lateinit var navCon : NavController
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var prefManager : PrefManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +65,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        prefManager = PrefManager(requireContext())
         super.onViewCreated(view, savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -68,12 +74,7 @@ class HomeFragment : Fragment() {
             window.statusBarColor = resources.getColor(R.color.primary)
         }
 
-        firebaseAnalytics = Firebase.analytics
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,"home_fragment")
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "Main Activity")
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
-
+        Util.recordScreenEvent("home_fragment","MainActivity")
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
@@ -170,15 +171,62 @@ class HomeFragment : Fragment() {
                 navCon.navigate(goToProfile)
             }
 
+            else if(it.itemId == R.id.menu_DarkTheme){
+                Toast.makeText(context,"Coming Soon",Toast.LENGTH_SHORT).show()
+                /*if(prefManager.isDarkThemeEnabled){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    prefManager.isDarkThemeEnabled = false
+                    it.title = "Day Theme"
+                }
+                else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    prefManager.isDarkThemeEnabled = true
+                    it.title = "Dark Theme"
+                }*/
+            }
+            else if(it.itemId == R.id.menu_facebookPage){
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/104842935132029"))
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    val intent =
+                        Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://www.facebook.com/IncomeExpenseManager/"))
+                    startActivity(intent)
+                    e.printStackTrace()
+                }
+            }
+
+            else if (it.itemId == R.id.menu_rateUs){
+                goToPlayStore()
+            }
+            else if (it.itemId == R.id.menu_aboutUs){
+                openAbout()
+            }
+            else if (it.itemId == R.id.menu_shareApp){
+                val sharingIntent = Intent(Intent.ACTION_SEND)
+                sharingIntent.type = "text/plain"
+                val shareBodyText =
+                    "Income Expense Manager - Your Daily Financial Calculator.\n\n" + "Download Income Expense Manager from google play:\n\n ${Constants.PLAY_STORE_APP_LINK}"
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Keep Track Of Your Daily Transactions.")
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
+                startActivity(Intent.createChooser(sharingIntent, "Share Income Expense Manager"))
+            }
+
+            else if (it.itemId == R.id.menu_loginLogout){
+                Toast.makeText(requireContext(),"Coming Soon",Toast.LENGTH_SHORT).show()
+            }
+
             true
         }
 
         binding.navigationView.itemIconTintList = null
-        //binding.navigationView.setNavigationItemSelectedListener(this)
+        binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
 
 
         //**********************************************Starting Methods***************************************
         viewModel.getIncomeExpenseData()
+        initDarkTheme()
 
     }
 
@@ -193,11 +241,15 @@ class HomeFragment : Fragment() {
 
         view.findViewById<View>(R.id.btn_rateApp_dilogue_about).setOnClickListener { v: View? ->
             dialog.dismiss()
-            val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
-            val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
-            goToPlayStoreAppLnk.data = appLink
-            startActivity(goToPlayStoreAppLnk)
+            goToPlayStore()
         }
+    }
+
+    private fun goToPlayStore() {
+        val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
+        val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
+        goToPlayStoreAppLnk.data = appLink
+        startActivity(goToPlayStoreAppLnk)
     }
 
 
@@ -217,6 +269,17 @@ class HomeFragment : Fragment() {
         }
         view.findViewById<View>(R.id.btn_no_alertImage_dialog_delete)
             .setOnClickListener { dialog.dismiss() }
+    }
+
+    private fun initDarkTheme(){
+        if(prefManager.isDarkThemeEnabled){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            binding.navigationView.menu.findItem(R.id.menu_DarkTheme).title = "Day Theme"
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            binding.navigationView.menu.findItem(R.id.menu_DarkTheme).title = "Dark Theme"
+        }
     }
 
     companion object {

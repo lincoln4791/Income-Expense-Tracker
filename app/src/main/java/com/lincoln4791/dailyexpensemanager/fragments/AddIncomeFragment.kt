@@ -20,6 +20,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.Util
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -70,6 +71,9 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Util.recordScreenEvent("add_income_fragment","MainActivity")
+
         vm_addIncome = ViewModelProvider(this)[VM_AddIncome::class.java]
         navCon = Navigation.findNavController(view)
 

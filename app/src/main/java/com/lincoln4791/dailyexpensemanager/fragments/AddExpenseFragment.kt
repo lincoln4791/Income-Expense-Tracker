@@ -22,6 +22,7 @@ import androidx.navigation.Navigation
 import com.google.android.material.color.MaterialColors.getColor
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.Util
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.ActivityAddExpenseBinding
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
@@ -74,6 +75,9 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Util.recordScreenEvent("add_expense_fragment","MainActivity")
+
         viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
         navCon = Navigation.findNavController(view)
 

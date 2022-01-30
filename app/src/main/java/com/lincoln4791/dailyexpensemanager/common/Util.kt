@@ -1,5 +1,10 @@
 package com.lincoln4791.dailyexpensemanager.common
 
+import android.os.Bundle
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+
 class Util(){
     companion object{
         fun getMonthNameFromMonthNumber(monthNumber : String):String{
@@ -46,6 +51,14 @@ class Util(){
 
 
             return monthName
+        }
+
+        fun recordScreenEvent(screenName:String,screenClass : String){
+            val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,screenName)
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
         }
     }
 }

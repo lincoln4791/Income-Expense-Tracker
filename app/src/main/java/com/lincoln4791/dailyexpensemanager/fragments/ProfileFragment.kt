@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.common.Util
+import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentProfileBinding
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
@@ -47,12 +49,16 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Util.recordScreenEvent("profile_fragment","MainActivity")
+
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_Profile::class.java]
 
         binding.cvImg.setOnClickListener {
             navCon.navigateUp()
         }
+
+        binding.tvCurrentBalanceValueToolBarProfile.text = UtilDB.currentBalance.toString()
 
     }
 

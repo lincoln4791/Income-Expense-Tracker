@@ -33,10 +33,10 @@
             android:id="@+id/toolbar_profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_profile"
             app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/Monthly"
+            app:title="Profile"
             app:titleTextColor="@color/white" />
 
         <LinearLayout
@@ -85,19 +85,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_toolbar_profile" />
 
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is my name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/purple"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_profilePic" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:drawablePadding="12dp"
         android:text="Biography"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:drawablePadding="12dp"
-        android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_profilePic"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/phone"
@@ -114,7 +126,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/nationality"
-        android:text="Bd"
+        android:text="Bangladesh"
         android:textSize="16sp"
         android:layout_marginStart="15dp"
         android:drawablePadding="12dp"
@@ -141,7 +153,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/state"
-        android:text="state"
+        android:text="Dhaka"
         android:textSize="16sp"
         android:layout_marginStart="15dp"
         android:drawablePadding="12dp"

@@ -103,6 +103,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Util.recordScreenEvent("monthly_fragment","MainActivity")
+
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MonthlyReport::class.java]
 
@@ -452,7 +454,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         binding.tvCategoryHouseRentIncomePercentValueMonthlyReport!!.text = houseRentIncomePercent.toString()
         binding.tvCategoryOtherIncomePercentValueMonthlyReport!!.text = otherIncomePercent.toString()
         binding.tvBalanceBotMonthlyReport!!.text = balance.toString()
-        binding.tvCurrentBalanceValueToolBarMonthlyReport!!.text = balance.toString()
+        binding.tvCurrentBalanceValueToolBarMonthlyReport!!.text = UtilDB.currentBalance.toString()
     }
 
     private fun calculatePercent() {
