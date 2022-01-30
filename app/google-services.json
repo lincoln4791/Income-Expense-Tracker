@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "495460956348",
+    "project_id": "dailyexpensemanager-16f91",
+    "storage_bucket": "dailyexpensemanager-16f91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495460956348:android:23ca64ddbe3018939df8b9",
+        "android_client_info": {
+          "package_name": "com.lincoln4791.dailyexpensemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495460956348-o2r53p9uvgdjln542gmlkah97uvrjt48.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYx2YZoDToFoQ4X_mcfVqC0vI6XGGV9YQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495460956348-o2r53p9uvgdjln542gmlkah97uvrjt48.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
