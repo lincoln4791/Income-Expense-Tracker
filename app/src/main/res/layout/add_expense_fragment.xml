@@ -100,10 +100,10 @@
         app:layout_constraintStart_toStartOf="@+id/et_expenseDescription_AddExpense"
         app:layout_constraintTop_toBottomOf="@+id/et_expenseDescription_AddExpense" />
 
-    <HorizontalScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/horizontalScrollView2_AddExpense"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -112,40 +112,32 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_typeTitle_AddExpenses">
 
         <LinearLayout
-            android:id="@+id/ll_horizontalView_AddExpense"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:weightSum="5">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_food_AddExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
+                    style="@style/ll_horizontalScroll_MainActivity"
+                   >
 
                     <ImageView
                         style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
                         android:src="@drawable/food" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight="1"
                         android:text="@string/Food"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                      />
 
                 </LinearLayout>
 
@@ -155,32 +147,19 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_transport_AddExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+               >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
+                    style="@style/ll_horizontalScroll_MainActivity">
 
                     <ImageView
                         style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
                         android:src="@drawable/transport" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
                         android:text="@string/Transport"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+               />
 
                 </LinearLayout>
 
@@ -190,32 +169,20 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_bills_AddExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+             >
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
+                    style="@style/ll_horizontalScroll_MainActivity">
 
                     <ImageView
                         style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
                         android:src="@drawable/bills" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
                         android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
                         android:text="@string/Bills"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                       />
 
                 </LinearLayout>
 
@@ -224,33 +191,21 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_houseRent_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                style="@style/CV_horizontalScroll_MainActivity">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
+                    style="@style/ll_horizontalScroll_MainActivity">
 
                     <ImageView
                         style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
+                        android:layout_width="match_parent"
                         android:src="@drawable/house" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
                         android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
                         android:text="@string/HouseRent"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                     />
 
                 </LinearLayout>
 
@@ -260,206 +215,20 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_business_AddExpense"
                 style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_weight="1"
+                android:layout_width="0dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
+                    style="@style/ll_horizontalScroll_MainActivity">
 
                     <ImageView
                         style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
                         android:src="@drawable/business_profits" />
 
                     <TextView
                         style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
                         android:text="@string/Business"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_medicine_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
-                        android:src="@drawable/medicine" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
-                        android:text="@string/Medicine"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_cloths_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
-                        android:src="@drawable/cloths" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
-                        android:text="@string/Cloths"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_education_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
-                        android:src="@drawable/education" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
-                        android:text="@string/Education"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_lifeStyle_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
-                        android:src="@drawable/life_style" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
-                        android:text="@string/LifeStyle"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_other_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="4">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:layout_width="120dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="3"
-                        android:src="@drawable/other" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="match_parent"
-                        android:layout_height="14dp"
-                        android:layout_weight="1"
-                        android:text="@string/Other"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                     />
 
                 </LinearLayout>
 
@@ -469,7 +238,121 @@
 
         </LinearLayout>
 
-    </HorizontalScrollView>
+        <LinearLayout
+            android:id="@+id/ll_horizontalView_AddExpense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll1">
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_medicine_AddExpense"
+                style="@style/CV_horizontalScroll_MainActivity"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    style="@style/ll_horizontalScroll_MainActivity">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:src="@drawable/medicine" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:text="@string/Medicine"
+                         />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_cloths_AddExpense"
+                style="@style/CV_horizontalScroll_MainActivity">
+
+                <LinearLayout
+                    style="@style/ll_horizontalScroll_MainActivity">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:src="@drawable/cloths" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:text="@string/Cloths" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_education_AddExpense"
+                style="@style/CV_horizontalScroll_MainActivity">
+
+                <LinearLayout
+                    style="@style/ll_horizontalScroll_MainActivity">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:src="@drawable/education" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:text="@string/Education" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_lifeStyle_AddExpense"
+                style="@style/CV_horizontalScroll_MainActivity">
+
+                <LinearLayout
+                    style="@style/ll_horizontalScroll_MainActivity">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:src="@drawable/life_style" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:text="@string/LifeStyle" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_other_AddExpense"
+                style="@style/CV_horizontalScroll_MainActivity">
+
+                <LinearLayout
+                    style="@style/ll_horizontalScroll_MainActivity">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:src="@drawable/other" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:text="@string/Other" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView2_AddExpense"

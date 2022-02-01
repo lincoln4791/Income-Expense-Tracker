@@ -40,6 +40,11 @@
             android:title="Privacy Policy" />
 
         <item
+            android:id="@+id/menu_moreApps"
+            android:icon="@drawable/ic_more_24"
+            android:title="More Apps" />
+
+        <item
             android:id="@+id/menu_loginLogout"
             android:icon="@drawable/ic_login_24"
             android:title="Login" />

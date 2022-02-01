@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -17,10 +18,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
@@ -74,6 +77,7 @@ class HomeFragment : Fragment() {
             window.statusBarColor = resources.getColor(R.color.primary)
         }
 
+        getAndSaveFCM()
         Util.recordScreenEvent("home_fragment","MainActivity")
 
         navCon = Navigation.findNavController(view)
@@ -282,8 +286,33 @@ class HomeFragment : Fragment() {
         }
     }
 
-    companion object {
 
+    private fun getAndSaveFCM() {
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            prefManager.fcmToken = token ?: ""
+            if (!prefManager.isUserLoggedIn) {
+                saveFCMInFirebase(token!!)
+            }
+            else  {
+                //FcmSave()
+            }
+            Log.d("FCM","FCM is $token")
+
+        })
+    }
+
+    companion object {
+            fun saveFCMInFirebase(fcm : String){
+
+            }
     }
 
 }

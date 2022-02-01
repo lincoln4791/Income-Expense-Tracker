@@ -19,4 +19,13 @@ class PrefManager(val context : Context) {
         set(value) {editor.putBoolean("isDarkThemeEnabled",value).commit()}
 
 
+    var fcmToken:String?
+        get() = pref.getString("fcmToken","")
+        set(value) {editor.putString("fcmToken",value).commit()}
+
+    var isUserLoggedIn:Boolean
+        get() = pref.getBoolean("isUserLoggedIn",false)
+        set(value) {editor.putBoolean("isUserLoggedIn",value).commit()}
+
+
 }
