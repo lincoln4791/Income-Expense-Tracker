@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -272,26 +273,6 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_cloths_AddExpense"
-                style="@style/CV_horizontalScroll_MainActivity">
-
-                <LinearLayout
-                    style="@style/ll_horizontalScroll_MainActivity">
-
-                    <ImageView
-                        style="@style/iv_horizontalScroll_MainActivity"
-                        android:src="@drawable/cloths" />
-
-                    <TextView
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:text="@string/Cloths" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_education_AddExpense"
                 style="@style/CV_horizontalScroll_MainActivity">
 
@@ -349,23 +330,54 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_addMore_AddExpense"
+                style="@style/CV_horizontalScroll_MainActivity">
+
+                <LinearLayout
+                    style="@style/ll_horizontalScroll_MainActivity">
+
+                    <ImageView
+                        style="@style/iv_horizontalScroll_MainActivity"
+                        android:src="@drawable/add" />
+
+                    <TextView
+                        style="@style/tv_horizontalScroll_MainActivity"
+                        android:text="Add More.." />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
 
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2_AddExpense" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView2_AddExpense"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         app:cardCornerRadius="25dp"
         app:cardElevation="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView2_AddExpense"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
         app:strokeColor="@color/green"
         app:strokeWidth="1dp">
 
@@ -374,11 +386,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/transparent"
-            android:inputType="number"
             android:drawableLeft="@drawable/ic_dollar"
             android:drawableRight="@drawable/ic_right_arrow"
             android:drawablePadding="10dp"
-            android:hint="@string/EnterAmount" />
+            android:hint="@string/EnterAmount"
+            android:inputType="number" />
 
 
     </com.google.android.material.card.MaterialCardView>

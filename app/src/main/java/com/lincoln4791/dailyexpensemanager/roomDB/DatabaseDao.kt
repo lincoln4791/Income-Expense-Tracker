@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.roomDB
 
 import androidx.room.*
+import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
 @Dao
@@ -58,6 +59,17 @@ interface DatabaseDao{
 
     @Query("Delete from mc_posts")
     fun deleteAll()
+
+
+
+    //Cards
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCard(vararg card: MC_Cards)
+
+
+    @Query("SELECT * FROM MC_Cards")
+    fun loadAllCards(): MutableList<MC_Cards>
+
 
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:id="@+id/cv_mainLayout">
+
+    <TextView
+        android:id="@+id/tv_sample_cv"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingTop="3dp"
+        android:textSize="15sp"
+        android:textColor="@color/pink"
+        android:paddingBottom="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="sample"
+        />
+
+</com.google.android.material.card.MaterialCardView>

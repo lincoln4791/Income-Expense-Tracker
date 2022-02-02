@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -144,6 +145,17 @@ class Repository(private val context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthDayTypeCategoryWise(year,month,day,type,category))
             callback(value as Resource.Success<List<MC_Posts>>)
+        }
+    }
+
+
+
+    // Cards
+    fun getAllCards(callback:(Resource<List<MC_Cards>>)->Unit){
+        var value : Resource<List<MC_Cards>>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadAllCards())
+            callback(value as Resource.Success<List<MC_Cards>>)
         }
     }
 }

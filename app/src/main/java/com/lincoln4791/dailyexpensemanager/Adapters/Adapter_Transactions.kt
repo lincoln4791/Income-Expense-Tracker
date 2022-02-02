@@ -22,6 +22,7 @@ import com.lincoln4791.dailyexpensemanager.view.Transactions
 class Adapter_Transactions(private val postList: List<MC_Posts>, private val context: Context) :
     RecyclerView.Adapter<Adapter_Transactions.MyViewHolder>() {
     private var cv_Temp: CardView? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.sample_transactions, parent, false)
         return MyViewHolder(view)

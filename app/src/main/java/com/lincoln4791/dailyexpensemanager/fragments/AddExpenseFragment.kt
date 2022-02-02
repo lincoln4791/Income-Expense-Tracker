@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
@@ -11,21 +12,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat.getColor
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.google.android.material.color.MaterialColors.getColor
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddExpense
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.Util
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
-import com.lincoln4791.dailyexpensemanager.databinding.ActivityAddExpenseBinding
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
+import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
@@ -92,6 +95,17 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
 
 
+        viewModel.postsList.observe(viewLifecycleOwner){
+            Log.d("addExpense", "observed")
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
+                is Resource.Success ->  updateUI(it.data)
+                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
+        }
+
+
         binding.cvBackAddExpense.setOnClickListener(View.OnClickListener { v: View? ->
          goBack()
         })
@@ -99,6 +113,12 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvImg.setOnClickListener {
             goBack()
         }
+
+        binding.cvAddMoreAddExpense.setOnClickListener {
+            addMoreCard()
+        }
+
+        viewModel.loadAllCards()
 
         binding.cvAmount500AddExpense.setOnClickListener(this)
         binding.cvAmount1000AddExpense.setOnClickListener(this)
@@ -126,7 +146,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvLifeStyleAddExpense.setOnClickListener(this)
         binding.cvEducationAddExpense.setOnClickListener(this)
         binding.cvBillsAddExpense.setOnClickListener(this)
-        binding.cvClothsAddExpense.setOnClickListener(this)
+        binding.cvAddMoreAddExpense.setOnClickListener(this)
         binding.cvTransportAddExpense.setOnClickListener(this)
         binding.cvOtherAddExpense.setOnClickListener(this)
         binding.cvSaveAddExpense.setOnClickListener { saveData() }
@@ -136,6 +156,14 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         observe()
         setDateTime()
 
+    }
+
+    private fun updateUI(data: List<MC_Cards>) {
+        val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        val myAdapter = Adapter_AddExpense(data,requireContext())
+        binding.recyclerView.layoutManager=layoutManager
+        binding.recyclerView.adapter = myAdapter
+        myAdapter.notifyDataSetChanged()
     }
 
     private fun setDateTime() {
@@ -209,7 +237,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
             } else if (s == Constants.CATEGORY_MEDICINE) {
                 markMedicine()
             } else if (s == Constants.CATEGORY_CLOTHS) {
-                markCloths()
+                addMoreCard()
             } else if (s == Constants.CATEGORY_EDUCATION) {
                 markEducation()
             } else if (s == Constants.CATEGORY_LIFESTYLE) {
@@ -355,12 +383,15 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+
+
+
     }
 
     private fun markMedicine() {
@@ -368,7 +399,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -381,7 +412,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
@@ -394,7 +425,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -407,7 +438,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -415,17 +446,34 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
-    private fun markCloths() {
+    private fun addMoreCard() {
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        //binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+
+        val viewAddCard = layoutInflater.inflate(R.layout.dialog_add_more_card,null,false)
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(viewAddCard)
+        dialog.show()
+
+        val tcCard = viewAddCard.findViewById<TextView>(R.id.tv_cardName)
+
+        viewAddCard.findViewById<Button>(R.id.btn).setOnClickListener {
+            if(!tcCard.text.isNullOrEmpty()){
+                dialog.dismiss()
+                CoroutineScope(Dispatchers.IO).launch {
+                    AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertCard(MC_Cards("test card"))
+                }
+            }
+        }
+
     }
 
     private fun markTransport() {
@@ -433,7 +481,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -446,7 +494,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -459,7 +507,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -472,7 +520,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvClothsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))

@@ -25,6 +25,7 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/add_expense_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/content_main_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_about.xml" value="0.33" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_add_more_card.xml" value="0.1171875" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_delete.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_income.xml" value="0.1515625" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_transaction.xml" value="0.1515625" />
@@ -38,6 +39,7 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.1375" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/header_navigation_drawer.xml" value="0.33" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_cardview.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_monthly_category_wise.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/menu/navigation_drawer.xml" value="0.2" />
       </map>
