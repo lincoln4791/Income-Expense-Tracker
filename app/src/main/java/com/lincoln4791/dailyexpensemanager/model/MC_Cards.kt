@@ -6,13 +6,13 @@ import androidx.room.PrimaryKey
 
 @Entity
 class MC_Cards{
-
     @PrimaryKey(autoGenerate = true) var id: Int?= null
     @ColumnInfo var cardName: String? = null
+    @ColumnInfo var cardType: String? = null
 
-    constructor(cardName : String){
+    constructor(cardName : String,cardType:String){
         this.cardName = cardName
-
+        this.cardType = cardType
     }
 
 }

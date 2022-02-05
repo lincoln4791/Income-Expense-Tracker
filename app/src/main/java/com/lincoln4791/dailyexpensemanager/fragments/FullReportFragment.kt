@@ -25,10 +25,7 @@ import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.view.Daily
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
-import com.lincoln4791.dailyexpensemanager.view.MonthlyReport
-import com.lincoln4791.dailyexpensemanager.view.Transactions
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport

@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
@@ -151,11 +150,21 @@ class Repository(private val context: Context) {
 
 
     // Cards
-    fun getAllCards(callback:(Resource<List<MC_Cards>>)->Unit){
+    fun getAllExpenseCards(callback:(Resource<List<MC_Cards>>)->Unit){
         var value : Resource<List<MC_Cards>>? = null
         CoroutineScope(Dispatchers.IO).launch {
-            value = Resource.Success(dao.loadAllCards())
+            value = Resource.Success(dao.loadAllExpenseCards(Constants.TYPE_EXPENSE))
             callback(value as Resource.Success<List<MC_Cards>>)
         }
     }
+
+    fun getAllIncomeCards(callback:(Resource<List<MC_Cards>>)->Unit){
+        var value : Resource<List<MC_Cards>>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadAllIncomeCards(Constants.TYPE_INCOME))
+            callback(value as Resource.Success<List<MC_Cards>>)
+        }
+    }
+
+
 }

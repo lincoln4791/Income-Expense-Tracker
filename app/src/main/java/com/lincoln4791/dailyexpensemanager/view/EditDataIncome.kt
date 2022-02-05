@@ -1,3 +1,4 @@
+/*
 package com.lincoln4791.dailyexpensemanager.view
 
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,6 @@ import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.common.NodeName
 import android.text.TextUtils
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.app.DatePickerDialog
@@ -45,7 +45,6 @@ class EditDataIncome : AppCompatActivity(), View.OnClickListener {
         binding = ActivityEditDataIncomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //*************************************************Initializations*******************************************
         supportActionBar!!.hide()
         vm_EditDataIncome = ViewModelProviders.of(this).get(VM_EditDataIncome::class.java)
         val calendar = Calendar.getInstance()
@@ -58,7 +57,6 @@ class EditDataIncome : AppCompatActivity(), View.OnClickListener {
         minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
 
 
-        //***************************************************Click Listeners**************************************
         binding.cvBackEditDataIncome.setOnClickListener(View.OnClickListener { v: View? ->
             startActivity(Intent(this@EditDataIncome,
                 MainActivity::class.java))
@@ -94,8 +92,6 @@ class EditDataIncome : AppCompatActivity(), View.OnClickListener {
                 MainActivity::class.java))
         })
 
-
-        //************************************************Starting Methods*****************************************
         binding.tvCurrentBalanceValueToolBarEditDataIncome.setText(UtilDB.currentBalance.toString())
         observe()
         intentData
@@ -400,4 +396,4 @@ class EditDataIncome : AppCompatActivity(), View.OnClickListener {
         super.onBackPressed()
         finish()
     }
-}
+}*/

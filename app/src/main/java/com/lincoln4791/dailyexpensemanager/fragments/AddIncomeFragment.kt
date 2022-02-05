@@ -1,8 +1,8 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -10,26 +10,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.ViewModel
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddIncome
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.Util
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
+import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddIncome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,7 +47,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     var am_pm: String? = null
     var hourInString: String? = null
 
-    private lateinit var vm_addIncome : VM_AddIncome
+    lateinit var vm_addIncome : VM_AddIncome
     private lateinit var binding : FragmentAddIncomeBinding
     private lateinit var navCon : NavController
 
@@ -86,15 +91,39 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
         minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
 
-        binding.cvBackAddIncome.setOnClickListener(View.OnClickListener { v: View? ->
-           /* startActivity(Intent(this@AddIncome,
-                MainActivity::class.java))*/
+        vm_addIncome.postsList.observe(viewLifecycleOwner){
+            Log.d("addExpense", "observed")
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
+                is Resource.Success ->  updateUI(it.data){
+
+                }
+                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
+        }
+
+/*        binding.cvBackAddIncome.setOnClickListener(View.OnClickListener { v: View? ->
+           *//* startActivity(Intent(this@AddIncome,
+                MainActivity::class.java))*//*
             val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
             navCon.navigate(action)
-        })
+        })*/
 
         binding.cvImg.setOnClickListener {
             goBack()
+        }
+
+        binding.cvAddMore.setOnClickListener {
+            addMoreCard()
+        }
+
+        binding.cvCalculatorAddIncome.setOnClickListener {
+            Toast.makeText(requireContext(),"Coming Soon",Toast.LENGTH_SHORT).show()
+        }
+
+        vm_addIncome.loadAllCards(){
+
         }
 
         binding.cvAmount500AddIncome.setOnClickListener(this)
@@ -318,6 +347,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markOther() {
+        deSelectedMoreCard()
         binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
         binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
         binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
@@ -325,6 +355,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markHouseRent() {
+        deSelectedMoreCard()
         binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
         binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
         binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
@@ -332,6 +363,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markBusiness() {
+        deSelectedMoreCard()
         binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
         binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
         binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
@@ -339,6 +371,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markSalary() {
+        deSelectedMoreCard()
         binding.cvSalaryAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.green))
         binding.cvBusinessAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
         binding.cvHouseRentAddIncome.setCardBackgroundColor(requireContext().getColor(R.color.white))
@@ -420,9 +453,119 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    fun deleteCardByName(cardName : String,callback : (isDeleted : Boolean)-> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                AppDatabase.getInstance(requireContext().applicationContext).dbDao().deleteIncomeCardByName(cardName,Constants.TYPE_INCOME)
+                callback(true)
+            }
+            catch (e:Exception){
+                e.printStackTrace()
+                callback(false)
+            }
+        }
+    }
+
+    fun selectMoreCard(cardName : String){
+
+        deselectAllCard()
+        binding.tvSelectedMoreCard.text = cardName
+        binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvSelectedMoreCard.visibility = View.VISIBLE
+    }
+
+    fun deSelectedMoreCard(){
+        binding.tvSelectedMoreCard.text = ""
+        binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvSelectedMoreCard.visibility = View.INVISIBLE
+    }
+
     private fun goBack() {
         val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
         navCon.navigate(action)
+    }
+
+    private fun deselectAllCard() {
+        binding.cvSalaryAddIncome.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddIncome.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddIncome.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddIncome.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+    }
+
+    private fun updateUI(data: List<MC_Cards>, callback: (isUIUpdated : Boolean) -> Unit) {
+        val layoutManager = LinearLayoutManager(requireContext(),
+            LinearLayoutManager.HORIZONTAL, false)
+        val myAdapter = Adapter_AddIncome(data, requireContext(), this)
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = myAdapter
+        myAdapter.notifyDataSetChanged()
+        callback(true)
+    }
+
+
+    private fun addMoreCard() {
+        deSelectedMoreCard()
+        deselectAllCard()
+        vm_addIncome.category=""
+
+        Log.d("tag","Add Card Called")
+
+        val viewAddCard = layoutInflater.inflate(R.layout.dialog_add_more_card,null,false)
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(viewAddCard)
+        dialog.show()
+
+        val tcCard = viewAddCard.findViewById<TextView>(R.id.tv_cardName)
+
+        viewAddCard.findViewById<Button>(R.id.btn).setOnClickListener {
+            if(!tcCard.text.isNullOrEmpty()){
+                dialog.dismiss()
+
+                var existingCardList : MutableList<MC_Cards>? = mutableListOf()
+                val job1= CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        existingCardList = AppDatabase.getInstance(requireContext().applicationContext).dbDao().loadAllIncomeCards(Constants.TYPE_INCOME)
+                    }
+                    catch (e:Exception){
+                        e.printStackTrace()
+                    }
+                }
+                runBlocking {
+                    var isExists = false
+                    job1.join()
+                    for(card in existingCardList!!){
+                        if(card.cardName == tcCard.text.toString()){
+                            isExists = true
+                            break
+                        }
+                    }
+
+                    if(!isExists){
+                        val job2 = CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertCard(
+                                    MC_Cards(tcCard.text.toString(),Constants.TYPE_INCOME))
+
+                            }
+                            catch (e:Exception){
+                                e.printStackTrace()
+                            }
+                        }
+
+                        runBlocking {
+                            job2.join()
+                            vm_addIncome.loadAllCards(){
+
+                            }
+                        }
+                    }
+                    else{
+                        Toast.makeText(requireContext(),"Card Already Exists",Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
     }
 
 

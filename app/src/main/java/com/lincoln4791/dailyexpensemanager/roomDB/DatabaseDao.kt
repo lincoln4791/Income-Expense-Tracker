@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.roomDB
 
 import androidx.room.*
+import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
@@ -67,8 +68,17 @@ interface DatabaseDao{
     fun insertCard(vararg card: MC_Cards)
 
 
-    @Query("SELECT * FROM MC_Cards")
-    fun loadAllCards(): MutableList<MC_Cards>
+    @Query("SELECT * FROM MC_Cards WHERE cardType = :cardType ORDER BY id DESC")
+    fun loadAllExpenseCards(cardType:String): MutableList<MC_Cards>
+
+    @Query("SELECT * FROM MC_Cards WHERE cardType = :cardType ORDER BY id DESC")
+    fun loadAllIncomeCards(cardType:String): MutableList<MC_Cards>
+
+    @Query("Delete from mc_cards where cardName =:cardName AND cardType = :cardType ")
+    fun deleteExpenseCardByName(cardName : String,cardType: String)
+
+    @Query("Delete from mc_cards where cardName =:cardName AND cardType =:cardType ")
+    fun deleteIncomeCardByName(cardName : String,cardType: String)
 
 
 

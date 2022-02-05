@@ -15,9 +15,7 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.NodeName
 import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.view.EditDataExpense
-import com.lincoln4791.dailyexpensemanager.view.EditDataIncome
-import com.lincoln4791.dailyexpensemanager.view.Transactions
+
 
 class Adapter_Transactions(private val postList: List<MC_Posts>, private val context: Context) :
     RecyclerView.Adapter<Adapter_Transactions.MyViewHolder>() {
@@ -47,7 +45,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
             false
         }
         holder.iv_editData.setOnClickListener { v: View? ->
-            if (postList[position].postType == Constants.TYPE_INCOME) {
+            /*if (postList[position].postType == Constants.TYPE_INCOME) {
                 val editDataIncomeIntent = Intent(context, EditDataIncome::class.java)
                 editDataIncomeIntent.putExtra(NodeName.ID, postList[position].id.toString())
                 editDataIncomeIntent.putExtra(NodeName.POST_DESCRIPTION,
@@ -64,7 +62,8 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
                 editDataIncomeIntent.putExtra(NodeName.POST_DATE_TIME,
                     postList[position].postDateTime)
                 context.startActivity(editDataIncomeIntent)
-            } else if (postList[position].postType == Constants.TYPE_EXPENSE) {
+            }*/
+     /*       else if (postList[position].postType == Constants.TYPE_EXPENSE) {
                 val editDataExpenseIntent = Intent(context, EditDataExpense::class.java)
                 editDataExpenseIntent.putExtra(NodeName.ID, postList[position].id.toString())
                 editDataExpenseIntent.putExtra(NodeName.POST_DESCRIPTION,
@@ -81,7 +80,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
                 editDataExpenseIntent.putExtra(NodeName.POST_DATE_TIME,
                     postList[position].postDateTime)
                 context.startActivity(editDataExpenseIntent)
-            }
+            }*/
         }
         holder.iv_deleteData.setOnClickListener { v: View? ->
             (context as TransactionsFragment).confirmDelete(

@@ -9,41 +9,17 @@ import android.os.Bundle
 import com.lincoln4791.dailyexpensemanager.R
 import android.content.Intent
 import android.net.Uri
-import com.lincoln4791.dailyexpensemanager.common.Extras
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
+
 import android.view.LayoutInflater
-import android.widget.Toast
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.listener.single.PermissionListener
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.PermissionToken
-import android.os.Environment
-import android.os.AsyncTask
-import android.provider.Settings
-import android.util.Log
+
 import android.view.View
-import android.view.Window
+
 import android.view.WindowManager
-import android.widget.ImageView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
-import androidx.navigation.NavHostController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.karumi.dexter.listener.PermissionRequest
-import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.databinding.ActivityMainBinding
-import com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import java.io.*
-import java.lang.Exception
-import java.util.ArrayList
 import android.os.Build
 
 

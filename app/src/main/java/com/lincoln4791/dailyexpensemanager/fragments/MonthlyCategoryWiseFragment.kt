@@ -18,13 +18,11 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyCategoryWiseR
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
 import com.lincoln4791.dailyexpensemanager.common.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyCategoryWiseBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import com.lincoln4791.dailyexpensemanager.common.Util
 
 

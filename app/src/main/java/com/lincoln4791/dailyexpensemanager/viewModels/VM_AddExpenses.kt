@@ -3,12 +3,10 @@ package com.lincoln4791.dailyexpensemanager.viewModels
 import android.app.Application
 import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import java.lang.Exception
 
 class VM_AddExpenses(application: Application) : AndroidViewModel(application) {
@@ -27,12 +25,13 @@ class VM_AddExpenses(application: Application) : AndroidViewModel(application) {
     var mutable_amount = MutableLiveData<String>()
 
 
-    fun loadAllCards(){
+    fun loadAllCards(callback : (isLoaded : Boolean)-> Unit){
         postsList.value = Resource.Loading()
         try {
-            repository.getAllCards {
+            repository.getAllExpenseCards {
                 android.os.Handler(Looper.getMainLooper()).post{
                     postsList.value = it
+                    callback(true)
                 }
             }
         }

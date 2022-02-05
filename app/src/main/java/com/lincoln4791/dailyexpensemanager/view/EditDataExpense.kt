@@ -1,3 +1,4 @@
+/*
 package com.lincoln4791.dailyexpensemanager.view
 
 import androidx.appcompat.app.AppCompatActivity
@@ -45,8 +46,6 @@ class EditDataExpense : AppCompatActivity(), View.OnClickListener {
         binding = ActivityEditDataExpenseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        //*************************************************Initializations*******************************************
         supportActionBar!!.hide()
         vm_EditDataExpense = ViewModelProviders.of(this).get(VM_EditDataExpense::class.java)
         val calendar = Calendar.getInstance()
@@ -59,7 +58,6 @@ class EditDataExpense : AppCompatActivity(), View.OnClickListener {
         minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
 
 
-        //***************************************************Click Listeners**************************************
         binding.cvBackEditDataExpense.setOnClickListener(View.OnClickListener { v: View? ->
             startActivity(Intent(this@EditDataExpense,
                 MainActivity::class.java))
@@ -100,8 +98,6 @@ class EditDataExpense : AppCompatActivity(), View.OnClickListener {
                 MainActivity::class.java))
         })
 
-
-        //************************************************Starting Methods*****************************************
         binding.tvCurrentBalanceValueToolBarEditDataExpense.setText(UtilDB.currentBalance.toString())
         observe()
         intentData
@@ -550,4 +546,4 @@ class EditDataExpense : AppCompatActivity(), View.OnClickListener {
         super.onBackPressed()
         finish()
     }
-}
+}*/

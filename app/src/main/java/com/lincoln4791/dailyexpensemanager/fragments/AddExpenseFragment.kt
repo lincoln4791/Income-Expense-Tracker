@@ -36,6 +36,7 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,7 +50,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     var hourInString: String? = null
     var vm_addExpenses: VM_AddExpenses? = null
 
-    private lateinit var viewModel: VM_AddExpenses
+    lateinit var viewModel: VM_AddExpenses
     private lateinit var binding : AddExpenseFragmentBinding
     private lateinit var navCon : NavController
 
@@ -100,7 +101,9 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success ->  updateUI(it.data)
+                is Resource.Success ->  updateUI(it.data){
+
+                }
                 is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
@@ -118,7 +121,13 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
             addMoreCard()
         }
 
-        viewModel.loadAllCards()
+        binding.cvCalculatorAddExpense.setOnClickListener {
+            Toast.makeText(requireContext(),"Coming Soon",Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.loadAllCards(){
+
+        }
 
         binding.cvAmount500AddExpense.setOnClickListener(this)
         binding.cvAmount1000AddExpense.setOnClickListener(this)
@@ -146,7 +155,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvLifeStyleAddExpense.setOnClickListener(this)
         binding.cvEducationAddExpense.setOnClickListener(this)
         binding.cvBillsAddExpense.setOnClickListener(this)
-        binding.cvAddMoreAddExpense.setOnClickListener(this)
+        //binding.cvAddMoreAddExpense.setOnClickListener(this)
         binding.cvTransportAddExpense.setOnClickListener(this)
         binding.cvOtherAddExpense.setOnClickListener(this)
         binding.cvSaveAddExpense.setOnClickListener { saveData() }
@@ -158,12 +167,21 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun updateUI(data: List<MC_Cards>) {
+    private fun updateUI(data: List<MC_Cards>,callback: (isUIUpdated : Boolean) -> Unit) {
+
+/*        if(data.isNotEmpty()){
+            binding.cvSelectedMoreCard.visibility = View.VISIBLE
+        }
+        else{
+            binding.cvSelectedMoreCard.visibility = View.GONE
+        }*/
+
         val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        val myAdapter = Adapter_AddExpense(data,requireContext())
+        val myAdapter = Adapter_AddExpense(data,requireContext(),this)
         binding.recyclerView.layoutManager=layoutManager
         binding.recyclerView.adapter = myAdapter
         myAdapter.notifyDataSetChanged()
+        callback(true)
     }
 
     private fun setDateTime() {
@@ -357,10 +375,12 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         } else if (v.id == R.id.cv_transport_AddExpense) {
             vm_addExpenses!!.category = Constants.CATEGORY_TRANSPORT
             vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_cloths_AddExpense) {
+        }
+       /* else if (v.id == R.id.cv_cloths_AddExpense) {
             vm_addExpenses!!.category = Constants.CATEGORY_CLOTHS
             vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_bills_AddExpense) {
+        }*/
+        else if (v.id == R.id.cv_bills_AddExpense) {
             vm_addExpenses!!.category = Constants.CATEGORY_BILLS
             vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
         } else if (v.id == R.id.cv_education_AddExpense) {
@@ -389,12 +409,14 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        deSelectedMoreCard()
 
 
 
     }
 
     private fun markMedicine() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -408,6 +430,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markLifeStyle() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -421,6 +444,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markEducation() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -434,6 +458,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markBills() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -447,16 +472,11 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun addMoreCard() {
-        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        //binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
-        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
-        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        deSelectedMoreCard()
+        deselectAllCard()
+        viewModel.category=""
+
+        Log.d("tag","Add Card Called")
 
         val viewAddCard = layoutInflater.inflate(R.layout.dialog_add_more_card,null,false)
         val dialog = Dialog(requireContext())
@@ -468,15 +488,70 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         viewAddCard.findViewById<Button>(R.id.btn).setOnClickListener {
             if(!tcCard.text.isNullOrEmpty()){
                 dialog.dismiss()
-                CoroutineScope(Dispatchers.IO).launch {
-                    AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertCard(MC_Cards("test card"))
+
+                var existingCardList : MutableList<MC_Cards>? = mutableListOf()
+                val job1= CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        existingCardList = AppDatabase.getInstance(requireContext().applicationContext).dbDao().loadAllExpenseCards(Constants.TYPE_EXPENSE)
+                    }
+                    catch (e:Exception){
+                        e.printStackTrace()
+                    }
+                }
+                runBlocking {
+                    var isExists = false
+                    job1.join()
+                    for(card in existingCardList!!){
+                        if(card.cardName == tcCard.text.toString()){
+                            isExists = true
+                            break
+                        }
+                    }
+
+                    if(!isExists){
+                        val job2 = CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertCard(
+                                    MC_Cards(tcCard.text.toString(),Constants.TYPE_EXPENSE))
+
+
+                            }
+                            catch (e:Exception){
+                                e.printStackTrace()
+                            }
+                        }
+
+                        runBlocking {
+                            job2.join()
+                            viewModel.loadAllCards(){
+
+                            }
+                        }
+                    }
+                    else{
+                        Toast.makeText(requireContext(),"Card Already Exists",Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
 
     }
 
+    private fun deselectAllCard() {
+        binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvTransportAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        //binding.cvAddMoreAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvBillsAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvEducationAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvLifeStyleAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvMedicineAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+    }
+
     private fun markTransport() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -490,6 +565,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markHouseRent() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
@@ -503,6 +579,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markBusiness() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -516,6 +593,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     }
 
     private fun markFood() {
+        deSelectedMoreCard()
         binding.cvFoodAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvBusinessAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvHouseRentAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
@@ -601,6 +679,32 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    fun deleteCardByName(cardName : String,callback : (isDeleted : Boolean)-> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                AppDatabase.getInstance(requireContext().applicationContext).dbDao().deleteExpenseCardByName(cardName,Constants.TYPE_EXPENSE)
+                callback(true)
+            }
+            catch (e:Exception){
+                e.printStackTrace()
+                callback(false)
+            }
+        }
+    }
+
+    fun selectMoreCard(cardName : String){
+
+        deselectAllCard()
+        binding.tvSelectedMoreCard.text = cardName
+        binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
+        binding.cvSelectedMoreCard.visibility = View.VISIBLE
+    }
+
+    fun deSelectedMoreCard(){
+        binding.tvSelectedMoreCard.text = ""
+        binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
+        binding.cvSelectedMoreCard.visibility = View.INVISIBLE
+    }
 
     private fun goBack(){
         navCon.navigateUp()

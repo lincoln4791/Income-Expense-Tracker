@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.fragments.AddExpenseFragment
+import com.lincoln4791.dailyexpensemanager.fragments.AddIncomeFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
@@ -24,12 +25,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.logging.Handler
 
-class Adapter_AddExpense(private val list: List<MC_Cards>,
-                         private val context: Context,
-                         private val fragment : AddExpenseFragment):
-    RecyclerView.Adapter<Adapter_AddExpense.MyViewHolder>() {
+class Adapter_AddIncome(private val list: List<MC_Cards>,
+                        private val context: Context,
+                        private val fragment : AddIncomeFragment
+):
+    RecyclerView.Adapter<Adapter_AddIncome.MyViewHolder>() {
 
-    var selectedCardPosition = -1
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,17 +44,16 @@ class Adapter_AddExpense(private val list: List<MC_Cards>,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.tv.text = list[position].cardName
 
-
         holder.cv.setOnClickListener {
             fragment.selectMoreCard(list[position].cardName.toString())
-            fragment.vm_addExpenses!!.category = list[position].cardName.toString()
+            fragment.vm_addIncome.category = list[position].cardName.toString()
         }
 
         holder.ivDelete.setOnClickListener {
             fragment.deleteCardByName(list[position].cardName!!){
                 if(it){
                     android.os.Handler(Looper.getMainLooper()).postDelayed({
-                        fragment.viewModel.loadAllCards(){
+                        fragment.vm_addIncome.loadAllCards(){
 
                         }
                     },0)

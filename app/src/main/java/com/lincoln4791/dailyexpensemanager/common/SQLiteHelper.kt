@@ -1,17 +1,14 @@
+/*
 package com.lincoln4791.dailyexpensemanager.common
 
 import android.database.sqlite.SQLiteOpenHelper
-import com.lincoln4791.dailyexpensemanager.common.SQLiteHelper
 import android.database.sqlite.SQLiteDatabase
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import android.content.ContentValues
 import android.content.Context
-import com.lincoln4791.dailyexpensemanager.common.NodeName
 import android.content.Intent
 import android.database.Cursor
 import android.util.Log
-import com.lincoln4791.dailyexpensemanager.view.Transactions
-import com.lincoln4791.dailyexpensemanager.common.Extras
 
 class SQLiteHelper(private val context: Context?) : SQLiteOpenHelper(
     context, DATABASE_NAME, null, 1) {
@@ -215,4 +212,4 @@ class SQLiteHelper(private val context: Context?) : SQLiteOpenHelper(
                     " postType varchar, postAmount varchar," +
                     "postTime varchar, postDay varchar, postMonth varchar, postYear varchar, dateTime varchar, timeStamp varchar) "
     }
-}
+}*/
