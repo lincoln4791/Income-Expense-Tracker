@@ -5,90 +5,107 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardElevation="16dp"
-    app:cardCornerRadius="20dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
+    app:cardCornerRadius="4dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cv_postHolder_sampleTransactions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/cv_editDltHolder_sampleTransactions">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:id="@+id/cv_type_sample_transactions"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="@color/pink"
                 app:cardCornerRadius="100dp"
+                android:orientation="vertical"
+                android:weightSum="2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cv_editDltHolder_sampleTransactions"
                 app:layout_constraintTop_toTopOf="parent">
 
 
+
+
                 <TextView
-                    android:id="@+id/tv_category_sample_transactions"
+                    android:id="@+id/tv_date_sample_transactions"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/H_Rent"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
+                    android:gravity="start|center"
+                    android:text="22.12.2021"
+                    android:textSize="12sp"
+                    android:textColor="@color/pink"/>
+
+                <TextView
+                    android:id="@+id/tv_time_sample_transactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="start|center"
+                    android:text="11:30 PM"
+                    android:textSize="12sp"
+                    android:textColor="@color/pink" />
 
 
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"
-                android:weightSum="3"
+                android:weightSum="2"
                 app:layout_constraintBottom_toBottomOf="@+id/cv_type_sample_transactions"
                 app:layout_constraintEnd_toStartOf="@+id/tv_amount_sample_transactions"
                 app:layout_constraintStart_toEndOf="@+id/cv_type_sample_transactions"
                 app:layout_constraintTop_toTopOf="@+id/cv_type_sample_transactions">
 
                 <TextView
-                    android:id="@+id/tv_dateTime_sample_transactions"
+                    android:id="@+id/tv_category_sample_transactions"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center|bottom"
-                    android:text="date"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="Category"
+                    android:textColor="@color/pink"
+                    android:textSize="13sp" />
 
 
                 <TextView
                     android:id="@+id/tv_description_sample_transactions"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/Description"
-                    android:textAlignment="gravity"
-                    android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textAlignment="gravity"
+                    android:textColor="@color/pink"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_amount_sample_transactions"
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 android:layout_height="0dp"
-                android:gravity="center"
-                android:text="@string/value"
-                android:textColor="@color/black"
-                android:textStyle="bold"
+                android:gravity="center|end"
+                android:text="9999999"
+                android:textColor="@color/pink"
+                android:layout_marginEnd="2dp"
                 app:layout_constraintBottom_toBottomOf="@+id/cv_type_sample_transactions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/cv_type_sample_transactions" />

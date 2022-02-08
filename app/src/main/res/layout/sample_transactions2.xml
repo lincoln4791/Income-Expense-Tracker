@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/cv_MainLayout_sampleTransaction"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="16dp"
+    app:cardCornerRadius="4dp"
+    android:layout_marginStart="3dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_postHolder_HouseRent_MonthlyReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_MonthlyReport">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_type_houseRentExpense_MonthlyReport"
+            style="@style/cv_categoryReportsExpenses_MonthlyReport"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_amount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/tv_categoryReportsExpenses_MonthlyReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/HouseRent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/amountPercent"
+                    style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="0.0"
+                    app:layout_constraintBottom_toBottomOf="parent"
+
+                    app:layout_constraintEnd_toStartOf="@+id/textView2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="%"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_amount"
+            style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
+            android:text="@string/value"
+            app:layout_constraintBottom_toBottomOf="@+id/cv_type_houseRentExpense_MonthlyReport"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cv_type_houseRentExpense_MonthlyReport" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

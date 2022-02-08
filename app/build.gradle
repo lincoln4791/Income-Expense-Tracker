@@ -5,6 +5,7 @@ plugins {
     id 'com.google.gms.google-services'
     id("androidx.navigation.safeargs.kotlin")
     id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
 }
 
 
@@ -118,6 +119,9 @@ dependencies {
 
     //Messaging
     implementation 'com.google.firebase:firebase-messaging-ktx'
+
+    //Performance Monitoring
+    implementation 'com.google.firebase:firebase-perf-ktx'
 
 
 }

@@ -174,7 +174,9 @@ class TransactionsFragment : Fragment() {
     }
 
     fun deleteData(id: Int) {
-        AppDatabase.getInstance(requireContext().applicationContext).dbDao().delete(id.toString())
+        CoroutineScope(Dispatchers.IO).launch {
+            AppDatabase.getInstance(requireContext().applicationContext).dbDao().delete(id.toString())
+        }
     }
 
     fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String) {

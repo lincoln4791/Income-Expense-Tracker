@@ -1,12 +1,9 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
-import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -21,12 +18,8 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.*
-import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.view.*
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
 import java.text.DecimalFormat
 import java.util.*
@@ -171,15 +164,17 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         initMonthSpinner()
         initYearSpinner()
 
-        viewModel.postsList.observe(viewLifecycleOwner, {
+        viewModel.postsList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  calculateAll(it.data)
+                is Resource.Success -> calculateAll(it.data)
                 is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
-        })
+        }
 
-        viewModel.loadYearMonth(year,month)
+        //viewModel.loadYearMonth(year,month)
+        viewModel.loadYearMonthTypeWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+        viewModel.loadYearMonthTypeWiseByGroup(year,month,Constants.TYPE_EXPENSE)
 
     }
 

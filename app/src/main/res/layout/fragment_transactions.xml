@@ -109,6 +109,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:text="@string/TotalIncome"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -120,6 +121,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
                     android:text="@string/value"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -150,6 +152,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:text="@string/TotalExpense"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -161,6 +164,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
                     android:text="@string/value"
+                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -255,7 +259,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold|italic"
         android:textSize="15sp"
-        android:textColor="@color/pink"
+        android:textColor="@color/black"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="3dp"
         android:layout_marginStart="10dp"
@@ -329,8 +333,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_Transactions"
         android:layout_width="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_height="0dp"

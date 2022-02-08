@@ -363,8 +363,14 @@ class DailyFragment : Fragment() {
 
     fun deleteData(id: Int,callback : (isDeleted : Boolean,error:String?)->Unit) {
         try {
-            AppDatabase.getInstance(requireContext()).dbDao().delete(id.toString())
-            callback(true,null)
+            CoroutineScope(Dispatchers.IO).launch {
+                AppDatabase.getInstance(requireContext()).dbDao().delete(id.toString())
+                Handler(Looper.getMainLooper()).post {
+                    callback(true, null)
+                }
+
+            }
+
         }
         catch (e:Exception){
             callback(false,e.message)

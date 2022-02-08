@@ -89,6 +89,8 @@ class MonthlyCategoryWiseFragment : Fragment() {
         Log.d("tag","year -> $type")
         Log.d("tag","year -> $category")
 
+        binding.tvTitle.text= "$category $type of ${Util.getMonthNameFromMonthNumber(month)}-$year"
+
         binding.cvImg.setOnClickListener {
            goBack()
         }

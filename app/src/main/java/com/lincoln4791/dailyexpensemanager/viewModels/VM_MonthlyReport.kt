@@ -32,4 +32,22 @@ class VM_MonthlyReport(application: Application) : AndroidViewModel(application)
     }
 
 
+    fun loadYearMonthTypeWiseByGroup(year:String, month:String,type : String){
+        /*   CoroutineScope(Dispatchers.IO).launch {*/
+        //postsList.value = repository.loadAllTransactions()
+        postsList.value = Resource.Loading()
+        try {
+            repository.loadYearMonthTypeWiseByGroup(year,month,type) {
+                android.os.Handler(Looper.getMainLooper()).post{
+                    postsList.value = it
+                }
+            }
+        }
+        catch (e: Exception){
+            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+        // }
+    }
+
+
 }

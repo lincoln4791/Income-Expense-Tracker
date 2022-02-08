@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/green"
+            android:fontFamily="@font/antic_regular"
             android:text="Income"/>
 
         <TextView
@@ -37,6 +38,7 @@
             style="@style/tv_splashActivityText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/antic_regular"
             android:textColor="@color/pink"
             android:text="@string/Expense"/>
 
@@ -46,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/teal"
+            android:fontFamily="@font/antic_regular"
             android:text="Manager"/>
 
     </LinearLayout>
