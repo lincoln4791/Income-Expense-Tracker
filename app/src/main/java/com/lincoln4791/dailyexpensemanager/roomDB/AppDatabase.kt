@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
+import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
-@Database(entities = [MC_Posts::class,MC_Cards::class], version = 1,exportSchema = false)
+@Database(entities = [MC_Posts::class,MC_Cards::class,MC_MonthlyReport::class], version = 1,exportSchema = false)
 abstract class AppDatabase() : RoomDatabase() {
     abstract fun dbDao(): DatabaseDao
     companion object DatabaseBuilder {

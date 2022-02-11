@@ -3,6 +3,7 @@ package com.lincoln4791.dailyexpensemanager.roomDB
 import androidx.room.*
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
+import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
 @Dao
@@ -62,8 +63,16 @@ interface DatabaseDao{
     suspend fun deleteAll()
 
 
-    @Query("SELECT * FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type GROUP BY postCategory ")
-    suspend fun loadYearMonthTypeWiseByGroup(year: String, month:String, type : String): List<MC_Posts>
+    @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type GROUP BY postCategory ")
+    suspend fun loadYearMonthTypeWiseByGroup(year: String, month:String, type : String): List<MC_MonthlyReport>
+
+    @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and  postType=:type ")
+    suspend fun loadYearMonthTypeTotal(year: String, month:String, type : String): Int
+
+    @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and postType=:typeExpense - (SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and postType=:typeIncome)")
+    suspend fun loadYearMonthBalance(year: String, month:String,typeIncome : String,typeExpense : String): Int
+
+
 
 
 

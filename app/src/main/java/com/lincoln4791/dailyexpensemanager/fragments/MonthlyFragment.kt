@@ -14,49 +14,26 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportExpense
+import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportIncome
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.*
+import com.lincoln4791.dailyexpensemanager.common.util.Util
+import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
 import java.text.DecimalFormat
 import java.util.*
 
 class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private val args: MonthlyFragmentArgs by navArgs()
-    private var totalIncome = 0.0
-    private var totalExpense = 0.0
+    private var tIncome = 0.0
+    private var tExpense = 0.0
     private var balance = 0.0
-    private var transportExpense = 0.0
-    private var foodExpense = 0.0
-    private var billsExpense = 0.0
-    private var houseRentExpense = 0.0
-    private var businessExpense = 0.0
-    private var medicineExpense = 0.0
-    private var clothsExpense = 0.0
-    private var educationExpense = 0.0
-    private var lifeStyleExpense = 0.0
-    private var otherExpense = 0.0
-    private var salaryIncome = 0.0
-    private var businessIncome = 0.0
-    private var houseRentIncome = 0.0
-    private var otherIncome = 0.0
-    private lateinit var foodExpensePercent: String
-    private lateinit var transportExpensePercent: String
-    private lateinit var billsExpensePercent: String
-    private lateinit var businessExpensePercent: String
-    private lateinit var houseRentExpensePercent: String
-    private lateinit var medicineExpensePercent: String
-    private lateinit var clothsExpensePercent: String
-    private lateinit var educationExpensePercent: String
-    private lateinit var lifeStyleExpensePercent: String
-    private lateinit var otherExpensePercent: String
-    private lateinit var salaryIncomePercent: String
-    private lateinit var businessIncomePercent: String
-    private lateinit var houseRentIncomePercent: String
-    private lateinit var otherIncomePercent: String
     private lateinit var month: String
     private lateinit var year: String
     private var currentMonthPosition = 0
@@ -67,6 +44,10 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private lateinit var viewModel: VM_MonthlyReport
     private lateinit var binding : FragmentMonthlyBinding
     private lateinit var navCon : NavController
+    private lateinit var linearLayoutManager : LinearLayoutManager
+    private lateinit var linearLayoutManager2 : LinearLayoutManager
+    private lateinit var expenseAdapterExpense : Adapter_MonthlyReportExpense
+    private lateinit var incomeAdapterIncome : Adapter_MonthlyReportIncome
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +82,18 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MonthlyReport::class.java]
 
+        linearLayoutManager = LinearLayoutManager(context)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+
+        linearLayoutManager2 = LinearLayoutManager(context)
+        linearLayoutManager2.reverseLayout = true
+        linearLayoutManager2.stackFromEnd = true
+
+        binding.rvExpense.layoutManager = linearLayoutManager
+        binding.rvIncome.layoutManager = linearLayoutManager2
+
+
 
 
         val calendar = Calendar.getInstance()
@@ -117,7 +110,10 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
         binding.cvSearchMonthlyReport.setOnClickListener {
             Log.d("tag", "Year -> $year ::: Month -> $month")
-            viewModel.loadYearMonth(year, month)
+            viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+            viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
         }
         binding.cvDailyMonthlyReport.setOnClickListener(View.OnClickListener { v: View? ->
            /* startActivity(Intent(this@MonthlyReport,
@@ -139,42 +135,59 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         }
 
         binding.cvPieChartMonthlyReport.setOnClickListener(View.OnClickListener { v: View? -> goToPieChartActivity() })
-        binding.cvTypeSalaryIncomeMonthlyReport.setOnClickListener(this)
-        binding.cvTypeBusinessIncomeMonthlyReport.setOnClickListener(this)
-        binding.cvTypeHouseRentIncomeMonthlyReport.setOnClickListener(this)
-        binding.cvTypeOtherIncomeMonthlyReport.setOnClickListener(this)
-        binding.cvTypeFoodExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeTransportExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeBusinessExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeHouseRentExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeBillsExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeClothsExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeMedicineExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeEducationExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeLifeStyleExpenseMonthlyReport.setOnClickListener(this)
-        binding.cvTypeOtherExpenseMonthlyReport.setOnClickListener(this)
-
-        /*binding.ivHomeToolbarMonthlyReport.setOnClickListener {
-           *//* startActivity(Intent(this@MonthlyReport,
-                MainActivity::class.java))*//*
-        }*/
-
-
         binding.tvCurrentBalanceValueToolBarMonthlyReport.setText(UtilDB.currentBalance.toString())
         initMonthSpinner()
         initYearSpinner()
 
-        viewModel.postsList.observe(viewLifecycleOwner) {
+        observer()
+
+        //viewModel.loadYearMonth(year,month)
+        viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+        viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+        viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+        viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
+
+        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = UtilDB.currentBalance.toString()
+
+
+    }
+
+    private fun observer() {
+        viewModel.expenseList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success -> calculateAll(it.data)
+                //is Resource.Success -> calculateAll(it.data)
+                is Resource.Success -> updateExpenseUI(it.data)
                 is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 
-        //viewModel.loadYearMonth(year,month)
-        viewModel.loadYearMonthTypeWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-        viewModel.loadYearMonthTypeWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+        viewModel.incomeList.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success -> calculateAll(it.data)
+                is Resource.Success -> updateIncomeUI(it.data)
+                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        viewModel.totalExpense.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success -> calculateAll(it.data)
+                is Resource.Success -> updateTotalExpenseUI(it.data)
+                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        viewModel.totalIncome.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success -> calculateAll(it.data)
+                is Resource.Success -> updateTotalIncomeUI(it.data)
+                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
+        }
 
     }
 
@@ -185,47 +198,12 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.cv_type_salaryIncome_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_SALARY)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_businessIncome_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_BUSINESS)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_houseRentIncome_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_HOUSE_RENT)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_otherIncome_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_INCOME,Constants.CATEGORY_OTHER)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_foodExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_FOOD)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_transportExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_TRANSPORT)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_businessExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_BUSINESS)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_houseRentExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_HOUSE_RENT)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_billsExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_BILLS)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_medicineExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_MEDICINE)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_clothsExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_CLOTHS)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_educationExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_EDUCATION)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_lifeStyleExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_LIFESTYLE)
-            navCon.navigate(action)
-        } else if (v.id == R.id.cv_type_otherExpense_MonthlyReport) {
-            val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,Constants.TYPE_EXPENSE,Constants.CATEGORY_OTHER)
+        if (v.id == R.id.cv_type_houseRentExpense_MonthlyReport) {
+            val action =
+                MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,
+                    month,
+                    Constants.TYPE_EXPENSE,
+                    Constants.CATEGORY_HOUSE_RENT,Constants.FRAGMENT_MONTHLY,null)
             navCon.navigate(action)
         }
     }
@@ -351,128 +329,36 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     }
 
 
-    private fun calculateAll(postsList:List<MC_Posts>) {
-        resetPreviousCalculatedValues()
-        Log.d("tag", "list size : " + postsList!!.size)
-        for (i in postsList!!.indices) {
-            if (postsList!![i].postType == Constants.TYPE_INCOME) {
-                if (postsList!![i].postCategory == Constants.CATEGORY_SALARY) {
-                    salaryIncome = salaryIncome + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_BUSINESS) {
-                    businessIncome = businessIncome + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_HOUSE_RENT) {
-                    houseRentIncome = houseRentIncome + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_OTHER) {
-                    otherIncome = otherIncome + postsList!![i].postAmount.toInt()
-                }
-                totalIncome = totalIncome + postsList!![i].postAmount.toInt()
-            } else {
-                if (postsList!![i].postCategory == Constants.CATEGORY_FOOD) {
-                    foodExpense = foodExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_TRANSPORT) {
-                    transportExpense = transportExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_BILLS) {
-                    billsExpense = billsExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_HOUSE_RENT) {
-                    houseRentExpense = houseRentExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_BUSINESS) {
-                    businessExpense = businessExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_MEDICINE) {
-                    medicineExpense = medicineExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_CLOTHS) {
-                    clothsExpense = clothsExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_EDUCATION) {
-                    educationExpense = educationExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_LIFESTYLE) {
-                    lifeStyleExpense = lifeStyleExpense + postsList!![i].postAmount.toInt()
-                } else if (postsList!![i].postCategory == Constants.CATEGORY_OTHER) {
-                    otherExpense = otherExpense + postsList!![i].postAmount.toInt()
-                }
-                totalExpense = totalExpense + postsList!![i].postAmount.toInt()
-            }
-        }
-        balance = totalIncome - totalExpense
-        calculatePercent()
+
+    private fun updateExpenseUI(list : List<MC_MonthlyReport>){
+        expenseAdapterExpense = Adapter_MonthlyReportExpense(list,this)
+        binding.rvExpense.adapter = expenseAdapterExpense
+        expenseAdapterExpense.notifyDataSetChanged()
     }
 
-    private fun resetPreviousCalculatedValues() {
-        salaryIncome = 0.0
-        businessIncome = 0.0
-        houseRentIncome = 0.0
-        otherIncome = 0.0
-        totalIncome = 0.0
-        foodExpense = 0.0
-        transportExpense = 0.0
-        billsExpense = 0.0
-        houseRentExpense = 0.0
-        businessExpense = 0.0
-        medicineExpense = 0.0
-        clothsExpense = 0.0
-        educationExpense = 0.0
-        lifeStyleExpense = 0.0
-        otherExpense = 0.0
-        totalExpense = 0.0
+    private fun updateIncomeUI(list : List<MC_MonthlyReport>){
+        incomeAdapterIncome = Adapter_MonthlyReportIncome(list,this)
+        binding.rvIncome.adapter = incomeAdapterIncome
+        incomeAdapterIncome.notifyDataSetChanged()
     }
 
-    fun setCalculatedValue() {
-        Log.d("tag", "setting value")
-        binding.tvAmountSalaryIncomeMonthlyReport.text = salaryIncome.toString()
-        binding.tvAmountBusinessIncomeMonthlyReport!!.text = businessIncome.toString()
-        binding.tvAmountHouseRentIncomeMonthlyReport!!.text = houseRentIncome.toString()
-        binding.tvAmountOtherIncomeMonthlyReport!!.text = otherIncome.toString()
-        binding.tvTotalIncomeBotMonthlyReport!!.text = totalIncome.toString()
-        binding.tvTotalIncomeValueTopBarMonthlyReport.text = totalIncome.toString()
-        binding.tvAmountFoodMonthlyReport!!.text = foodExpense.toString()
-        binding.tvAmountTransportMonthlyReport!!.text = transportExpense.toString()
-        binding.tvAmountBusinessMonthlyReport!!.text = businessExpense.toString()
-        binding.tvAmountBillsMonthlyReport!!.text = billsExpense.toString()
-        binding.tvAmountHouseRentMonthlyReport!!.text = houseRentExpense.toString()
-        binding.tvAmountMedicineMonthlyReport!!.text = medicineExpense.toString()
-        binding.tvAmountClothsMonthlyReport!!.text = clothsExpense.toString()
-        binding.tvAmountEducationMonthlyReport!!.text = educationExpense.toString()
-        binding.tvAmountLifeStyleMonthlyReport!!.text = lifeStyleExpense.toString()
-        binding.tvAmountOtherExpenseMonthlyReport!!.text = otherExpense.toString()
-        binding.tvTotalExpenseBotMonthlyReport!!.text = totalExpense.toString()
-        binding.tvTotalExpenseValueTopBarMonthlyReport!!.text = totalExpense.toString()
-        binding.tvCategoryFoodPercentValueMonthlyReport!!.text = foodExpensePercent.toString()
-        binding.tvCategoryTransportPercentValueMonthlyReport!!.text = transportExpensePercent.toString()
-        binding.tvCategoryBusinessPercentValueMonthlyReport!!.text = businessExpensePercent.toString()
-        binding.tvCategoryBillsPercentValueMonthlyReport!!.text = billsExpensePercent.toString()
-        binding.tvCategoryHouseRentPercentValueMonthlyReport!!.text = houseRentExpensePercent.toString()
-        binding.tvCategoryMedicinePercentValueMonthlyReport!!.text = medicineExpensePercent.toString()
-        binding.tvCategoryClothsPercentValueMonthlyReport!!.text = clothsExpensePercent.toString()
-        binding.tvCategoryEducationPercentValueMonthlyReport!!.text = educationExpensePercent.toString()
-        binding.tvCategoryLifeStylePercentValueMonthlyReport!!.text = lifeStyleExpensePercent.toString()
-        binding.tvCategoryOtherExpensePercentValueMonthlyReport!!.text = otherExpensePercent.toString()
-        binding.tvCategorySalaryIncomePercentValueMonthlyReport!!.text = salaryIncomePercent.toString()
-        binding.tvCategoryBusinessIncomePercentValueMonthlyReport!!.text = businessIncomePercent.toString()
-        binding.tvCategoryHouseRentIncomePercentValueMonthlyReport!!.text = houseRentIncomePercent.toString()
-        binding.tvCategoryOtherIncomePercentValueMonthlyReport!!.text = otherIncomePercent.toString()
-        binding.tvBalanceBotMonthlyReport!!.text = balance.toString()
-        binding.tvCurrentBalanceValueToolBarMonthlyReport!!.text = UtilDB.currentBalance.toString()
+
+    private fun updateTotalIncomeUI(totalIncome:Int?){
+        tIncome = totalIncome?.toDouble() ?: 0.0
+        binding.tvTotalIncomeBotMonthlyReport.text=totalIncome?.toString()?:"0.0"
+        updateMonthlyBalanceUI()
+
     }
 
-    private fun calculatePercent() {
-        foodExpensePercent = df2.format(foodExpense / totalExpense * 100.0)
-        businessExpensePercent = df2.format(businessExpense / totalExpense * 100)
-        transportExpensePercent = df2.format(transportExpense / totalExpense * 100)
-        billsExpensePercent = df2.format(billsExpense / totalExpense * 100)
-        houseRentExpensePercent = df2.format(houseRentExpense / totalExpense * 100)
-        medicineExpensePercent = df2.format(medicineExpense / totalExpense * 100)
-        clothsExpensePercent = df2.format(clothsExpense / totalExpense * 100)
-        educationExpensePercent = df2.format(educationExpense / totalExpense * 100)
-        lifeStyleExpensePercent = df2.format(lifeStyleExpense / totalExpense * 100)
-        otherExpensePercent = df2.format(otherExpense / totalExpense * 100)
-        salaryIncomePercent = df2.format(salaryIncome / totalIncome * 100)
-        businessIncomePercent = df2.format(businessIncome / totalIncome * 100)
-        houseRentIncomePercent = df2.format(houseRentIncome / totalIncome * 100)
-        otherIncomePercent = df2.format(otherIncome / totalIncome * 100)
-        Log.d("tag",
-            "food : " + foodExpense + " totat : " + totalExpense + "percent: " + foodExpensePercent)
-
-        setCalculatedValue()
+    private fun updateTotalExpenseUI(totalExpense:Int?){
+        tExpense = totalExpense?.toDouble() ?: 0.0
+        binding.tvTotalExpenseBotMonthlyReport.text= totalExpense?.toString() ?: "0.0"
+        updateMonthlyBalanceUI()
     }
 
+    private fun updateMonthlyBalanceUI(){
+        binding.tvBalanceBotMonthlyReport.text=(tIncome-tExpense).toString()
+    }
 
     companion object{
          val df2 = DecimalFormat("#.##")
@@ -484,6 +370,11 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
     private fun goBack(){
         val action = MonthlyFragmentDirections.actionMonthlyFragmentToHomeFragment()
+        navCon.navigate(action)
+    }
+
+    fun navigateToDetails(type:String,category:String){
+        val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,type,category,Constants.FRAGMENT_MONTHLY,null)
         navCon.navigate(action)
     }
 

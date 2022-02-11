@@ -20,9 +20,10 @@ import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
 
-class Adapter_Transactions(private val postList: List<MC_Posts>, private val context: Context) :
+class Adapter_Transactions(private val postList: List<MC_Posts>, private val fragment: TransactionsFragment) :
     RecyclerView.Adapter<Adapter_Transactions.MyViewHolder>() {
     private var cv_Temp: CardView? = null
+    private var context = fragment.requireContext()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.sample_transactions, parent, false)
@@ -44,7 +45,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
         holder.tv_date.text = date
         holder.tv_time.text = postList[position].postTime
         holder.tv_category.text = postList[position].postCategory
-        holder.tv_amount.text = postList[position].postAmount
+        holder.tv_amount.text = postList[position].postAmount.toString()
         holder.tv_description.text = postList[position].postDescription
         holder.cv_mainLayout.setOnClickListener { v: View? -> }
         holder.cv_mainLayout.setOnLongClickListener { v: View? ->
@@ -56,42 +57,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
             false
         }
         holder.iv_editData.setOnClickListener { v: View? ->
-            /*if (postList[position].postType == Constants.TYPE_INCOME) {
-                val editDataIncomeIntent = Intent(context, EditDataIncome::class.java)
-                editDataIncomeIntent.putExtra(NodeName.ID, postList[position].id.toString())
-                editDataIncomeIntent.putExtra(NodeName.POST_DESCRIPTION,
-                    postList[position].postDescription)
-                editDataIncomeIntent.putExtra(NodeName.POST_CATEGORY,
-                    postList[position].postCategory)
-                editDataIncomeIntent.putExtra(NodeName.POST_AMOUNT,
-                    postList[position].postAmount)
-                editDataIncomeIntent.putExtra(NodeName.POST_YEAR, postList[position].postYear)
-                editDataIncomeIntent.putExtra(NodeName.POST_MONTH,
-                    postList[position].postMonth)
-                editDataIncomeIntent.putExtra(NodeName.POST_DAY, postList[position].postDay)
-                editDataIncomeIntent.putExtra(NodeName.POST_TIME, postList[position].postTime)
-                editDataIncomeIntent.putExtra(NodeName.POST_DATE_TIME,
-                    postList[position].postDateTime)
-                context.startActivity(editDataIncomeIntent)
-            }*/
-     /*       else if (postList[position].postType == Constants.TYPE_EXPENSE) {
-                val editDataExpenseIntent = Intent(context, EditDataExpense::class.java)
-                editDataExpenseIntent.putExtra(NodeName.ID, postList[position].id.toString())
-                editDataExpenseIntent.putExtra(NodeName.POST_DESCRIPTION,
-                    postList[position].postDescription)
-                editDataExpenseIntent.putExtra(NodeName.POST_CATEGORY,
-                    postList[position].postCategory)
-                editDataExpenseIntent.putExtra(NodeName.POST_AMOUNT,
-                    postList[position].postAmount)
-                editDataExpenseIntent.putExtra(NodeName.POST_YEAR, postList[position].postYear)
-                editDataExpenseIntent.putExtra(NodeName.POST_MONTH,
-                    postList[position].postMonth)
-                editDataExpenseIntent.putExtra(NodeName.POST_DAY, postList[position].postDay)
-                editDataExpenseIntent.putExtra(NodeName.POST_TIME, postList[position].postTime)
-                editDataExpenseIntent.putExtra(NodeName.POST_DATE_TIME,
-                    postList[position].postDateTime)
-                context.startActivity(editDataExpenseIntent)
-            }*/
+
         }
         holder.iv_deleteData.setOnClickListener { v: View? ->
             (context as TransactionsFragment).confirmDelete(
@@ -100,6 +66,15 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val con
         }
         holder.iv_closeEdtDltLayout.setOnClickListener { v: View? ->
             holder.cv_editDltLayout.visibility = View.GONE
+        }
+
+        holder.cv_mainLayout.setOnClickListener {
+            fragment.navigateToDetails(
+                postList[position].postYear,
+                postList[position].postMonth,
+                postList[position].postType,
+                postList[position].postCategory
+            )
         }
     }
 

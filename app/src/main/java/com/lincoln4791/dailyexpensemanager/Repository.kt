@@ -3,6 +3,7 @@ package com.lincoln4791.dailyexpensemanager
 import android.content.Context
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
+import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -146,22 +147,14 @@ class Repository(private val context: Context) {
     }
 
 
-    fun loadYearMonthTypeWiseByGroup(year:String, month:String,type:String, callback:(Resource<List<MC_Posts>>)->Unit){
-        var value : Resource<List<MC_Posts>>? = null
+    fun loadYearMonthTypeWiseByGroup(year:String, month:String,type:String, callback:(Resource<List<MC_MonthlyReport>>)->Unit){
+        var value : Resource<List<MC_MonthlyReport>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthTypeWiseByGroup(year,month,type))
-            callback(value as Resource.Success<List<MC_Posts>>)
+            callback(value as Resource.Success<List<MC_MonthlyReport>>)
         }
     }
 
-
-    fun loadYearMonthWiseIncomeByGroup(year:String, month:String, callback:(Resource<List<MC_Posts>>)->Unit){
-        var value : Resource<List<MC_Posts>>? = null
-        CoroutineScope(Dispatchers.IO).launch {
-            value = Resource.Success(dao.loadYearMonthTypeWiseByGroup(year,month,Constants.TYPE_EXPENSE))
-            callback(value as Resource.Success<List<MC_Posts>>)
-        }
-    }
 
 
 
@@ -179,6 +172,24 @@ class Repository(private val context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadAllIncomeCards(Constants.TYPE_INCOME))
             callback(value as Resource.Success<List<MC_Cards>>)
+        }
+    }
+
+
+    fun loadYearMonthTypeTotal(year: String,month: String,type: String,callback:(Resource<Int>)->Unit){
+        var value : Resource<Int>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadYearMonthTypeTotal(year,month,type))
+            callback(value as Resource.Success<Int>)
+        }
+    }
+
+
+    fun loadYearMonthBalance(year: String,month: String,callback:(Resource<Int>)->Unit){
+        var value : Resource<Int>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadYearMonthBalance(year,month,Constants.TYPE_EXPENSE,Constants.TYPE_EXPENSE))
+            callback(value as Resource.Success<Int>)
         }
     }
 

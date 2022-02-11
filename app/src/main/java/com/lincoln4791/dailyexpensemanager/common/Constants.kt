@@ -38,6 +38,9 @@ object Constants {
         const val AMOUNT_300000 = "300000"
         const val AMOUNT_400000 = "400000"
         const val AMOUNT_500000 = "500000"
+        const val FRAGMENT_FROM = "fragment_from"
+        const val FRAGMENT_TRANSACTION = "fragment_transaction"
+        const val FRAGMENT_MONTHLY = "fragment_monthly"
         const val PLAY_STORE_APP_LINK =
             "https://play.google.com/store/apps/details?id=com.lincoln4791.dailyexpensemanager"
 

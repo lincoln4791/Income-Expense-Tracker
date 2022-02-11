@@ -12,30 +12,31 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.navigation.NavigationView
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+import com.itmedicus.patientaid.utils.CurrentDate
+import com.itmedicus.patientaid.utils.CurrentDate.Companion.currentTime
+import com.itmedicus.patientaid.utils.DayDifference.Companion.getDaysDifference
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
-import com.lincoln4791.dailyexpensemanager.common.Util
+import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
+import com.lincoln4791.dailyexpensemanager.common.util.Util
+import com.lincoln4791.dailyexpensemanager.common.util.VersionControl
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
-import org.apache.commons.lang3.ClassUtils.getSimpleName
+import java.text.SimpleDateFormat
 
 
 class HomeFragment : Fragment() {
+    private val sdf = SimpleDateFormat("yyyy-MM-dd")
+
 
     private lateinit var binding : FragmentHomeBinding
     private lateinit var viewModel: VM_MainActivity
@@ -79,6 +80,7 @@ class HomeFragment : Fragment() {
 
         getAndSaveFCM()
         Util.recordScreenEvent("home_fragment","MainActivity")
+        InitCheckAppVersion()
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
@@ -232,6 +234,21 @@ class HomeFragment : Fragment() {
         viewModel.getIncomeExpenseData()
         initDarkTheme()
 
+    }
+
+    private fun InitCheckAppVersion() {
+        if (NetworkCheck.isConnect(requireContext())) {
+            var lastVersionControlCheckDate = sdf.parse(prefManager.versionControlCheckLastDate)
+            if (getDaysDifference(lastVersionControlCheckDate, sdf.parse(currentTime)) > 1) {
+
+                VersionControl.checkVersion(requireContext())
+
+                prefManager.versionControlCheckLastDate = CurrentDate.currentDate
+                Log.d("tag", "VC checked")
+            } else {
+                Log.d("tag", "VC will be checked tomorrow")
+            }
+        }
     }
 
     private fun openAbout() {

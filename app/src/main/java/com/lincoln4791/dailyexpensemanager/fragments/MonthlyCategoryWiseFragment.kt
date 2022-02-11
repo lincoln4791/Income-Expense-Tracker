@@ -1,6 +1,5 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,12 +17,12 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyCategoryWiseR
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyCategoryWiseBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
-import com.lincoln4791.dailyexpensemanager.common.Util
+import com.lincoln4791.dailyexpensemanager.common.util.Util
 
 
 class MonthlyCategoryWiseFragment : Fragment() {
@@ -33,6 +32,8 @@ class MonthlyCategoryWiseFragment : Fragment() {
     private lateinit var month: String
     private lateinit var type: String
     private lateinit var category: String
+    private lateinit var fragmentFrom: String
+    private lateinit var selectedTransactionType: String
     val args: MonthlyCategoryWiseFragmentArgs by navArgs()
     private lateinit var viewModel: VM_MonthlyCategoryWise
     private lateinit var binding : FragmentMonthlyCategoryWiseBinding
@@ -83,6 +84,8 @@ class MonthlyCategoryWiseFragment : Fragment() {
         month = args.month
         type = args.type
         category = args.category
+        fragmentFrom = args.fragmentFrom?:""
+        selectedTransactionType = args.selectedTransactionType?:Constants.TYPE_ALL
 
         Log.d("tag","year -> $year")
         Log.d("tag","year -> $month")
@@ -139,8 +142,16 @@ class MonthlyCategoryWiseFragment : Fragment() {
 
     private fun goBack() {
 
-       val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment(year,month)
-        navCon.navigate(action)
+        if(fragmentFrom==Constants.FRAGMENT_TRANSACTION){
+            val transactionsAction = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToTransactionsFragment(selectedTransactionType)
+            navCon.navigate(transactionsAction)
+        }
+        else{
+            val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment(year,month)
+            navCon.navigate(action)
+        }
+
+
     }
 
 }

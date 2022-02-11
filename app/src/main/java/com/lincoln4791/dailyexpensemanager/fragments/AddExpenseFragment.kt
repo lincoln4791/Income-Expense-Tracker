@@ -25,8 +25,8 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddExpense
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.Util
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.Util
+import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -213,7 +213,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
             val posts = MC_Posts(expenseDescription,
                 vm_addExpenses!!.category,
                 Constants.TYPE_EXPENSE,
-                amount,
+                amount.toInt(),
                 vm_addExpenses!!.year!!,
                 vm_addExpenses!!.month!!,
                 vm_addExpenses!!.day!!,

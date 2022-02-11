@@ -456,7 +456,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:layout_constraintTop_toBottomOf="@+id/cv_search_MonthlyReport"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/iv_pieChart_Transactions"
@@ -468,7 +469,17 @@
             </com.google.android.material.card.MaterialCardView>
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvExpense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_MonthlyReport" />
+
+
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cv_postHolder_HouseRent_MonthlyReport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1184,7 +1195,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/cv_type_otherExpense_MonthlyReport"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/cv_type_otherExpense_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_totalExpenses_bot_MonthlyReport"
@@ -1195,7 +1206,7 @@
                 android:layout_height="30dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_otherExpense_MonthlyReport">
+                app:layout_constraintTop_toBottomOf="@+id/rvExpense">
 
                 <TextView
                     android:id="@+id/tv_totalExpense_bot_MonthlyReport"
@@ -1233,7 +1244,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/view2_MonthlyReport" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+<!--            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cv_postHolder_salaryIncome_MonthlyReport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1526,8 +1537,16 @@
                     app:layout_constraintBottom_toBottomOf="@+id/cv_type_otherIncome_MonthlyReport"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/cv_type_otherIncome_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvIncome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_titleIncome_MonthlyReport" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_totalIncome_bot_MonthlyReport"
@@ -1538,7 +1557,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_otherIncome_MonthlyReport">
+                app:layout_constraintTop_toBottomOf="@+id/rvIncome">
 
                 <TextView
                     android:id="@+id/tv_totalIncome_bot__MonthlyReport"

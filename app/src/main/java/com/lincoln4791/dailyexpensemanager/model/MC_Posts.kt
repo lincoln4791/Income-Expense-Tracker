@@ -16,7 +16,7 @@ import androidx.room.PrimaryKey
     @ColumnInfo
     var postType: String
     @ColumnInfo
-    var postAmount: String
+    var postAmount: Int
     @ColumnInfo
     var postYear: String
     @ColumnInfo
@@ -46,7 +46,7 @@ import androidx.room.PrimaryKey
         postDescription: String,
         postCategory: String,
         postType: String,
-        postAmount: String,
+        postAmount: Int,
         postYear: String,
         postMonth: String,
         postDay: String,
@@ -71,7 +71,7 @@ import androidx.room.PrimaryKey
         postDescription: String,
         postCategory: String,
         postType: String,
-        postAmount: String,
+        postAmount: Int,
         postYear: String,
         postMonth: String,
         postDay: String,

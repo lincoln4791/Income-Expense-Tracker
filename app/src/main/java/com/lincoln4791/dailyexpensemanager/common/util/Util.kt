@@ -1,4 +1,4 @@
-package com.lincoln4791.dailyexpensemanager.common
+package com.lincoln4791.dailyexpensemanager.common.util
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics

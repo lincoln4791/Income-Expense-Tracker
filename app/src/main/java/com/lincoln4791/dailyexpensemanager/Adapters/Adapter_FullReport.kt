@@ -20,7 +20,7 @@ class Adapter_FullReport(private val context: Context, private val postsList: Li
         holder.tv_dateTime.text = postsList[position].postDateTime
         holder.tv_category.text = postsList[position].postCategory
         holder.tv_type.text = postsList[position].postType
-        holder.tv_amount.text = postsList[position].postAmount
+        holder.tv_amount.text = postsList[position].postAmount.toString()
     }
 
     override fun getItemCount(): Int {

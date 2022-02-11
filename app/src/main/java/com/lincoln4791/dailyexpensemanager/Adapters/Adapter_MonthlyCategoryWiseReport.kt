@@ -46,7 +46,7 @@ class Adapter_MonthlyCategoryWiseReport(
         holder.tv_date.text = date
         holder.tv_time.text = postList[position].postTime
         holder.tv_category.text = postList[position].postCategory
-        holder.tv_amount.text = postList[position].postAmount
+        holder.tv_amount.text = postList[position].postAmount.toString()
         holder.tv_description.text = postList[position].postDescription
     }
 

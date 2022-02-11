@@ -2,8 +2,6 @@ package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,11 +21,11 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Daily
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.*
-import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
+import com.lincoln4791.dailyexpensemanager.common.util.Util
+import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentDailyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Daily
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

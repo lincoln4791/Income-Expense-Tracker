@@ -9,7 +9,7 @@ import com.lincoln4791.dailyexpensemanager.R
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
 import com.lincoln4791.dailyexpensemanager.common.NodeName
 import android.text.TextUtils
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts

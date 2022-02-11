@@ -28,4 +28,21 @@ class PrefManager(val context : Context) {
         set(value) {editor.putBoolean("isUserLoggedIn",value).commit()}
 
 
+    var isAppInstalledFirstTime:Boolean?
+        get() = pref.getBoolean("isAppInstalledFirstTime",true)
+        set(value) {editor.putBoolean("isAppInstalledFirstTime", value!!).commit()}
+
+    var appVersion:String?
+        get() = pref.getString("appVersion","1")
+        set(value) {editor.putString("appVersion",value).commit()}
+
+    var appInstallDate:String
+        get() = pref.getString("appInstallDate","")!!
+        set(value) {editor.putString("appInstallDate",value).commit()}
+
+    var versionControlCheckLastDate:String
+        get() = pref.getString("versionControlCheckLastDate", "2021-08-10")!!
+        set(value) {editor.putString("versionControlCheckLastDate",value).commit()}
+
+
 }

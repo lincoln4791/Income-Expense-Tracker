@@ -81,6 +81,9 @@
         <argument
             android:name="type"
             app:argType="string" />
+        <action
+            android:id="@+id/action_transactionsFragment_to_monthlyCategoryWiseFragment"
+            app:destination="@id/monthlyCategoryWiseFragment" />
     </fragment>
     <fragment
         android:id="@+id/dailyFragment"
@@ -152,6 +155,17 @@
             app:exitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_monthlyCategoryWiseFragment_to_transactionsFragment"
+            app:destination="@id/transactionsFragment" />
+        <argument
+            android:name="fragment_from"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="selected_transaction_type"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/pieChartFragment"

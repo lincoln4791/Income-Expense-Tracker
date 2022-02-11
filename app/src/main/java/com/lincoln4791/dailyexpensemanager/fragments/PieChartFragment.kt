@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -17,14 +16,10 @@ import androidx.navigation.fragment.navArgs
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.Extras
-import com.lincoln4791.dailyexpensemanager.common.Util
+import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentPieChartBinding
-import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_PieChart
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
 import org.eazegraph.lib.models.PieModel
 
 class PieChartFragment : Fragment() {

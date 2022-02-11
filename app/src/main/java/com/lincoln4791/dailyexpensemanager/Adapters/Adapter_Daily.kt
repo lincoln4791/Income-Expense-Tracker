@@ -44,7 +44,7 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val context: C
         val date = postList[position].postDateTime.split(" ")[0]
 
         holder.tv_category.text = postList[position].postCategory
-        holder.tv_amount.text = postList[position].postAmount
+        holder.tv_amount.text = postList[position].postAmount.toString()
         holder.tv_date.text = date
         holder.tv_time.text = postList[position].postTime
         holder.tv_description.text = postList[position].postDescription

@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -25,13 +23,11 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.Extras
-import com.lincoln4791.dailyexpensemanager.common.Util
-import com.lincoln4791.dailyexpensemanager.common.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.Util
+import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.view.*
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -131,12 +127,15 @@ class TransactionsFragment : Fragment() {
             goBack()
         })
         binding.cvTotalIncomesTopBarTransactions.setOnClickListener {
+            transactionType=Constants.TYPE_INCOME
             vm_transactions!!.loadAllIncomes()
         }
         binding.ivReloadTransactionsTransactions.setOnClickListener {
+            transactionType=Constants.TYPE_ALL
             vm_transactions!!.loadAllTransactions()
         }
         binding.cvTotalExpensesTopBarTransactions.setOnClickListener {
+            transactionType=Constants.TYPE_EXPENSE
             vm_transactions!!.loadAllExpenses()
         }
 
@@ -155,7 +154,7 @@ class TransactionsFragment : Fragment() {
 
     private fun update(posts: List<MC_Posts> ){
         vm_transactions!!.fetchAllTransactions(posts)
-        adapter_transactions = Adapter_Transactions(posts, requireContext())
+        adapter_transactions = Adapter_Transactions(posts, this)
         binding.tvTypeTitleTransactions.text = getString(R.string.Transactions)
         toolbar!!.title = getString(R.string.Transactions)
         binding.rvTransactions.adapter = adapter_transactions
@@ -216,7 +215,12 @@ class TransactionsFragment : Fragment() {
 
     private fun goBack(){
         val homeAction = TransactionsFragmentDirections.actionTransactionsFragmentToHomeFragment()
-        navCon.navigateUp()
+        navCon.navigate(homeAction)
+    }
+
+    fun navigateToDetails(year:String,month:String,type:String,category:String){
+        val action = TransactionsFragmentDirections.actionTransactionsFragmentToMonthlyCategoryWiseFragment(year,month,type,category,Constants.FRAGMENT_TRANSACTION,transactionType)
+        navCon.navigate(action)
     }
 
 /*    override fun onBackPressed() {
