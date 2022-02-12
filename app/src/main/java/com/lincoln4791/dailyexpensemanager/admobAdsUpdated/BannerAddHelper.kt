@@ -1,17 +1,18 @@
+/*
 package com.itmedicus.patientaid.ads.admobAdsUpdated
 
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.ads.*
-import com.itmedicus.patientaid.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 
 class BannerAddHelper(private val context: Context) {
     val prefManager = PrefManager(context)
 
 
     fun loadBannerAd(mAdView : AdView, callBack:(isShown:Boolean)->Unit){
-        MobileAds.initialize(context)
+        //MobileAds.initialize(context)
 
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
@@ -53,3 +54,4 @@ class BannerAddHelper(private val context: Context) {
     }
 
 }
+*/

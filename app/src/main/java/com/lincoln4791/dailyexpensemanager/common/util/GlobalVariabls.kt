@@ -1,6 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.common.util
 
-class UtilDB {
+class GlobalVariabls {
     companion object{
         var currentBalance = 0
     }

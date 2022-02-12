@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +43,7 @@ class VM_MainActivity(application: Application) : AndroidViewModel(application) 
                    totalIncome.value = income
                    totalExpense.value = expense
                    currentBalance.value = income-expense
-                   UtilDB.currentBalance = income-expense
+                   GlobalVariabls.currentBalance = income-expense
                }
             }
             else{

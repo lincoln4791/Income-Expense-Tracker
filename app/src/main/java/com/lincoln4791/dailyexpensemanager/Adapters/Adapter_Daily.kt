@@ -16,6 +16,7 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.NodeName
 import com.lincoln4791.dailyexpensemanager.fragments.DailyFragment
+import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
 
@@ -49,59 +50,24 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val context: C
         holder.tv_time.text = postList[position].postTime
         holder.tv_description.text = postList[position].postDescription
         holder.cv_mainLayout.setOnClickListener { v: View? -> }
-        holder.cv_mainLayout.setOnLongClickListener { v: View? ->
+        holder.cv_mainLayout.setOnLongClickListener {
             if (cv_Temp != null) {
                 cv_Temp!!.visibility = View.GONE
             }
             cv_Temp = holder.cv_editDltLayout
             cv_Temp!!.visibility = View.VISIBLE
-            false
+            true
         }
-        holder.iv_editData.setOnClickListener { v: View? ->
-        /*    if (postList[position].postType == Constants.TYPE_INCOME) {
-                val editDataIncomeIntent = Intent(context, EditDataIncome::class.java)
-                editDataIncomeIntent.putExtra(NodeName.ID, postList[position].id.toString())
-                editDataIncomeIntent.putExtra(NodeName.POST_DESCRIPTION,
-                    postList[position].postDescription)
-                editDataIncomeIntent.putExtra(NodeName.POST_CATEGORY,
-                    postList[position].postCategory)
-                editDataIncomeIntent.putExtra(NodeName.POST_AMOUNT,
-                    postList[position].postAmount)
-                editDataIncomeIntent.putExtra(NodeName.POST_YEAR, postList[position].postYear)
-                editDataIncomeIntent.putExtra(NodeName.POST_MONTH,
-                    postList[position].postMonth)
-                editDataIncomeIntent.putExtra(NodeName.POST_DAY, postList[position].postDay)
-                editDataIncomeIntent.putExtra(NodeName.POST_TIME, postList[position].postTime)
-                editDataIncomeIntent.putExtra(NodeName.POST_DATE_TIME,
-                    postList[position].postDateTime)
-                context.startActivity(editDataIncomeIntent)
-            }*/
 
-      /*      else if (postList[position].postType == Constants.TYPE_EXPENSE) {
-                val editDataExpenseIntent = Intent(context, EditDataExpense::class.java)
-                editDataExpenseIntent.putExtra(NodeName.ID, postList[position].id.toString())
-                editDataExpenseIntent.putExtra(NodeName.POST_DESCRIPTION,
-                    postList[position].postDescription)
-                editDataExpenseIntent.putExtra(NodeName.POST_CATEGORY,
-                    postList[position].postCategory)
-                editDataExpenseIntent.putExtra(NodeName.POST_AMOUNT,
-                    postList[position].postAmount)
-                editDataExpenseIntent.putExtra(NodeName.POST_YEAR, postList[position].postYear)
-                editDataExpenseIntent.putExtra(NodeName.POST_MONTH,
-                    postList[position].postMonth)
-                editDataExpenseIntent.putExtra(NodeName.POST_DAY, postList[position].postDay)
-                editDataExpenseIntent.putExtra(NodeName.POST_TIME, postList[position].postTime)
-                editDataExpenseIntent.putExtra(NodeName.POST_DATE_TIME,
-                    postList[position].postDateTime)
-                context.startActivity(editDataExpenseIntent)
-            }*/
+        holder.iv_editData.setOnClickListener {
+
         }
         holder.iv_deleteData.setOnClickListener {
-
             fragment.confirmDelete(
-                postList[position].id)
+                postList[position].id, postList[position].postAmount.toInt(),
+                postList[position].postType)
         }
-        holder.iv_closeEdtDltLayout.setOnClickListener { v: View? ->
+        holder.iv_closeEdtDltLayout.setOnClickListener {
             holder.cv_editDltLayout.visibility = View.GONE
         }
     }

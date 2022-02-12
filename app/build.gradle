@@ -123,6 +123,13 @@ dependencies {
     //Performance Monitoring
     implementation 'com.google.firebase:firebase-perf-ktx'
 
+    //Firebase Database
+    implementation 'com.google.firebase:firebase-database-ktx'
+
+    //admob
+    //implementation 'com.google.android.gms:play-services-ads:20.5.0'
+    //implementation project(path: ':nativetemplates')
+
 
 }
 repositories {

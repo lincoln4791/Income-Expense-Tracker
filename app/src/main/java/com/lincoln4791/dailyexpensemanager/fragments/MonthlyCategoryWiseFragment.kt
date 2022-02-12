@@ -17,11 +17,12 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyCategoryWiseR
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyCategoryWiseBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
+import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 
 
@@ -99,7 +100,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
         }
 
 
-        binding.tvCurrentBalanceValueToolBarMonthlyCategoryWiseReport.text = UtilDB.currentBalance.toString()
+        binding.tvCurrentBalanceValueToolBarMonthlyCategoryWiseReport.text = GlobalVariabls.currentBalance.toString()
         setCategoryAndType()
 
         viewModel.postsList.observe(viewLifecycleOwner, Observer {
@@ -134,9 +135,24 @@ class MonthlyCategoryWiseFragment : Fragment() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         binding.rvCategoryWiseReport.layoutManager = linearLayoutManager
-        adapter_monthlyCategoryWiseReport = Adapter_MonthlyCategoryWiseReport(postList,requireContext())
+        adapter_monthlyCategoryWiseReport = Adapter_MonthlyCategoryWiseReport(postList,this)
         binding.rvCategoryWiseReport.adapter = adapter_monthlyCategoryWiseReport
         adapter_monthlyCategoryWiseReport!!.notifyDataSetChanged()
+    }
+
+
+    fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
+        DbAdapter.confirmDelete(requireContext(),id,amount,typeOfTheFile){
+            if(it !=null){
+                if(it){
+                    viewModel.loadYearMonthTypeCategoryWise(year,month,type,category)
+                }
+                else{
+                    Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
     }
 
 

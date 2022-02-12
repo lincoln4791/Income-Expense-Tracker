@@ -25,7 +25,7 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -149,13 +149,12 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         binding.cvBusinessAddIncome.setOnClickListener(this)
         binding.cvHouseRentAddIncome.setOnClickListener(this)
         binding.cvOtherAddIncome.setOnClickListener(this)
-        binding.cvSaveAddIncome.setOnClickListener({ addIncome() })
-        binding.tvDateTimeAddIncome.setOnClickListener({ changeDate() })
-
+        binding.tvDateTimeAddIncome.setOnClickListener { changeDate() }
+        binding.cvSaveAddIncome.setOnClickListener { addIncome() }
 
         observe()
         setDateTime()
-        binding.tvCurrentBalanceValueToolBarAddIncome.setText(UtilDB.currentBalance.toString())
+        binding.tvCurrentBalanceValueToolBarAddIncome.setText(GlobalVariabls.currentBalance.toString())
 
 
 
@@ -191,15 +190,15 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
                 expenseDescription = binding.etIncomeDescriptionAddIncome.text.toString()
             }
             val posts = MC_Posts(expenseDescription,
-                vm_addIncome!!.category,
+                vm_addIncome.category,
                 Constants.TYPE_INCOME,
                 amount.toInt(),
-                vm_addIncome!!.year!!,
-                vm_addIncome!!.month!!,
-                vm_addIncome!!.day!!,
-                vm_addIncome!!.time!!,
+                vm_addIncome.year!!,
+                vm_addIncome.month!!,
+                vm_addIncome.day!!,
+                vm_addIncome.time!!,
                 System.currentTimeMillis().toString(),
-                vm_addIncome!!.dateTime)
+                vm_addIncome.dateTime)
             /*val helper = SQLiteHelper(this@AddIncome)
             helper.saveData(posts)*/
             val db = AppDatabase.getInstance(requireContext().applicationContext)
@@ -207,12 +206,14 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 dao.insertAll(posts)
                 CoroutineScope(Dispatchers.Main).launch {
-                    UtilDB.currentBalance = UtilDB.currentBalance + amount.toInt()
-                    Log.d("tag","Income added , Current Balance is ${UtilDB.currentBalance}")
+                    GlobalVariabls.currentBalance = GlobalVariabls.currentBalance + amount.toInt()
+                    Log.d("tag","Income added , Current Balance is ${GlobalVariabls.currentBalance}")
 
                    /* startActivity(Intent(this@AddIncome, MainActivity::class.java))
                     finish()*/
                     Toast.makeText(context, "Success ", Toast.LENGTH_SHORT).show()
+                    val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
+                    navCon.navigate(action)
                 }
             }
 
@@ -515,10 +516,10 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         dialog.setContentView(viewAddCard)
         dialog.show()
 
-        val tcCard = viewAddCard.findViewById<TextView>(R.id.tv_cardName)
+        val tvCard = viewAddCard.findViewById<TextView>(R.id.tv_cardName)
 
         viewAddCard.findViewById<Button>(R.id.btn).setOnClickListener {
-            if(!tcCard.text.isNullOrEmpty()){
+            if(!tvCard.text.isNullOrEmpty()){
                 dialog.dismiss()
 
                 var existingCardList : MutableList<MC_Cards>? = mutableListOf()
@@ -534,7 +535,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
                     var isExists = false
                     job1.join()
                     for(card in existingCardList!!){
-                        if(card.cardName == tcCard.text.toString()){
+                        if(card.cardName == tvCard.text.toString()){
                             isExists = true
                             break
                         }
@@ -544,7 +545,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
                         val job2 = CoroutineScope(Dispatchers.IO).launch {
                             try {
                                 AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertCard(
-                                    MC_Cards(tcCard.text.toString(),Constants.TYPE_INCOME))
+                                    MC_Cards(tvCard.text.toString(),Constants.TYPE_INCOME))
 
                             }
                             catch (e:Exception){
@@ -555,7 +556,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
                         runBlocking {
                             job2.join()
                             vm_addIncome.loadAllCards(){
-
+                               selectMoreCard(tvCard.text.toString())
                             }
                         }
                     }

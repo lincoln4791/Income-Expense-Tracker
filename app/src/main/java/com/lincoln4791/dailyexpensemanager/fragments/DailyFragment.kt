@@ -21,8 +21,9 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Daily
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.*
+import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentDailyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
@@ -110,7 +111,7 @@ class DailyFragment : Fragment() {
 
 
         setDate()
-        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = UtilDB.currentBalance.toString()
+        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = GlobalVariabls.currentBalance.toString()
        viewModel.loadDailyTransactions(year!!,month!!,day!!)
 
     }
@@ -376,7 +377,22 @@ class DailyFragment : Fragment() {
 
     }
 
-    fun confirmDelete(id: Int) {
+
+    fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
+        DbAdapter.confirmDelete(requireContext(),id,amount,typeOfTheFile){
+            if(it !=null){
+                if(it){
+                    viewModel.loadDailyTransactions(year!!,month!!,day!!)
+                }
+                else{
+                    Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+    }
+
+/*    fun confirmDelete(id: Int) {
         val dialog = Dialog(requireContext())
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_delete, null)
         dialog.setContentView(view)
@@ -400,5 +416,5 @@ class DailyFragment : Fragment() {
         }
         view.findViewById<View>(R.id.btn_no_alertImage_dialog_delete)
             .setOnClickListener { dialog.dismiss() }
-    }
+    }*/
 }

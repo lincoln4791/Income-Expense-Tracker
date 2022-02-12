@@ -47,26 +47,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val fra
         holder.tv_category.text = postList[position].postCategory
         holder.tv_amount.text = postList[position].postAmount.toString()
         holder.tv_description.text = postList[position].postDescription
-        holder.cv_mainLayout.setOnClickListener { v: View? -> }
-        holder.cv_mainLayout.setOnLongClickListener { v: View? ->
-            if (cv_Temp != null) {
-                cv_Temp!!.visibility = View.GONE
-            }
-            cv_Temp = holder.cv_editDltLayout
-            cv_Temp!!.visibility = View.VISIBLE
-            false
-        }
-        holder.iv_editData.setOnClickListener { v: View? ->
-
-        }
-        holder.iv_deleteData.setOnClickListener { v: View? ->
-            (context as TransactionsFragment).confirmDelete(
-                postList[position].id, postList[position].postAmount.toInt(),
-                postList[position].postType)
-        }
-        holder.iv_closeEdtDltLayout.setOnClickListener { v: View? ->
-            holder.cv_editDltLayout.visibility = View.GONE
-        }
+        //holder.cv_mainLayout.setOnClickListener { v: View? -> }
 
         holder.cv_mainLayout.setOnClickListener {
             fragment.navigateToDetails(
@@ -76,6 +57,28 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val fra
                 postList[position].postCategory
             )
         }
+
+        holder.cv_mainLayout.setOnLongClickListener {
+            if (cv_Temp != null) {
+                cv_Temp!!.visibility = View.GONE
+            }
+            cv_Temp = holder.cv_editDltLayout
+            cv_Temp!!.visibility = View.VISIBLE
+            true
+        }
+        holder.iv_editData.setOnClickListener {
+
+        }
+        holder.iv_deleteData.setOnClickListener {
+            fragment.confirmDelete(
+                postList[position].id, postList[position].postAmount.toInt(),
+                postList[position].postType)
+        }
+        holder.iv_closeEdtDltLayout.setOnClickListener {
+            holder.cv_editDltLayout.visibility = View.GONE
+        }
+
+
     }
 
     override fun getItemCount(): Int {

@@ -1,3 +1,4 @@
+/*
 package com.itmedicus.patientaid.ads.admobAdsUpdated
 import android.app.Activity
 import android.app.Application
@@ -13,12 +14,15 @@ import com.google.android.gms.ads.AdError
 import androidx.lifecycle.Lifecycle.Event.ON_START
 import com.google.android.gms.ads.FullScreenContentCallback
 import androidx.lifecycle.OnLifecycleEvent
-import com.itmedicus.patientaid.PatientAid
+import com.lincoln4791.dailyexpensemanager.MyApplication
+
 import java.util.*
 
 
 class AppOpenManager
-/** Constructor  */(private var myApplication: PatientAid?) : LifecycleObserver, Application.ActivityLifecycleCallbacks {
+*/
+/** Constructor  *//*
+(private var myApplication: MyApplication?) : LifecycleObserver, Application.ActivityLifecycleCallbacks {
     private var currentActivity: Activity? = null
     //private val AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294"
     //private val AD_UNIT_ID = "ca-app-pub-7974966348786771/9555310918"
@@ -29,11 +33,13 @@ class AppOpenManager
     private var loadTime: Long = 0
 
     init {
-        myApplication!!.registerActivityLifecycleCallbacks(this)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        //myApplication!!.registerActivityLifecycleCallbacks(this)
+        //ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
-    /** Request an ad  */
+    */
+/** Request an ad  *//*
+
     fun fetchAd() {
         if (isAdAvailable()) {
             Log.d("AppOpenAd","inside isAvailable Called")
@@ -53,18 +59,24 @@ class AppOpenManager
                 Log.d("AppOpenAd","onAdFailedToLoad() called -> ${p0!!.message}")
             }
 
-        /*    override fun on(ad: AppOpenAd?) {
+        */
+/*    override fun on(ad: AppOpenAd?) {
 
 
             }
 *//*
+*/
+/*
             override fun onAppOpenAdFailedToLoad(p0: LoadAdError?) {
                 super.onAppOpenAdFailedToLoad(p0)
                 Log.d("tag","onAdFailedToLoad() called -> ${p0!!.message}")
-            }*/
-           /* override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+            }*//*
+
+           */
+/* override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 Log.d("tag","onAdFailedToLoad() called")
-            }*/
+            }*//*
+
         }
         val request = getAdRequest()
         AppOpenAd.load(
@@ -72,12 +84,16 @@ class AppOpenManager
             AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback)
     }
 
-    /** Creates and returns ad request.  */
+    */
+/** Creates and returns ad request.  *//*
+
     private fun getAdRequest(): AdRequest? {
         return AdRequest.Builder().build()
     }
 
-    /** Utility method that checks if ad exists and can be shown.  */
+    */
+/** Utility method that checks if ad exists and can be shown.  *//*
+
     fun isAdAvailable(): Boolean {
         //return appOpenAd != null
         //Log.d("tag","isAdAvailable -> $appOpenAd::: ${wasLoadTimeLessThanNHoursAgo(4)} :::${appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)} ")
@@ -112,7 +128,9 @@ class AppOpenManager
         currentActivity = null
     }
 
-    /** Shows the ad if one isn't already showing.  */
+    */
+/** Shows the ad if one isn't already showing.  *//*
+
     fun showAdIfAvailable() {
         // Only show ad if there is not already an app open ad currently showing
         // and an ad is available.
@@ -160,4 +178,4 @@ class AppOpenManager
         //return dateDifference < 30000
     }
 
-}
+}*/

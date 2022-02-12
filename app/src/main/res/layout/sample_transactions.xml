@@ -144,6 +144,7 @@
                     android:layout_width="0dp"
                     android:layout_marginEnd="5dp"
                     android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
                     android:src="@drawable/back32"/>
 
 
@@ -153,13 +154,15 @@
                     android:layout_width="0dp"
                     android:layout_marginStart="8dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/edit_32"/>
+                    android:src="@drawable/edit_32"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/iv_delete_sampleTransactions"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_marginStart="12dp"
+                    android:background="?selectableItemBackground"
                     android:layout_height="wrap_content"
                     android:src="@drawable/delete_32"/>
 

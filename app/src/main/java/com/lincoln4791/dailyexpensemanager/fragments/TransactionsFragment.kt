@@ -2,6 +2,8 @@ package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -23,8 +25,9 @@ import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
@@ -32,6 +35,7 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class TransactionsFragment : Fragment() {
     val args: TransactionsFragmentArgs by navArgs()
@@ -139,17 +143,21 @@ class TransactionsFragment : Fragment() {
             vm_transactions!!.loadAllExpenses()
         }
 
-        binding.tvCurrentBalanceValueToolBarTransactions.text = UtilDB.currentBalance.toString()
-        Log.d("tag","Current Balance is ${UtilDB.currentBalance}")
+        binding.tvCurrentBalanceValueToolBarTransactions.text = GlobalVariabls.currentBalance.toString()
+        Log.d("tag","Current Balance is ${GlobalVariabls.currentBalance}")
 
+        loadTransactions()
+
+
+
+    }
+
+    private fun loadTransactions() {
         when(transactionType){
             Constants.TYPE_ALL -> vm_transactions!!.loadAllTransactions()
             Constants.TYPE_EXPENSE -> vm_transactions!!.loadAllExpenses()
             Constants.TYPE_INCOME -> vm_transactions!!.loadAllIncomes()
         }
-
-        //vm_transactions!!.loadAllTransactions()
-
     }
 
     private fun update(posts: List<MC_Posts> ){
@@ -172,29 +180,18 @@ class TransactionsFragment : Fragment() {
         startActivity(intent)*/
     }
 
-    fun deleteData(id: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            AppDatabase.getInstance(requireContext().applicationContext).dbDao().delete(id.toString())
-        }
-    }
-
-    fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String) {
-        val dialog = Dialog(requireContext())
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_delete, null)
-        dialog.setContentView(view)
-        dialog.setCancelable(true)
-        dialog.show()
-        view.findViewById<View>(R.id.btn_yes_alertImage_dialog_delete).setOnClickListener {
-            if ((typeOfTheFile == Constants.TYPE_INCOME)) {
-                UtilDB.currentBalance = UtilDB.currentBalance - amount
-            } else if ((typeOfTheFile == Constants.TYPE_EXPENSE)) {
-                UtilDB.currentBalance = UtilDB.currentBalance + amount
+    fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
+        DbAdapter.confirmDelete(requireContext(),id,amount,typeOfTheFile){
+            if(it !=null){
+                if(it){
+                    loadTransactions()
+                }
+                else{
+                    Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
+                }
             }
-            dialog.dismiss()
-            deleteData(id)
+
         }
-        view.findViewById<View>(R.id.btn_no_alertImage_dialog_delete)
-            .setOnClickListener { dialog.dismiss() }
     }
 
     fun confirmDeleteAll() {

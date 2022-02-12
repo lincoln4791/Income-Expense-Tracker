@@ -20,6 +20,11 @@
             android:title="Facebook Page" />
 
         <item
+            android:id="@+id/menu_checkUpdate"
+            android:icon="@drawable/check_update"
+            android:title="Check Update" />
+
+        <item
             android:id="@+id/menu_rateUs"
             android:icon="@drawable/rate_us24"
             android:title="RateUs" />

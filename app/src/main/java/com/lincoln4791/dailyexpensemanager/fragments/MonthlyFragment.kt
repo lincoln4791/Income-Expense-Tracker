@@ -22,7 +22,7 @@ import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.*
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
@@ -135,7 +135,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         }
 
         binding.cvPieChartMonthlyReport.setOnClickListener(View.OnClickListener { v: View? -> goToPieChartActivity() })
-        binding.tvCurrentBalanceValueToolBarMonthlyReport.setText(UtilDB.currentBalance.toString())
+        binding.tvCurrentBalanceValueToolBarMonthlyReport.setText(GlobalVariabls.currentBalance.toString())
         initMonthSpinner()
         initYearSpinner()
 
@@ -147,7 +147,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
         viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
 
-        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = UtilDB.currentBalance.toString()
+        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = GlobalVariabls.currentBalance.toString()
 
 
     }

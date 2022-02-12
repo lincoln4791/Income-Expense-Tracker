@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentProfileBinding
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Profile
 
@@ -54,7 +54,7 @@ class ProfileFragment : Fragment() {
             navCon.navigateUp()
         }
 
-        binding.tvCurrentBalanceValueToolBarProfile.text = UtilDB.currentBalance.toString()
+        binding.tvCurrentBalanceValueToolBarProfile.text = GlobalVariabls.currentBalance.toString()
 
     }
 

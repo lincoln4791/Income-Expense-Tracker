@@ -26,7 +26,7 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -161,7 +161,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvSaveAddExpense.setOnClickListener { saveData() }
         binding.tvDateTimeAddExpense.setOnClickListener { changeDate() }
 
-        binding.tvCurrentBalanceValueToolBarAddExpense.setText(UtilDB.currentBalance.toString())
+        binding.tvCurrentBalanceValueToolBarAddExpense.setText(GlobalVariabls.currentBalance.toString())
         observe()
         setDateTime()
 
@@ -226,9 +226,10 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertAll(posts)
                     CoroutineScope(Dispatchers.Main).launch {
-                        UtilDB.currentBalance = UtilDB.currentBalance - amount.toInt()
-                        startActivity(Intent(context, MainActivity::class.java))
+                        GlobalVariabls.currentBalance = GlobalVariabls.currentBalance - amount.toInt()
                         Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                        val action = AddExpenseFragmentDirections.actionAddExpenseFragmentToHomeFragment()
+                        navCon.navigate(action)
                     }
                 }
 
@@ -483,10 +484,10 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         dialog.setContentView(viewAddCard)
         dialog.show()
 
-        val tcCard = viewAddCard.findViewById<TextView>(R.id.tv_cardName)
+        val tvCard = viewAddCard.findViewById<TextView>(R.id.tv_cardName)
 
         viewAddCard.findViewById<Button>(R.id.btn).setOnClickListener {
-            if(!tcCard.text.isNullOrEmpty()){
+            if(!tvCard.text.isNullOrEmpty()){
                 dialog.dismiss()
 
                 var existingCardList : MutableList<MC_Cards>? = mutableListOf()
@@ -502,7 +503,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                     var isExists = false
                     job1.join()
                     for(card in existingCardList!!){
-                        if(card.cardName == tcCard.text.toString()){
+                        if(card.cardName == tvCard.text.toString()){
                             isExists = true
                             break
                         }
@@ -512,7 +513,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                         val job2 = CoroutineScope(Dispatchers.IO).launch {
                             try {
                                 AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertCard(
-                                    MC_Cards(tcCard.text.toString(),Constants.TYPE_EXPENSE))
+                                    MC_Cards(tvCard.text.toString(),Constants.TYPE_EXPENSE))
 
 
                             }
@@ -524,7 +525,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                         runBlocking {
                             job2.join()
                             viewModel.loadAllCards(){
-
+                                selectMoreCard(tvCard.text.toString())
                             }
                         }
                     }

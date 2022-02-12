@@ -1,3 +1,4 @@
+/*
 package com.itmedicus.patientaid.ads.admobAdsUpdated
 
 import android.app.Activity
@@ -63,4 +64,4 @@ class InterstistialAdHelper(private val context: Context,private val activity:Ac
 
 
 
-}
+}*/

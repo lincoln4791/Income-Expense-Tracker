@@ -1,3 +1,4 @@
+/*
 package com.itmedicus.patientaid.ads.admobAdsUpdated
 
 import android.app.Activity
@@ -55,4 +56,4 @@ class NativeAdUtil(private val context: Context) {
 
         adLoader.loadAd(AdRequest.Builder().build())
     }
-}
+}*/

@@ -1,7 +1,9 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -32,6 +34,7 @@ import com.lincoln4791.dailyexpensemanager.common.util.VersionControl
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HomeFragment : Fragment() {
@@ -203,12 +206,32 @@ class HomeFragment : Fragment() {
                 }
             }
 
+            else if(it.itemId == R.id.menu_checkUpdate){
+                goToPlayStore(requireContext())
+            }
+
             else if (it.itemId == R.id.menu_rateUs){
-                goToPlayStore()
+                goToPlayStore(requireContext())
             }
             else if (it.itemId == R.id.menu_aboutUs){
                 openAbout()
             }
+
+            else if(it.itemId == R.id.menu_privacyPolicy){
+                val intent =
+                    Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://www.freeprivacypolicy.com/live/99f6d75d-0da4-4e65-b9f8-b29cda9349e4"))
+                startActivity(intent)
+            }
+
+/*            else if(it.itemId == R.id.menu_moreApps){
+                val intent =
+                    Intent(Intent.ACTION_VIEW,
+                        Uri.parse(" https://play.google.com/store/apps/developer?id=Mahmudul+Karim+Lincoln&hl=en&gl=US"))
+                startActivity(intent)
+            }*/
+
+
             else if (it.itemId == R.id.menu_shareApp){
                 val sharingIntent = Intent(Intent.ACTION_SEND)
                 sharingIntent.type = "text/plain"
@@ -238,15 +261,13 @@ class HomeFragment : Fragment() {
 
     private fun InitCheckAppVersion() {
         if (NetworkCheck.isConnect(requireContext())) {
-            var lastVersionControlCheckDate = sdf.parse(prefManager.versionControlCheckLastDate)
+            //VersionControl.checkVersion(requireContext())
+            val lastVersionControlCheckDate = sdf.parse(prefManager.versionControlCheckLastDate)
             if (getDaysDifference(lastVersionControlCheckDate, sdf.parse(currentTime)) > 1) {
-
                 VersionControl.checkVersion(requireContext())
-
-                prefManager.versionControlCheckLastDate = CurrentDate.currentDate
-                Log.d("tag", "VC checked")
+                Log.d("appVersion", "VC checked")
             } else {
-                Log.d("tag", "VC will be checked tomorrow")
+                Log.d("appVersion", "VC will be checked tomorrow")
             }
         }
     }
@@ -262,16 +283,11 @@ class HomeFragment : Fragment() {
 
         view.findViewById<View>(R.id.btn_rateApp_dilogue_about).setOnClickListener { v: View? ->
             dialog.dismiss()
-            goToPlayStore()
+            goToPlayStore(requireContext())
         }
     }
 
-    private fun goToPlayStore() {
-        val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
-        val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
-        goToPlayStoreAppLnk.data = appLink
-        startActivity(goToPlayStoreAppLnk)
-    }
+
 
 
     private fun goback(){
@@ -327,9 +343,25 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-            fun saveFCMInFirebase(fcm : String){
 
+        val currentTime: String
+            @SuppressLint("SimpleDateFormat")
+            get() {
+                val c = Calendar.getInstance()
+                val df = SimpleDateFormat("yyyy-MM-dd")
+                return df.format(c.time)
             }
+
+        fun saveFCMInFirebase(fcm: String) {
+
+        }
+
+        fun goToPlayStore(context: Context) {
+            val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
+            val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
+            goToPlayStoreAppLnk.data = appLink
+            context.startActivity(goToPlayStoreAppLnk)
+        }
     }
 
 }

@@ -19,7 +19,7 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.*
 import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.UtilDB
+import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
@@ -83,7 +83,7 @@ class FullReportFragment : Fragment() {
           navCon.navigateUp()
         })
 
-        binding.tvCurrentBalanceValueToolBarFullReport.setText(UtilDB.currentBalance.toString())
+        binding.tvCurrentBalanceValueToolBarFullReport.setText(GlobalVariabls.currentBalance.toString())
 
 
         vm_fullReport.postsList.observe(viewLifecycleOwner, Observer {
