@@ -46,7 +46,7 @@
             android:orientation="vertical"
             android:weightSum="2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cv_deleteAll_Transactions"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -73,6 +73,28 @@
 
         </LinearLayout>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_deleteAll_Transactions"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="2dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/primary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_deleteAll_Transactions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/delete_32" />
+
+        </com.google.android.material.card.MaterialCardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -86,7 +108,8 @@
         android:weightSum="2"
         app:layout_constraintEnd_toStartOf="@id/iv_reloadTransactions_Transactions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_Transactions">
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_Transactions"
+        android:visibility="gone">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_totalIncomes_topBar_transactions"
@@ -188,7 +211,8 @@
         app:layout_constraintStart_toEndOf="@id/ll_topBar_transactions"
         app:layout_constraintTop_toTopOf="@id/ll_topBar_transactions"
         app:layout_constraintBottom_toBottomOf="@id/ll_topBar_transactions"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/linearLayout31_FullReport"
@@ -253,38 +277,80 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar_Transactions">
+
+        <LinearLayout
+            android:id="@+id/ss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|top"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="3dp"
+                android:background="@drawable/tab_background"
+                android:padding="2dp"
+                >
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/select_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:animateLayoutChanges="true"
+                    android:background="@drawable/tab_background_new"
+                    app:tabBackground="@drawable/tab_background_new"
+                    app:tabIndicatorAnimationDuration="500"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabSelectedTextColor="@color/white">
+
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="All" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Incomes" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Expenses" />
+
+                </com.google.android.material.tabs.TabLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/tv_typeTitle_Transactions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold|italic"
-        android:textSize="15sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="3dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:text="@string/AllTransactions"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout31_FullReport" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_pieChart_Transactions"
-        android:clickable="true"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_typeTitle_Transactions"
-        android:focusable="true">
-
-        <ImageView
-            android:id="@+id/iv_deleteAll_Transactions"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@drawable/delete_32" />
-
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toBottomOf="@+id/ll"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/ll_detailsReport_Transactions"
@@ -298,7 +364,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_Transactions">
+        app:layout_constraintTop_toBottomOf="@+id/ll">
 
         <TextView
             style="@style/tv_data_FullReport"
@@ -335,6 +401,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ll_detailsReport_Transactions"

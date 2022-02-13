@@ -110,7 +110,7 @@
     <string name="do_you_want_to_exit">Do you want to exit?</string>
     <string name="demoTime">11:48 am</string>
     <string name="DateTime">Date-Time</string>
-    <string name="do_you_want_to_delete_all_Files">Do you want to delete all files?</string>
+    <string name="do_you_want_to_delete_all_Files">Do you really want to delete all transactions?</string>
     <string name="CurrentBalance">Current Balance</string>
     <string name="AddExpense">Add Expense</string>
     <string name="AddIncome">Add Income</string>

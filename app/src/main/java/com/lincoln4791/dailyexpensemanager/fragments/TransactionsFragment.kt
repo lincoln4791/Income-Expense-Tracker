@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -93,6 +94,8 @@ class TransactionsFragment : Fragment() {
         binding.rvTransactions.layoutManager = linearLayoutManager
         vm_transactions = ViewModelProvider(this)[VM_Transactions::class.java]
 
+        setUpTabLayout()
+
 
         vm_transactions!!.postsList.observe(viewLifecycleOwner, Observer {
             Log.d("Transaction", "observed")
@@ -130,7 +133,7 @@ class TransactionsFragment : Fragment() {
         binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
             goBack()
         })
-        binding.cvTotalIncomesTopBarTransactions.setOnClickListener {
+/*        binding.cvTotalIncomesTopBarTransactions.setOnClickListener {
             transactionType=Constants.TYPE_INCOME
             vm_transactions!!.loadAllIncomes()
         }
@@ -141,7 +144,7 @@ class TransactionsFragment : Fragment() {
         binding.cvTotalExpensesTopBarTransactions.setOnClickListener {
             transactionType=Constants.TYPE_EXPENSE
             vm_transactions!!.loadAllExpenses()
-        }
+        }*/
 
         binding.tvCurrentBalanceValueToolBarTransactions.text = GlobalVariabls.currentBalance.toString()
         Log.d("tag","Current Balance is ${GlobalVariabls.currentBalance}")
@@ -150,6 +153,36 @@ class TransactionsFragment : Fragment() {
 
 
 
+    }
+
+    private fun setUpTabLayout() {
+        binding.selectTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if(tab == binding.selectTab.getTabAt(0)){
+                    transactionType=Constants.TYPE_ALL
+                    vm_transactions!!.loadAllTransactions()
+                }
+
+                else if(tab == binding.selectTab.getTabAt(1)){
+                    transactionType=Constants.TYPE_INCOME
+                    vm_transactions!!.loadAllIncomes()
+                }
+
+                else if(tab == binding.selectTab.getTabAt(2)){
+                    transactionType=Constants.TYPE_EXPENSE
+                    vm_transactions!!.loadAllExpenses()
+                }
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // Handle tab reselect
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // Handle tab unselect
+            }
+        })
     }
 
     private fun loadTransactions() {
@@ -167,6 +200,22 @@ class TransactionsFragment : Fragment() {
         toolbar!!.title = getString(R.string.Transactions)
         binding.rvTransactions.adapter = adapter_transactions
         adapter_transactions!!.notifyDataSetChanged()
+
+        when (transactionType) {
+            Constants.TYPE_ALL -> {
+                binding.tvTypeTitleTransactions.text = getString(R.string.Transactions)
+                binding.selectTab.selectTab(binding.selectTab.getTabAt(0))
+            }
+            Constants.TYPE_INCOME -> {
+                binding.tvTypeTitleTransactions.text = "Incomes"
+                binding.selectTab.selectTab(binding.selectTab.getTabAt(1))
+            }
+            Constants.TYPE_EXPENSE -> {
+                binding.tvTypeTitleTransactions.text = "Expenses"
+                binding.selectTab.selectTab(binding.selectTab.getTabAt(2))
+            }
+        }
+
     }
 
 
@@ -174,10 +223,6 @@ class TransactionsFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             AppDatabase.getInstance(requireContext().applicationContext).dbDao().deleteAll()
         }
-        /*val intent = Intent(context, Transactions::class.java)
-        intent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
-        UtilDB.currentBalance = 0
-        startActivity(intent)*/
     }
 
     fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){

@@ -78,13 +78,39 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_MonthlyReport">
+
+        <TextView
+            android:id="@+id/tcSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Here..."
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:drawablePadding="10dp"
+            android:gravity="center|start"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            />
+
+    </com.google.android.material.card.MaterialCardView>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_MonthlyReport">
+        app:layout_constraintTop_toBottomOf="@id/cvSearch">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -373,7 +399,8 @@
                 android:weightSum="2"
                 app:layout_constraintEnd_toStartOf="@+id/cv_search_MonthlyReport"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3_MonthlyReport">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3_MonthlyReport"
+                android:visibility="gone">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cv_spinnerYearly_MonthlyReport"
@@ -416,7 +443,8 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/view_MonthlyReport"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout31_MonthlyReport">
+                app:layout_constraintTop_toTopOf="@+id/linearLayout31_MonthlyReport"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="match_parent"

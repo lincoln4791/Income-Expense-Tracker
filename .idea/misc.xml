@@ -5,10 +5,16 @@
       <map>
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/app_logo.xml" value="0.1390625" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_account_box_24.xml" value="0.2169230769230769" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.135" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_darkmoon_24.xml" value="0.2169230769230769" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_login_24.xml" value="0.1390625" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_privacy_24.xml" value="0.1390625" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_search2.xml" value="0.135" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/ic_share_24.xml" value="0.2203125" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/tab_background.xml" value="0.1" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/tab_background_new.xml" value="0.1" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/tab_background_selected2.xml" value="0.1" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/drawable/tab_background_unselected.xml" value="0.1" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/actionbar_main_activity.xml" value="0.1" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_add_expense.xml" value="0.1" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_add_income.xml" value="0.15" />
@@ -27,6 +33,7 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_about.xml" value="0.33" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_add_more_card.xml" value="0.22" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_delete.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_delete_all.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_new_version_available.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_income.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_transaction.xml" value="0.1515625" />
@@ -38,7 +45,7 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_monthly_report.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_pie_chart.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
-        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.1375" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.21" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/header_navigation_drawer.xml" value="0.33" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_cardview.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_full_report.xml" value="0.20416666666666666" />
