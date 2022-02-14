@@ -31,7 +31,7 @@ class Adapter_MonthlyReportIncome(private val postList: List<MC_MonthlyReport>, 
         holder.cvHolder.setCardBackgroundColor(ContextCompat.getColor(fragment.requireContext(),R.color.green))
         holder.tv_amountPercent.text = MonthlyFragment.df2.format(postList[position].amountPercent!!.toDouble())
         holder.tv_name.text = postList[position].postCategory
-        holder.tv_amount.text = postList[position].postAmount.toString()
+        holder.tv_amount.text = "${postList[position].postAmount.toString()} tk"
 
         holder.cvHolder.setOnClickListener {
             fragment.navigateToDetails(

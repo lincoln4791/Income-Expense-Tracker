@@ -262,20 +262,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cv_selectedMoreCard" />
 
-            <EditText
-                android:id="@+id/et_incomeDescription_AddIncome"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_incomeDescription_AddIncome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:drawableStart="@drawable/ic_money_bag"
-                android:drawableEnd="@drawable/ic_right_arrow"
-                android:drawablePadding="10dp"
-                android:hint="@string/IncomeDescription"
-                android:maxLength="60"
-                android:paddingStart="10dp"
+                android:minHeight="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                app:cardElevation="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recyclerView" />
+                app:layout_constraintTop_toBottomOf="@id/recyclerView"
+                app:strokeColor="@color/green"
+                app:strokeWidth="1dp">
+
+                <EditText
+                    android:id="@+id/et_incomeDescription_AddIncome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="40dp"
+                    android:background="@color/white"
+                    android:drawablePadding="10dp"
+                    android:hint="Description (Optional)"
+                    android:maxLength="60"
+                    android:paddingStart="10dp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/materialCardView2_AddIncome"
@@ -288,7 +303,7 @@
                 app:cardElevation="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_incomeDescription_AddIncome"
+                app:layout_constraintTop_toBottomOf="@+id/cv_incomeDescription_AddIncome"
                 app:strokeColor="@color/green"
                 app:strokeWidth="1dp">
 

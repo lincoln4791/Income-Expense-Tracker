@@ -108,13 +108,6 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         setMonth()
         Log.d("tag","year -> $year :argyear -> ${args.year}::: month -> $month :argmonth->${args.month}")
 
-        binding.cvSearchMonthlyReport.setOnClickListener {
-            Log.d("tag", "Year -> $year ::: Month -> $month")
-            viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-            viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
-            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
-            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
-        }
         binding.cvDailyMonthlyReport.setOnClickListener(View.OnClickListener { v: View? ->
            /* startActivity(Intent(this@MonthlyReport,
                 Daily::class.java))*/
@@ -134,7 +127,6 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             goBack()
         }
 
-        binding.cvPieChartMonthlyReport.setOnClickListener(View.OnClickListener { v: View? -> goToPieChartActivity() })
         binding.tvCurrentBalanceValueToolBarMonthlyReport.setText(GlobalVariabls.currentBalance.toString())
         initMonthSpinner()
         initYearSpinner()
@@ -142,14 +134,18 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         observer()
 
         //viewModel.loadYearMonth(year,month)
-        viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-        viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
-        viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
-        viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
+        loadDatas()
 
         binding.tvCurrentBalanceValueToolBarMonthlyReport.text = GlobalVariabls.currentBalance.toString()
 
 
+    }
+
+    private fun loadDatas() {
+        viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+        viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+        viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+        viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
     }
 
     private fun observer() {
@@ -235,7 +231,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private fun initMonthSpinner() {
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            resources.getStringArray(R.array.monthNames_MonthlyReport))
+            resources.getStringArray(R.array.monthFullNames_MonthlyReport))
         binding.spinnerMonthMonthlyReport.adapter = spinnerAdapter
         binding.spinnerMonthMonthlyReport.setSelection(currentMonthPosition)
         binding.spinnerMonthMonthlyReport.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -245,30 +241,55 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                 position: Int,
                 id: Long,
             ) {
-                if (position == 0) {
-                    month = getString(R.string.digit01)
-                } else if (position == 1) {
-                    month = getString(R.string.digit02)
-                } else if (position == 2) {
-                    month = getString(R.string.digit03)
-                } else if (position == 3) {
-                    month = getString(R.string.digit04)
-                } else if (position == 4) {
-                    month = getString(R.string.digit05)
-                } else if (position == 5) {
-                    month = getString(R.string.digit06)
-                } else if (position == 6) {
-                    month = getString(R.string.digit07)
-                } else if (position == 7) {
-                    month = getString(R.string.digit08)
-                } else if (position == 8) {
-                    month = getString(R.string.digit09)
-                } else if (position == 9) {
-                    month = getString(R.string.digit10)
-                } else if (position == 10) {
-                    month = getString(R.string.digit11)
-                } else if (position == 11) {
-                    month = getString(R.string.digit12)
+                when (position) {
+                    0 -> {
+                        month = getString(R.string.digit01)
+                        loadDatas()
+                    }
+                    1 -> {
+                        month = getString(R.string.digit02)
+                        loadDatas()
+                    }
+                    2 -> {
+                        month = getString(R.string.digit03)
+                        loadDatas()
+                    }
+                    3 -> {
+                        month = getString(R.string.digit04)
+                        loadDatas()
+                    }
+                    4 -> {
+                        month = getString(R.string.digit05)
+                        loadDatas()
+                    }
+                    5 -> {
+                        month = getString(R.string.digit06)
+                        loadDatas()
+                    }
+                    6 -> {
+                        month = getString(R.string.digit07)
+                        loadDatas()
+                    }
+                    7 -> {
+                        month = getString(R.string.digit08)
+                        loadDatas()
+                    }
+                    8 -> {
+                        month = getString(R.string.digit09)
+                        loadDatas()
+                    }
+                    9 -> {
+                        month = getString(R.string.digit10)
+                        loadDatas()
+                    }
+                    10 -> {
+                        month = getString(R.string.digit11)
+                        loadDatas()
+                    }
+                    11 -> {
+                        month = getString(R.string.digit12)
+                        loadDatas()
+                    }
                 }
             }
 
@@ -312,12 +333,29 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                 year = currentYear.toString()
                 if(position==0){
                     year = "2021"
+                    loadDatas()
                 }
                 else if(position == 1){
-                    year = currentYear.toString()
+                    //year = currentYear.toString()
+                    year = "2022"
+                    loadDatas()
                 }
-                else{
-                    year = (currentYear.toLong()+position).toString()
+                else if(position==2) {
+                    //year = (currentYear.toLong()+position).toString()
+                    year = "2023"
+                    loadDatas()
+                }
+
+                else if(position==3) {
+                    //year = (currentYear.toLong()+position).toString()
+                    year = "2024"
+                    loadDatas()
+                }
+
+                else if(position==4) {
+                    //year = (currentYear.toLong()+position).toString()
+                    year = "2025"
+                    loadDatas()
                 }
             }
 
@@ -344,20 +382,23 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
 
     private fun updateTotalIncomeUI(totalIncome:Int?){
+        binding.tvTitleIncomeMonthlyReport.text = "Incomes :        ${Util.getMonthNameFromMonthNumber(month)}-$year"
         tIncome = totalIncome?.toDouble() ?: 0.0
-        binding.tvTotalIncomeBotMonthlyReport.text=totalIncome?.toString()?:"0.0"
+        binding.tvTotalIncomeBotMonthlyReport.text="${totalIncome?.toString()?:"0.0"} tk"
         updateMonthlyBalanceUI()
 
     }
 
     private fun updateTotalExpenseUI(totalExpense:Int?){
+        binding.tvTitleExpensesMonthlyReport.text = "Expenses :      ${Util.getMonthNameFromMonthNumber(month)}-$year"
         tExpense = totalExpense?.toDouble() ?: 0.0
-        binding.tvTotalExpenseBotMonthlyReport.text= totalExpense?.toString() ?: "0.0"
+        binding.tvTotalExpenseBotMonthlyReport.text= "${totalExpense?.toString() ?: "0.0"} tk"
         updateMonthlyBalanceUI()
     }
 
     private fun updateMonthlyBalanceUI(){
-        binding.tvBalanceBotMonthlyReport.text=(tIncome-tExpense).toString()
+        binding.tvTitleBalanceMonthlyReport.text = "Balance :      ${Util.getMonthNameFromMonthNumber(month)}-$year"
+        binding.tvBalanceBotMonthlyReport.text="${(tIncome-tExpense).toString()} tk"
     }
 
     companion object{
@@ -376,6 +417,11 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     fun navigateToDetails(type:String,category:String){
         val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,type,category,Constants.FRAGMENT_MONTHLY,null)
         navCon.navigate(action)
+    }
+
+
+    private fun selectMonthDialog(){
+
     }
 
 }

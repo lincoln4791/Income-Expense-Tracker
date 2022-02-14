@@ -696,6 +696,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     fun selectMoreCard(cardName : String){
 
         deselectAllCard()
+        viewModel.category = cardName
         binding.tvSelectedMoreCard.text = cardName
         binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvSelectedMoreCard.visibility = View.VISIBLE

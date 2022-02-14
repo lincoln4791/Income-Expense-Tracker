@@ -84,11 +84,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_MonthlyReport">
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_MonthlyReport"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tcSearch"
@@ -104,13 +107,61 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <LinearLayout
+        android:id="@+id/linearLayout31_MonthlyReport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="5dp"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar_MonthlyReport"
+        android:visibility="visible">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_spinnerYearly_MonthlyReport"
+            style="@style/cv_spinner_FullReport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_year_MonthlyReport"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/cv_spinner_FullReport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_month_MonthlyReport"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cvSearch">
+        app:layout_constraintTop_toBottomOf="@id/linearLayout31_MonthlyReport">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -390,840 +441,42 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout31_MonthlyReport"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:weightSum="2"
-                app:layout_constraintEnd_toStartOf="@+id/cv_search_MonthlyReport"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3_MonthlyReport"
-                android:visibility="gone">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_spinnerYearly_MonthlyReport"
-                    style="@style/cv_spinner_FullReport"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinner_year_MonthlyReport"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    style="@style/cv_spinner_FullReport"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinner_month_MonthlyReport"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-
-
-
-            </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_search_MonthlyReport"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="60dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/view_MonthlyReport"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout31_MonthlyReport"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_search" />
-
-            </com.google.android.material.card.MaterialCardView>
 
             <View
                 android:id="@+id/view_MonthlyReport"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
                 android:background="@color/pink"
-                app:layout_constraintEnd_toEndOf="@+id/cv_search_MonthlyReport"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout31_MonthlyReport" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/tv_titleExpenses_MonthlyReport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/Expenses"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
                 android:textColor="@color/black"
                 android:textStyle="bold|italic"
-                app:layout_constraintTop_toTopOf="@id/cv_pieChart_MonthlyReport"
-                app:layout_constraintStart_toStartOf="@+id/view_MonthlyReport" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_pieChart_MonthlyReport"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="10dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:layout_constraintTop_toBottomOf="@+id/cv_search_MonthlyReport"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="invisible">
-
-                <ImageView
-                    android:id="@+id/iv_pieChart_Transactions"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:src="@drawable/pie_chart" />
-
-            </com.google.android.material.card.MaterialCardView>
-
+                app:layout_constraintTop_toBottomOf="@id/view_MonthlyReport"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvExpense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_MonthlyReport" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_titleExpenses_MonthlyReport" />
 
-
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_HouseRent_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_pieChart_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_type_houseRentExpense_MonthlyReport"
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_houseRent_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_HouseRent_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/ic_house"
-                            android:text="@string/HouseRent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_HouseRentPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-
-                            app:layout_constraintEnd_toStartOf="@+id/textView2"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/tv_amount_houseRent_MonthlyReport"
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_houseRentExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_houseRentExpense_MonthlyReport" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_transport_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_HouseRent_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_transportExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_transport_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_transport_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/ic_car"
-                            android:text="@string/Transport"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_transportPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_transport"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_transport"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_transport_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_transportExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_transportExpense_MonthlyReport" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_food_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_transport_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_foodExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_food_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_food_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/hamburger24"
-                            android:text="@string/Food"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_foodPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_food"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_food"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_food_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_foodExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_foodExpense_MonthlyReport" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_bills_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_food_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_billsExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_bills_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_bills_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/bills24"
-                            android:text="@string/Bills"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_billsPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_bills"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_bills"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_bills_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_billsExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_billsExpense_MonthlyReport" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_business_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_bills_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_businessExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_business_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_business_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/business24"
-                            android:text="@string/Business"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_businessPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_business"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_business"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_business_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_businessExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_businessExpense_MonthlyReport" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_medicine_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_business_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_medicineExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_medicine_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_medicine_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/medicine24"
-                            android:text="@string/Medicine"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_medicinePercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_medicine"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_medicine"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_medicine_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_medicineExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_medicineExpense_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_cloths_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_medicine_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_clothsExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_cloths_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_cloths_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/cloths24"
-                            android:text="@string/Cloths"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_clothsPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_cloths"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_cloths"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_cloths_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_clothsExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_clothsExpense_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_education_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_cloths_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_educationExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_education_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_education_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/education24"
-                            android:text="@string/Education"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_educationPercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_education"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_education"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_education_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_educationExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_educationExpense_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_lifeStyle_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_education_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_lifeStyleExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_lifeStyle_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_lifeStyle_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/lifestyle24"
-                            android:text="@string/LifeStyle"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_lifeStylePercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_lifeStyle"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_lifeStyle"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_lifeStyle_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_lifeStyleExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_lifeStyleExpense_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cv_postHolder_otherExpense_MonthlyReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_postHolder_lifeStyle_MonthlyReport">
-
-                <androidx.cardview.widget.CardView
-                    style="@style/cv_categoryReportsExpenses_MonthlyReport"
-                    android:id="@+id/cv_type_otherExpense_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_amount_otherExpense_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_category_otherExpense_MonthlyReport"
-                            style="@style/tv_categoryReportsExpenses_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:drawableStart="@drawable/other24"
-                            android:text="@string/Other"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/tv_category_otherExpensePercentValue_MonthlyReport"
-                            style="@style/tv_categoryReportsExpensesPercentValue_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="0.0"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView2_otherExpense"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                        <TextView
-                            android:id="@+id/textView2_otherExpense"
-                            style="@style/tv_categoryReportsExpensesPercentSign_MonthlyReport"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="%"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-                </androidx.cardview.widget.CardView>
-
-
-                <TextView
-                    style="@style/tv_categoryReportsExpensesValue_MonthlyReport"
-                    android:id="@+id/tv_amount_otherExpense_MonthlyReport"
-                    android:text="@string/value"
-                    app:layout_constraintBottom_toBottomOf="@+id/cv_type_otherExpense_MonthlyReport"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/cv_type_otherExpense_MonthlyReport" />
-            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_totalExpenses_bot_MonthlyReport"
@@ -1254,10 +507,12 @@
                 android:id="@+id/view2_MonthlyReport"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:background="@color/pink"
-                app:layout_constraintEnd_toEndOf="@+id/cv_search_MonthlyReport"
+                app:layout_constraintEnd_toEndOf="@+id/view_MonthlyReport"
+                app:layout_constraintStart_toStartOf="@+id/view_MonthlyReport"
                 app:layout_constraintTop_toBottomOf="@+id/cv_totalExpenses_bot_MonthlyReport" />
 
             <TextView
@@ -1572,6 +827,8 @@
                 android:id="@+id/rvIncome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleIncome_MonthlyReport" />
@@ -1603,10 +860,12 @@
                 android:id="@+id/view3_MonthlyReport"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:background="@color/pink"
-                app:layout_constraintEnd_toEndOf="@+id/cv_search_MonthlyReport"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cv_totalIncome_bot_MonthlyReport" />
 
             <TextView
@@ -1647,7 +906,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="@string/balance"
+                        android:text="Balance"
                         android:textColor="@color/white"
                         android:textSize="15dp"
                         android:textStyle="bold" />
