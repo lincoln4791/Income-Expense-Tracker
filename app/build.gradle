@@ -19,7 +19,7 @@ android {
         applicationId "com.lincoln4791.dailyexpensemanager"
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 4
+        versionCode 5
         versionName "1.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
