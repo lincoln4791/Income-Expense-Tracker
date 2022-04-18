@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.common.util
 
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -60,7 +61,9 @@ class Util(){
             val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,screenName)
             bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+            bundle.putString("TestCustomEvent", "I am test Custom Event")
+            firebaseAnalytics.logEvent("MyCustomEvent", bundle)
+            Log.d("Analytics","Screen Recorded")
         }
 
         fun isEnglishWord(name: String): Boolean {

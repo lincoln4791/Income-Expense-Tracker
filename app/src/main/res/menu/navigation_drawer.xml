@@ -8,8 +8,7 @@
         <item
             android:id="@+id/menu_profile"
             android:title="Profile"
-            android:checked="true"
-            android:actionLayout="@layout/demo_action_layout"/>
+            android:icon="@drawable/profile64" />
         <item
             android:id="@+id/menu_DarkTheme"
             android:icon="@drawable/ic_darkmoon_24"
@@ -52,6 +51,7 @@
         <item
             android:id="@+id/menu_loginLogout"
             android:icon="@drawable/ic_login_24"
-            android:title="Login" />
+            android:title="Login"
+            android:visible="false"/>
     </group>
 </menu>

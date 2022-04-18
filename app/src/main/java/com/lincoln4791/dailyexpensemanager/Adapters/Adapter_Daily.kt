@@ -53,7 +53,7 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val ctx: Conte
         holder.tv_description.text = postList[position].postDescription
 
         holder.cv_mainLayout.setOnClickListener { v: View? ->
-            //context.navigateToDetails(postList[position].postType,postList[position].postCategory)
+            //dailyFragment.navigateToDetails(postList[position].postType,postList[position].postCategory)
         }
 
         holder.cv_mainLayout.setOnLongClickListener {
@@ -69,9 +69,9 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val ctx: Conte
 
         }
         holder.iv_deleteData.setOnClickListener {
-            /*context.confirmDelete(
+            dailyFragment.confirmDelete(
                 postList[position].id, postList[position].postAmount.toInt(),
-                postList[position].postType)*/
+                postList[position].postType)
         }
         holder.iv_closeEdtDltLayout.setOnClickListener {
             holder.cv_editDltLayout.visibility = View.GONE

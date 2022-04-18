@@ -83,6 +83,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
         Util.recordScreenEvent("monthly_fragment","MainActivity")
 
+        binding.shimmerViewContainer.startShimmer()
+
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MonthlyReport::class.java]
 
@@ -375,7 +377,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         else{
             binding.cvNoResultFoundExpenses.visibility = View.GONE
         }
-        //expenseAdapterExpense = Adapter_MonthlyReportExpense(list,this)
+        expenseAdapterExpense = Adapter_MonthlyReportExpense(list,requireContext(),this)
         binding.rvExpense.adapter = expenseAdapterExpense
         expenseAdapterExpense.notifyDataSetChanged()
 
@@ -394,7 +396,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             binding.cvNoResultFoundIncomes.visibility = View.GONE
         }
 
-        //incomeAdapterIncome = Adapter_MonthlyReportIncome(list,this)
+        incomeAdapterIncome = Adapter_MonthlyReportIncome(list,requireContext(),this)
         binding.rvIncome.adapter = incomeAdapterIncome
         incomeAdapterIncome.notifyDataSetChanged()
         CoroutineScope(Dispatchers.IO).launch {
@@ -422,6 +424,9 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private fun updateMonthlyBalanceUI(){
         binding.tvTitleBalanceMonthlyReport.text = "Balance :      ${Util.getMonthNameFromMonthNumber(month)}-$year"
         binding.tvBalanceBotMonthlyReport.text="${(tIncome-tExpense).toString()} tk"
+        binding.shimmerViewContainer.stopShimmer()
+        binding.shimmerViewContainer.visibility = View.GONE
+        binding.clContentMain.visibility = View.VISIBLE
     }
 
     companion object{

@@ -18,7 +18,7 @@ import com.lincoln4791.dailyexpensemanager.fragments.MonthlyCategoryWiseFragment
 import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 
 class Adapter_MonthlyCategoryWiseReport(
-    private val postList: List<MC_Posts>, ctx: Context,
+    private val postList: List<MC_Posts>,private val ctx: Context,private val monthlyCategoryWiseFragment: MonthlyCategoryWiseFragment
 ) : RecyclerView.Adapter<Adapter_MonthlyCategoryWiseReport.MyViewHolder>() {
 
     private var cv_Temp: CardView? = null
@@ -67,9 +67,9 @@ class Adapter_MonthlyCategoryWiseReport(
 
         }
         holder.iv_deleteData.setOnClickListener {
-           /* context.confirmDelete(
+            monthlyCategoryWiseFragment.confirmDelete(
                 postList[position].id, postList[position].postAmount.toInt(),
-                postList[position].postType)*/
+                postList[position].postType)
         }
         holder.iv_closeEdtDltLayout.setOnClickListener {
             holder.cv_editDltLayout.visibility = View.GONE

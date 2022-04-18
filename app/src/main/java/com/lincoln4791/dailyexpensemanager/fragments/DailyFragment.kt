@@ -367,7 +367,7 @@ class DailyFragment : Fragment() {
         updateUI(postList)
     }
 
-    fun deleteData(id: Int,callback : (isDeleted : Boolean,error:String?)->Unit) {
+/*    fun deleteData(id: Int,callback : (isDeleted : Boolean,error:String?)->Unit) {
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 AppDatabase.getInstance(requireContext()).dbDao().delete(id.toString())
@@ -382,7 +382,7 @@ class DailyFragment : Fragment() {
             callback(false,e.message)
         }
 
-    }
+    }*/
 
     fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
         DbAdapter.confirmDelete(requireContext(),id,amount,typeOfTheFile){

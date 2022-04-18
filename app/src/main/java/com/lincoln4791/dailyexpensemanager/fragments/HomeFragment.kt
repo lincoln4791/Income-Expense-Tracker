@@ -49,6 +49,9 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: VM_MainActivity
     private lateinit var navCon : NavController
     private lateinit var prefManager : PrefManager
+    private var day: String? = null
+    private var month: String? = null
+    private var year: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +86,7 @@ class HomeFragment : Fragment() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(R.color.primary)
 
+        setDate()
         getAndSaveFCM()
         Util.recordScreenEvent("home_fragment","MainActivity")
         FirebaseUtil.fetchDataFromRemoteConfig(requireContext())
@@ -159,7 +163,7 @@ class HomeFragment : Fragment() {
            /* startActivity(Intent(this@MainActivity,
                 MonthlyReport::class.java))*/
 
-            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(null,null)
+            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(year,month)
             navCon.navigate(action)
 
             /*val monthlyIntent = Intent(requireContext(),MonthlyActivity::class.java)
@@ -282,7 +286,7 @@ class HomeFragment : Fragment() {
         if (NetworkCheck.isConnect(requireContext())) {
             //VersionControl.checkVersion(requireContext())
             val lastVersionControlCheckDate = sdf.parse(prefManager.versionControlCheckLastDate)
-            if (getDaysDifference(lastVersionControlCheckDate, sdf.parse(currentTime)) > 1) {
+            if (getDaysDifference(lastVersionControlCheckDate, sdf.parse(currentTime)) >= 1) {
                 VersionControl.checkVersion(requireContext())
                 Log.d("appVersion", "VC checked")
             } else {
@@ -397,6 +401,18 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+
+    private fun setDate() {
+        val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
+        val simpleMonthFormat = SimpleDateFormat("MM", Locale.getDefault())
+        val simpleYearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+        day = simpleDayFormat.format(System.currentTimeMillis())
+        month = simpleMonthFormat.format(System.currentTimeMillis())
+        year = simpleYearFormat.format(System.currentTimeMillis())
+        /*date = "$day-$month-$year"
+        binding.tvDateDailyReport.text = date*/
     }
 
 }

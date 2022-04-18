@@ -135,7 +135,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         binding.rvCategoryWiseReport.layoutManager = linearLayoutManager
-        //adapter_monthlyCategoryWiseReport = Adapter_MonthlyCategoryWiseReport(postList,this)
+        adapter_monthlyCategoryWiseReport = Adapter_MonthlyCategoryWiseReport(postList,requireContext(),this)
         binding.rvCategoryWiseReport.adapter = adapter_monthlyCategoryWiseReport
         adapter_monthlyCategoryWiseReport!!.notifyDataSetChanged()
     }

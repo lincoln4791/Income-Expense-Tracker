@@ -21,7 +21,7 @@ class VM_Transactions( application: Application) : AndroidViewModel(application)
     var totalExpense : MutableLiveData<Int> = MutableLiveData(0)
     var mutable_postsList = MutableLiveData<List<MC_Posts>>()
 
-    fun loadAllTransactions(){
+     fun  loadAllTransactions(){
      /*   CoroutineScope(Dispatchers.IO).launch {*/
             //postsList.value = repository.loadAllTransactions()
             postsList.value = Resource.Loading()

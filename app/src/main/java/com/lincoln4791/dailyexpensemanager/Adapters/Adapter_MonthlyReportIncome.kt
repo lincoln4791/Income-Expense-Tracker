@@ -14,7 +14,7 @@ import com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 
 
-class Adapter_MonthlyReportIncome(private val postList: List<MC_MonthlyReport>, private val context: Context,val fragMonthlyReportIncome: Adapter_MonthlyReportIncome) :
+class Adapter_MonthlyReportIncome(private val postList: List<MC_MonthlyReport>, private val context: Context,val fragMonthlyReportIncome: MonthlyFragment) :
     RecyclerView.Adapter<Adapter_MonthlyReportIncome.MyViewHolder>() {
     private var cv_Temp: CardView? = null
     private var ctx = context
@@ -35,10 +35,10 @@ class Adapter_MonthlyReportIncome(private val postList: List<MC_MonthlyReport>, 
         holder.tv_amount.text = "${postList[position].postAmount.toString()} tk"
 
         holder.cvHolder.setOnClickListener {
-           /* fragMonthlyReportIncome.navigateToDetails(
+            fragMonthlyReportIncome.navigateToDetails(
                 Constants.TYPE_INCOME,
                 postList[position].postCategory
-            )*/
+            )
         }
 
     }
