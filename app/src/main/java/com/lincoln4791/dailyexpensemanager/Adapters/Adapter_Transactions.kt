@@ -1,8 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.Adapters
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,18 +13,16 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.NodeName
 import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
-
-class Adapter_Transactions(private val postList: List<MC_Posts>, private val fragment: TransactionsFragment) :
+class Adapter_Transactions(private val postList: List<MC_Posts>, context: Context, val tFragment : TransactionsFragment) :
     RecyclerView.Adapter<Adapter_Transactions.MyViewHolder>() {
     private var cv_Temp: CardView? = null
-    private var context = fragment.requireContext()
+    private var ctx = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.sample_transactions, parent, false)
+        val view = LayoutInflater.from(ctx).inflate(R.layout.sample_transactions, parent, false)
         return MyViewHolder(view)
     }
 
@@ -34,11 +30,11 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val fra
         if (postList[position].postType == Constants.TYPE_INCOME) {
             Log.d("tag", "color green" + postList[position].postType)
             //holder.cv_mainLayout.setCardBackgroundColor(context.getColor(R.color.green))
-            holder.tv_date.setTextColor(ContextCompat.getColor(context,R.color.green))
-            holder.tv_time.setTextColor(ContextCompat.getColor(context,R.color.green))
-            holder.tv_category.setTextColor(ContextCompat.getColor(context,R.color.green))
-            holder.tv_description.setTextColor(ContextCompat.getColor(context,R.color.green))
-            holder.tv_amount.setTextColor(ContextCompat.getColor(context,R.color.green))
+            holder.tv_date.setTextColor(ContextCompat.getColor(ctx,R.color.greenIncome))
+            holder.tv_time.setTextColor(ContextCompat.getColor(ctx,R.color.greenIncome))
+            holder.tv_category.setTextColor(ContextCompat.getColor(ctx,R.color.greenIncome))
+            holder.tv_description.setTextColor(ContextCompat.getColor(ctx,R.color.greenIncome))
+            holder.tv_amount.setTextColor(ContextCompat.getColor(ctx,R.color.greenIncome))
         }
 
         val date = postList[position].postDateTime.split(" ")[0]
@@ -50,7 +46,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val fra
         //holder.cv_mainLayout.setOnClickListener { v: View? -> }
 
         holder.cv_mainLayout.setOnClickListener {
-            fragment.navigateToDetails(
+            tFragment.navigateToDetails(
                 postList[position].postYear,
                 postList[position].postMonth,
                 postList[position].postType,
@@ -70,7 +66,7 @@ class Adapter_Transactions(private val postList: List<MC_Posts>, private val fra
 
         }
         holder.iv_deleteData.setOnClickListener {
-            fragment.confirmDelete(
+            tFragment.confirmDelete(
                 postList[position].id, postList[position].postAmount.toInt(),
                 postList[position].postType)
         }

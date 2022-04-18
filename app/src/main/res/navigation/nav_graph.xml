@@ -20,11 +20,11 @@
             app:destination="@id/addIncomeFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
-        <action
+     <!--   <action
             android:id="@+id/action_homeFragment_to_transactionsFragment"
             app:destination="@id/transactionsFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
+            app:exitAnim="@android:anim/slide_out_right" />-->
         <action
             android:id="@+id/action_homeFragment_to_dailyFragment"
             app:destination="@id/dailyFragment"
@@ -43,6 +43,11 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_transactionsFragment"
+            app:destination="@id/transactionsFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
     </fragment>

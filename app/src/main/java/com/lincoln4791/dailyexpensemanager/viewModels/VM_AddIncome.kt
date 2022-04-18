@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class VM_AddIncome(application: Application) : AndroidViewModel(application) {
@@ -27,10 +30,12 @@ class VM_AddIncome(application: Application) : AndroidViewModel(application) {
     fun loadAllCards(callback : (isLoaded : Boolean)-> Unit){
         postsList.value = Resource.Loading()
         try {
-            repository.getAllIncomeCards {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
-                    callback(true)
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.getAllIncomeCards {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                        callback(true)
+                    }
                 }
             }
         }

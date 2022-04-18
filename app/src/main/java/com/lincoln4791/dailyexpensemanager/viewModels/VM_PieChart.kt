@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class VM_PieChart(application: Application) : AndroidViewModel(application) {
@@ -19,9 +22,12 @@ class VM_PieChart(application: Application) : AndroidViewModel(application) {
         //postsList.value = repository.loadAllTransactions()
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthWise(year,month) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthWise(year,month) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
         }

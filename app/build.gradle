@@ -3,7 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
-    id("androidx.navigation.safeargs.kotlin")
+    //id("androidx.navigation.safeargs.kotlin")
+    id("androidx.navigation.safeargs")
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
 }
@@ -11,13 +12,13 @@ plugins {
 
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.lincoln4791.dailyexpensemanager"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 2
         versionName "1.1.2"
 
@@ -127,8 +128,20 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
 
     //admob
-    //implementation 'com.google.android.gms:play-services-ads:20.5.0'
-    //implementation project(path: ':nativetemplates')
+    implementation 'com.google.android.gms:play-services-ads:20.5.0'
+    implementation project(path: ':nativetemplates')
+
+    //Remote Config
+    implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
+
+    //GSON
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    //ShimmerEffect
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    // Leak CAnarry
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 
 
 }

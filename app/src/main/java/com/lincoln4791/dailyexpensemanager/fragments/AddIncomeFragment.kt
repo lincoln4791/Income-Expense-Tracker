@@ -483,8 +483,9 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun goBack() {
-        val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
-        navCon.navigate(action)
+       /* val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
+        navCon.navigate(action)*/
+        navCon.navigateUp()
     }
 
     private fun deselectAllCard() {
@@ -569,6 +570,22 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         }
 
     }
+
+    override fun onPause() {
+        Log.d("tag", " Add Income Fragment Paused")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d("tag","Add Income Fragment Stopped")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d("tag","Add Income Fragment Destroyed")
+        super.onDestroy()
+    }
+
 
 
 }

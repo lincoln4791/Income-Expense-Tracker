@@ -9,44 +9,46 @@ class Util(){
     companion object{
         fun getMonthNameFromMonthNumber(monthNumber : String):String{
             var monthName = ""
-            if(monthNumber=="01"){
-                monthName = "January"
-            }
-            else if(monthNumber=="02"){
-                monthName="February"
-            }
-            else if(monthNumber=="03"){
-                monthName="March"
-            }
-            else if(monthNumber=="04"){
-                monthName="April"
-            }
-            else if(monthNumber=="05"){
-                monthName="May"
-            }
-            else if(monthNumber=="06"){
-                monthName="June"
-            }
-            else if(monthNumber=="07"){
-                monthName="July"
-            }
-            else if(monthNumber=="08"){
-                monthName="August"
-            }
-            else if(monthNumber=="09"){
-                monthName="September"
-            }
-            else if(monthNumber=="10"){
-                monthName="October"
-            }
-            else if(monthNumber=="11"){
-                monthName="November"
-            }
-            else if(monthNumber=="12"){
-                monthName="December"
-            }
-            else{
-                monthName="Blank"
+            when (monthNumber) {
+                "01" -> {
+                    monthName = "January"
+                }
+                "02" -> {
+                    monthName="February"
+                }
+                "03" -> {
+                    monthName="March"
+                }
+                "04" -> {
+                    monthName="April"
+                }
+                "05" -> {
+                    monthName="May"
+                }
+                "06" -> {
+                    monthName="June"
+                }
+                "07" -> {
+                    monthName="July"
+                }
+                "08" -> {
+                    monthName="August"
+                }
+                "09" -> {
+                    monthName="September"
+                }
+                "10" -> {
+                    monthName="October"
+                }
+                "11" -> {
+                    monthName="November"
+                }
+                "12" -> {
+                    monthName="December"
+                }
+                else -> {
+                    monthName="Blank"
+                }
             }
 
 
@@ -60,5 +62,23 @@ class Util(){
             bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass)
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
         }
+
+        fun isEnglishWord(name: String): Boolean {
+            var isEnglish = true
+            if(name.isNotEmpty()){
+                val chars = name.toCharArray()
+                for (c in chars) {
+                    if (!c.toString().matches(".*[ a-zA-Z0-9].*".toRegex())) {
+                        isEnglish = false
+                    }
+                }
+            }
+
+            else{
+
+            }
+            return isEnglish
+        }
+
     }
 }

@@ -7,9 +7,9 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/menu_profile"
-            android:icon="@drawable/profile64"
             android:title="Profile"
-            android:checked="true" />
+            android:checked="true"
+            android:actionLayout="@layout/demo_action_layout"/>
         <item
             android:id="@+id/menu_DarkTheme"
             android:icon="@drawable/ic_darkmoon_24"

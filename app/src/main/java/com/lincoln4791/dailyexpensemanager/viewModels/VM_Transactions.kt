@@ -26,11 +26,14 @@ class VM_Transactions( application: Application) : AndroidViewModel(application)
             //postsList.value = repository.loadAllTransactions()
             postsList.value = Resource.Loading()
         try {
-            repository.getTransactions {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.getTransactions {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
             catch (e:Exception){
                 postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -43,11 +46,13 @@ class VM_Transactions( application: Application) : AndroidViewModel(application)
         //postsList.value = repository.loadAllTransactions()
         postsList.value = Resource.Loading()
         try {
-            repository.getIncomes {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
-                }
-            }
+           CoroutineScope(Dispatchers.IO).launch {
+               repository.getIncomes {
+                   android.os.Handler(Looper.getMainLooper()).post{
+                       postsList.value = it
+                   }
+               }
+           }
         }
         catch (e:Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")

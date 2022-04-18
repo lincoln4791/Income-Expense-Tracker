@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "mc_posts")
  class MC_Posts{
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

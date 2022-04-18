@@ -26,6 +26,10 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.*
 
@@ -142,10 +146,14 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     }
 
     private fun loadDatas() {
-        viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-        viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
-        viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
-        viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(350)
+            viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+   /*         viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)*/
+        }
+
     }
 
     private fun observer() {
@@ -184,12 +192,6 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                 is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
-
-    }
-
-    private fun goToPieChartActivity() {
-        val action = MonthlyFragmentDirections.actionMonthlyFragmentToPieChartFragment(year,month)
-        navCon.navigate(action)
 
     }
 
@@ -366,27 +368,45 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         }
     }
 
-
-
     private fun updateExpenseUI(list : List<MC_MonthlyReport>){
-        expenseAdapterExpense = Adapter_MonthlyReportExpense(list,this)
+        if(list.isEmpty()){
+            binding.cvNoResultFoundExpenses.visibility = View.VISIBLE
+        }
+        else{
+            binding.cvNoResultFoundExpenses.visibility = View.GONE
+        }
+        //expenseAdapterExpense = Adapter_MonthlyReportExpense(list,this)
         binding.rvExpense.adapter = expenseAdapterExpense
         expenseAdapterExpense.notifyDataSetChanged()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+        }
+
     }
 
     private fun updateIncomeUI(list : List<MC_MonthlyReport>){
-        incomeAdapterIncome = Adapter_MonthlyReportIncome(list,this)
+
+        if(list.isEmpty()){
+            binding.cvNoResultFoundIncomes.visibility = View.VISIBLE
+        }
+        else{
+            binding.cvNoResultFoundIncomes.visibility = View.GONE
+        }
+
+        //incomeAdapterIncome = Adapter_MonthlyReportIncome(list,this)
         binding.rvIncome.adapter = incomeAdapterIncome
         incomeAdapterIncome.notifyDataSetChanged()
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+        }
     }
-
 
     private fun updateTotalIncomeUI(totalIncome:Int?){
         binding.tvTitleIncomeMonthlyReport.text = "Incomes :        ${Util.getMonthNameFromMonthNumber(month)}-$year"
         tIncome = totalIncome?.toDouble() ?: 0.0
         binding.tvTotalIncomeBotMonthlyReport.text="${totalIncome?.toString()?:"0.0"} tk"
         updateMonthlyBalanceUI()
-
     }
 
     private fun updateTotalExpenseUI(totalExpense:Int?){
@@ -394,6 +414,9 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         tExpense = totalExpense?.toDouble() ?: 0.0
         binding.tvTotalExpenseBotMonthlyReport.text= "${totalExpense?.toString() ?: "0.0"} tk"
         updateMonthlyBalanceUI()
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
+        }
     }
 
     private fun updateMonthlyBalanceUI(){
@@ -419,9 +442,5 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         navCon.navigate(action)
     }
 
-
-    private fun selectMonthDialog(){
-
-    }
 
 }

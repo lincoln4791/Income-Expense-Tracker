@@ -20,10 +20,12 @@ import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
 
-class Adapter_Daily(private val postList: List<MC_Posts>, private val context: Context,private val fragment: DailyFragment) :
+
+class Adapter_Daily(private val postList: List<MC_Posts>, private val ctx: Context,val dailyFragment: DailyFragment) :
     RecyclerView.Adapter<Adapter_Daily.MyViewHolder>() {
     private var cv_Temp: CardView? = null
     private val cv_new: CardView? = null
+    private val context = ctx
     private val i = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.sample_transactions, parent, false)
@@ -49,7 +51,11 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val context: C
         holder.tv_date.text = date
         holder.tv_time.text = postList[position].postTime
         holder.tv_description.text = postList[position].postDescription
-        holder.cv_mainLayout.setOnClickListener { v: View? -> }
+
+        holder.cv_mainLayout.setOnClickListener { v: View? ->
+            //context.navigateToDetails(postList[position].postType,postList[position].postCategory)
+        }
+
         holder.cv_mainLayout.setOnLongClickListener {
             if (cv_Temp != null) {
                 cv_Temp!!.visibility = View.GONE
@@ -63,9 +69,9 @@ class Adapter_Daily(private val postList: List<MC_Posts>, private val context: C
 
         }
         holder.iv_deleteData.setOnClickListener {
-            fragment.confirmDelete(
+            /*context.confirmDelete(
                 postList[position].id, postList[position].postAmount.toInt(),
-                postList[position].postType)
+                postList[position].postType)*/
         }
         holder.iv_closeEdtDltLayout.setOnClickListener {
             holder.cv_editDltLayout.visibility = View.GONE

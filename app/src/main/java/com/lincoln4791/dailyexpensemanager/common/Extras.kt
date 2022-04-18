@@ -1,6 +1,10 @@
 package com.lincoln4791.dailyexpensemanager.common
 
 object Extras {
+        const val DAY = "day"
+        const val YEAR = "year"
+        const val MONTH = "month"
+        const val CATEGORY = "category"
         const val TYPE = "type"
         const val TOTAL_INCOME = "total_expense"
         const val SALARY_INCOME = "salary_income"

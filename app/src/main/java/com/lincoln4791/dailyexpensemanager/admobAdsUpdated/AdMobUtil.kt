@@ -13,6 +13,8 @@ class AdMobUtil {
     companion object{
         private val tag = "tag"
 
+        val TEST_AD_ID = "ca-app-pub-3940256099942544~3347511713"
+
         @SuppressLint("SimpleDateFormat")
         fun diffTime(time: String): Long {
             var min: Long = 0
@@ -40,8 +42,8 @@ class AdMobUtil {
             var error = ""
 
             if(NetworkCheck.isConnect(context)){
-                    if (lastAdShownDate!="" && diffTime(lastAdShownDate) >=0){
-                        if (diffTime(lastAdShownDate) >3L) {
+                    if (lastAdShownDate!=""){
+                        if (diffTime(lastAdShownDate).toInt() >= prefManager.adInterval.toInt()) {
                             info(tag," Ad shown because difference is greater than 3")
                             canAdShow = true
                         } else {

@@ -3,55 +3,45 @@ package com.lincoln4791.dailyexpensemanager.viewModels
 import android.app.Application
 import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.util.ArrayList
 
 class VM_FullReport(application: Application) : AndroidViewModel(application) {
+
+    var expenseList: MutableLiveData<Resource<List<MC_MonthlyReport>>> = MutableLiveData<Resource<List<MC_MonthlyReport>>>()
+    var incomeList: MutableLiveData<Resource<List<MC_MonthlyReport>>> = MutableLiveData<Resource<List<MC_MonthlyReport>>>()
     var postsList: MutableLiveData<Resource<List<MC_Posts>>> = MutableLiveData<Resource<List<MC_Posts>>>()
+    var categoryCards: MutableLiveData<Resource<Array<String>>> = MutableLiveData<Resource<Array<String>>>()
+    var totalIncome: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()
+    var totalExpense: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()
+    var balance: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()
     private var repository : Repository = Repository(application.applicationContext)
     var year = Constants.YEAR_DEFAULT
-    var month = Constants.MONTH_NULL
-    var day = Constants.DAY_NULL
+    var month = Constants.MONTH_All
+    var day = Constants.DAY_ALL
     var type = Constants.TYPE_ALL
-    var category = Constants.CATEGORY_NULL
-    var income_salary = 0
+    var category = Constants.CATEGORY_All
     var income = 0
-    var income_business = 0
-    var income_house_rent = 0
-    var income_other = 0
-    var total_income = 0
-    var expense_food = 0
-    var expense_transport = 0
-    var expense_bills = 0
-    var expense_houseRent = 0
-    var expense_business = 0
-    var expense_medicine = 0
-    var expense_cloths = 0
-    var expense_education = 0
-    var expense_lifestyle = 0
-    var expense_other = 0
-    var total_expense = 0
-    var mutablePostsList = MutableLiveData<List<MC_Posts>>()
-    var mutableYear = MutableLiveData<String>()
-    var mutableMonth = MutableLiveData<String>()
-    var mutableDay = MutableLiveData<String>()
-    var mutableType = MutableLiveData<String>()
-    var mutableCategory = MutableLiveData<String>()
 
     fun loadYearMonthDayTypeCategoryWise(year:String,month:String,day:String,type:String,category:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthDayTypeCategoryWise(year,month,day,type,category) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthDayTypeCategoryWise(year,month,day,type,category) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -62,11 +52,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthTypeCategoryWise(year:String,month:String,type:String,category:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthTypeCategoryWise(year,month,type,category) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthTypeCategoryWise(year,month,type,category) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -77,11 +70,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthDayTypeWise(year:String,month:String,day:String,type:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthDayTypeWise(year,month,day,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthDayTypeWise(year,month,day,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -92,11 +88,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthDayCategoryWise(year:String,month:String,day:String,category:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthDayCategoryWise(year,month,day,category) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthDayCategoryWise(year,month,day,category) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -106,11 +105,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthDayWise(year:String,month:String,day:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthDayWise(year,month,day) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthDayWise(year,month,day) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -121,11 +123,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthTypeWise(year:String,month:String,type:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthTypeWise(year,month,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthTypeWise(year,month,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -136,11 +141,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthCategoryWise(year:String,month:String,category:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthCategoryWise(year,month,category) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthCategoryWise(year,month,category) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -151,11 +159,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthCategoryWise(year:String,month:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthWise(year,month) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthWise(year,month) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -165,11 +176,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearTypeWise(year:String,type:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearTypeWise(year,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearTypeWise(year,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -179,11 +193,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearTypeCategoryWise(year:String,type:String,category:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearTypeCategoryWise(year,type, category) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearTypeCategoryWise(year,type, category) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -194,11 +211,14 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearMonthWise(year:String,month:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearMonthWise(year,month) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthWise(year,month) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
@@ -208,15 +228,173 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     fun loadYearWise(year:String){
         postsList.value = Resource.Loading()
         try {
-            repository.loadYearWise(year) {
-                android.os.Handler(Looper.getMainLooper()).post{
-                    postsList.value = it
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearWise(year) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        postsList.value = it
+                    }
                 }
             }
+
         }
         catch (e: Exception){
             postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
+
+
+    fun getAllCardsByTypeArrayString(type : String){
+        categoryCards.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.getAllCardsByTypeArrayString(type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        categoryCards.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+    }
+
+
+    //Group Wise
+    fun loadYearMonthExpeneWiseByGroup(year:String, month:String, type : String){
+        /*   CoroutineScope(Dispatchers.IO).launch {*/
+        //postsList.value = repository.loadAllTransactions()
+        expenseList.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthTypeWiseByGroup(year,month,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        expenseList.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+        // }
+    }
+
+    fun loadYearMonthIncomeWiseByGroup(year:String, month:String, type : String){
+        /*   CoroutineScope(Dispatchers.IO).launch {*/
+        //postsList.value = repository.loadAllTransactions()
+        incomeList.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthTypeWiseByGroup(year,month,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        incomeList.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+        // }
+    }
+
+    fun loadYearExpeneWiseByGroup(year:String, type : String){
+        /*   CoroutineScope(Dispatchers.IO).launch {*/
+        //postsList.value = repository.loadAllTransactions()
+        expenseList.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearTypeWiseByGroup(year,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        expenseList.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+        // }
+    }
+
+    fun loadYearIncomeWiseByGroup(year:String,type : String){
+        /*   CoroutineScope(Dispatchers.IO).launch {*/
+        //postsList.value = repository.loadAllTransactions()
+        incomeList.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearTypeWiseByGroup(year,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        incomeList.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+        // }
+    }
+
+
+    fun loadYearMonthIncomeTotal(year:String,month: String,type : String){
+        totalIncome.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthTypeTotal(year,month,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        totalIncome.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            totalIncome.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+    }
+
+
+    fun loadYearMonthExpenseTotal(year:String,month: String,type : String){
+        totalExpense.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthTypeTotal(year,month,type) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        totalExpense.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            totalExpense.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+    }
+
+    fun loadYearMonthBalance(year:String,month: String){
+        balance.value = Resource.Loading()
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                repository.loadYearMonthBalance(year,month) {
+                    android.os.Handler(Looper.getMainLooper()).post{
+                        balance.value = it
+                    }
+                }
+            }
+
+        }
+        catch (e: Exception){
+            balance.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        }
+    }
+
+
 
 }

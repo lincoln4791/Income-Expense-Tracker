@@ -12,14 +12,17 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 
 
-class Adapter_MonthlyReportExpense(private val postList: List<MC_MonthlyReport>, private val fragment: MonthlyFragment) :
+
+class Adapter_MonthlyReportExpense(private val postList: List<MC_MonthlyReport>, private val context: Context,val monthlyFragment:MonthlyFragment) :
     RecyclerView.Adapter<Adapter_MonthlyReportExpense.MyViewHolder>() {
     private var cv_Temp: CardView? = null
+    private var ctx = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(fragment.requireContext()).inflate(R.layout.sample_transactions2, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.sample_transactions2, parent, false)
         return MyViewHolder(view)
     }
 
@@ -29,17 +32,15 @@ class Adapter_MonthlyReportExpense(private val postList: List<MC_MonthlyReport>,
         }*/
 
         holder.tv_amountPercent.text = MonthlyFragment.df2.format(postList[position].amountPercent!!.toDouble())
-        //holder.tv_amountPercent.text = postList[position].amountPercent
         holder.tv_name.text = postList[position].postCategory
         holder.tv_amount.text = "${postList[position].postAmount.toString()} tk"
 
         holder.cvHolder.setOnClickListener {
-            fragment.navigateToDetails(
+            monthlyFragment.navigateToDetails(
                 Constants.TYPE_EXPENSE,
                 postList[position].postCategory
             )
         }
-
     }
 
     override fun getItemCount(): Int {

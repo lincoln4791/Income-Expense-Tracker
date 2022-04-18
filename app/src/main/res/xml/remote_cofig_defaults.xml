@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>ad_interval</key>
+        <value>5</value>
+    </entry>
+
+</defaultsMap>
+    <!-- END xml_defaults -->

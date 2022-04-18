@@ -33,6 +33,7 @@
     <color name="lime">#00FF00</color>
     <color name="teal">#008080</color>
     <color name="green">#4CAF50</color>
+    <color name="green2">#3E7A40</color>
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
     <color name="chatBackground">#ededed</color>
@@ -47,7 +48,7 @@
     <color name="LightGray">#ACA3A3</color>
     <color name="caseDeath">#ba160c</color>
     <color name="caseTotal">#FFE600</color>
-    <color name="caseRecovered">#177e0f</color>
+    <color name="greenIncome">#177e0f</color>
     <color name="caseActive">#0009ff</color>
     <color name="orangeDeep">#F33709 </color>
     <color name="orange">#F39309 </color>

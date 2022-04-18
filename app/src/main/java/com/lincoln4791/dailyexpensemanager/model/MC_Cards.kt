@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "mc_cards")
 class MC_Cards{
     @PrimaryKey(autoGenerate = true) var id: Int?= null
     @ColumnInfo var cardName: String? = null

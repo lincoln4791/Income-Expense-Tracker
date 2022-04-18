@@ -19,15 +19,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.itmedicus.patientaid.utils.CurrentDate
-import com.itmedicus.patientaid.utils.CurrentDate.Companion.currentTime
 import com.itmedicus.patientaid.utils.DayDifference.Companion.getDaysDifference
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.Extras
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.util.FirebaseUtil
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.VersionControl
@@ -75,15 +79,15 @@ class HomeFragment : Fragment() {
         prefManager = PrefManager(requireContext())
         super.onViewCreated(view, savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = requireActivity().window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = resources.getColor(R.color.primary)
-        }
+        val window = requireActivity().window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = resources.getColor(R.color.primary)
 
         getAndSaveFCM()
         Util.recordScreenEvent("home_fragment","MainActivity")
+        FirebaseUtil.fetchDataFromRemoteConfig(requireContext())
         InitCheckAppVersion()
+        initAdMob()
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
@@ -109,45 +113,60 @@ class HomeFragment : Fragment() {
             val action = HomeFragmentDirections.actionHomeFragmentToAddIncomeFragment()
             navCon.navigate(action)
         })
+
         binding.cvAddExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToAddExpenseFragment()
             navCon.navigate(action)
 
         })
+
         binding.cvFullReportMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToFullReportFragment(  )
             navCon.navigate(action)
         })
-        binding.cvTransactionsMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-       /*     val transactionsIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
-            transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
-            startActivity(transactionsIntent)*/
-            val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
+
+        binding.cvTransactionsMainActivity.setOnClickListener {
+            /* val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
+             transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
+             startActivity(transactionsIntent)*/
+
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
             navCon.navigate(action)
-        })
+
+        }
+
         binding.cvIncomeMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  val incomeIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
-            incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
-            startActivity(incomeIntent)*/
+            /*val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
+            transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
+            startActivity(transactionsIntent)*/
             val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_INCOME)
             navCon.navigate(action)
         })
         binding.cvExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  val incomeIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
-            incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
-            startActivity(incomeIntent)*/
+          /*  val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
+            transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
+            startActivity(transactionsIntent)*/
             val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_EXPENSE)
             navCon.navigate(action)
         })
         binding.cvDailyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToDailyFragment()
             navCon.navigate(action)
+            //startActivity(Intent(requireContext(),DailyActivity::class.java))
         })
         binding.cvMonthlyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
            /* startActivity(Intent(this@MainActivity,
                 MonthlyReport::class.java))*/
+
             val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(null,null)
             navCon.navigate(action)
+
+            /*val monthlyIntent = Intent(requireContext(),MonthlyActivity::class.java)
+            monthlyIntent.putExtra("year","2022")
+            monthlyIntent.putExtra("month","02")
+            startActivity(monthlyIntent)*/
+
         })
         binding.cvTotalIncomesTopBarMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
           /*  val incomeIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
@@ -163,7 +182,7 @@ class HomeFragment : Fragment() {
             openAbout()
         }
         binding.cvBackupDataMainActivity.setOnClickListener {
-            Toast.makeText(context,"Coming Soon",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext().applicationContext,"Coming Soon",Toast.LENGTH_SHORT).show()
         }
         binding.cvRestoreDataMainActivity.setOnClickListener { Toast.makeText(context,"Coming Soon",Toast.LENGTH_SHORT).show() }
 
@@ -181,7 +200,7 @@ class HomeFragment : Fragment() {
             }
 
             else if(it.itemId == R.id.menu_DarkTheme){
-                Toast.makeText(context,"Coming Soon",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext().applicationContext,"Coming Soon",Toast.LENGTH_SHORT).show()
                 /*if(prefManager.isDarkThemeEnabled){
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     prefManager.isDarkThemeEnabled = false
@@ -220,7 +239,7 @@ class HomeFragment : Fragment() {
             else if(it.itemId == R.id.menu_privacyPolicy){
                 val intent =
                     Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://www.freeprivacypolicy.com/live/99f6d75d-0da4-4e65-b9f8-b29cda9349e4"))
+                        Uri.parse(Constants.PRIVACY_POLICY_LINK))
                 startActivity(intent)
             }
 
@@ -243,7 +262,7 @@ class HomeFragment : Fragment() {
             }
 
             else if (it.itemId == R.id.menu_loginLogout){
-                Toast.makeText(requireContext(),"Coming Soon",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext().applicationContext,"Coming Soon",Toast.LENGTH_SHORT).show()
             }
 
             true
@@ -287,11 +306,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-
-
     private fun goback(){
-        confirmQuit()
+        if(binding.drawerLayout.isOpen){
+            binding.drawerLayout.closeDrawers()
+        }
+        else{
+            confirmQuit()
+        }
+
     }
 
     private fun confirmQuit() {
@@ -319,9 +341,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun getAndSaveFCM() {
-
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.d(TAG, "Fetching FCM registration token failed", task.exception)
@@ -343,7 +363,6 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-
         val currentTime: String
             @SuppressLint("SimpleDateFormat")
             get() {
@@ -361,6 +380,22 @@ class HomeFragment : Fragment() {
             val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
             goToPlayStoreAppLnk.data = appLink
             context.startActivity(goToPlayStoreAppLnk)
+        }
+    }
+
+    private fun initAdMob() {
+
+        val lastAdShowDate = prefManager.lastBannerAdShownHomeF
+
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            MobileAds.initialize(requireContext()) {
+                val bannerAdHelper = BannerAddHelper(requireContext())
+                bannerAdHelper.loadBannerAd(binding.adView){
+                    if(it){
+                        prefManager.lastBannerAdShownHomeF = CurrentDate.currentTime24H
+                    }
+                }
+            }
         }
     }
 

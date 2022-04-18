@@ -194,8 +194,16 @@ class TransactionsFragment : Fragment() {
     }
 
     private fun update(posts: List<MC_Posts> ){
+
+        if(posts.isEmpty()){
+            binding.cvNoResultFound.visibility = View.VISIBLE
+        }
+        else{
+            binding.cvNoResultFound.visibility = View.GONE
+        }
+
         vm_transactions!!.fetchAllTransactions(posts)
-        adapter_transactions = Adapter_Transactions(posts, this)
+        adapter_transactions = Adapter_Transactions(posts, requireContext(),this)
         binding.tvTypeTitleTransactions.text = getString(R.string.Transactions)
         toolbar!!.title = getString(R.string.Transactions)
         binding.rvTransactions.adapter = adapter_transactions

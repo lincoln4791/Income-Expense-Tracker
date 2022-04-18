@@ -1,9 +1,9 @@
 package com.lincoln4791.dailyexpensemanager.common
 
 object Constants {
-        const val MONTH_NULL = "null"
-        const val CATEGORY_NULL = "null"
-        const val DAY_NULL = "null"
+        const val MONTH_All = "All"
+        const val CATEGORY_All = "All"
+        const val DAY_ALL = "All"
         const val YEAR_DEFAULT = "2021"
         const val TYPE_INCOME = "Income"
         const val TYPE_EXPENSE = "Expense"
@@ -39,10 +39,19 @@ object Constants {
         const val AMOUNT_400000 = "400000"
         const val AMOUNT_500000 = "500000"
         const val FRAGMENT_FROM = "fragment_from"
+        const val ACTIVITY_FROM = "activity_from"
+        const val SELECTED_TRANSACTION_TYPE = "selected_transaction_type"
         const val FRAGMENT_TRANSACTION = "fragment_transaction"
+        const val ACTIVITY_TRANSACTION = "activity_transaction"
+        const val ACTIVITY_DAILY = "activity_daily"
         const val FRAGMENT_MONTHLY = "fragment_monthly"
         const val PLAY_STORE_APP_LINK =
             "https://play.google.com/store/apps/details?id=com.lincoln4791.dailyexpensemanager"
+
+        const val PRIVACY_POLICY_LINK =
+            "https://www.freeprivacypolicy.com/live/99f6d75d-0da4-4e65-b9f8-b29cda9349e4"
+
+        const val ADD_INTERVAL = "ad_interval"
 
 
 

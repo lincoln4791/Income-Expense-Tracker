@@ -18,16 +18,14 @@ import com.lincoln4791.dailyexpensemanager.fragments.MonthlyCategoryWiseFragment
 import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 
 class Adapter_MonthlyCategoryWiseReport(
-    private val postList: List<MC_Posts>,
-    private val fragment: MonthlyCategoryWiseFragment
+    private val postList: List<MC_Posts>, ctx: Context,
 ) : RecyclerView.Adapter<Adapter_MonthlyCategoryWiseReport.MyViewHolder>() {
 
     private var cv_Temp: CardView? = null
-    private var context: Context
+    private var context = ctx
 
     init {
         Log.d("tag","List size in adapter is -> ${postList.size}")
-        context = fragment.requireContext()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -69,9 +67,9 @@ class Adapter_MonthlyCategoryWiseReport(
 
         }
         holder.iv_deleteData.setOnClickListener {
-            fragment.confirmDelete(
+           /* context.confirmDelete(
                 postList[position].id, postList[position].postAmount.toInt(),
-                postList[position].postType)
+                postList[position].postType)*/
         }
         holder.iv_closeEdtDltLayout.setOnClickListener {
             holder.cv_editDltLayout.visibility = View.GONE

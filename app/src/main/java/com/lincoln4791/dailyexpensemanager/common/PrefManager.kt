@@ -44,5 +44,20 @@ class PrefManager(val context : Context) {
         get() = pref.getString("versionControlCheckLastDate", "2021-08-10")!!
         set(value) {editor.putString("versionControlCheckLastDate",value).commit()}
 
+    var adInterval:String
+        get() = pref.getString("adInterval", "3")!!
+        set(value) {editor.putString("adInterval",value).commit()}
+
+
+
+
+
+
+
+    // ads
+    var lastBannerAdShownHomeF:String
+        get() = pref.getString("lastBannerAdShownHomeF","")!!
+        set(value) {editor.putString("lastBannerAdShownHomeF",value).commit()}
+
 
 }

@@ -1,4 +1,3 @@
-/*
 package com.itmedicus.patientaid.ads.admobAdsUpdated
 
 import android.content.Context
@@ -39,14 +38,14 @@ class BannerAddHelper(private val context: Context) {
             }
 
             override fun onAdClicked() {
-                Toast.makeText(context, "Add clicked", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "Add clicked", Toast.LENGTH_SHORT).show()
                 Log.d("Banner","banner Clicked")
             }
 
             override fun onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
-                Toast.makeText(context, "Add clicked", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "Add clicked", Toast.LENGTH_SHORT).show()
                 Log.d("Banner","banner Closed")
 
             }
@@ -54,4 +53,3 @@ class BannerAddHelper(private val context: Context) {
     }
 
 }
-*/

@@ -152,7 +152,7 @@
     </string-array>
 
     <string-array name="monthNames">
-        <item>Null</item>
+        <item>All</item>
         <item>JAN</item>
         <item>FEB</item>
         <item>MAR</item>
@@ -217,7 +217,7 @@
     <string-array name="dayNull"></string-array>
 
     <string-array name="day31">
-        <item>Null</item>
+        <item>All</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -253,7 +253,7 @@
 
 
     <string-array name="day30">
-        <item>Null</item>
+        <item>All</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -288,7 +288,7 @@
 
 
     <string-array name="day28">
-        <item>Null</item>
+        <item>All</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -322,7 +322,7 @@
 
     <string name="about">
 
-        Contact Me: \n\nMahmudul Karim Lincoln\nM.Sc in Computer Science And Engineering\nEast West University, Dhaka, Bangladesh\n\nPhone : +8801670878110\nEmail : mahmuduulkarim@gmail.com
+        Contact Me: \n\nMahmudul Karim Lincoln\nM.Sc in Software Engineering\nEast West University, Dhaka, Bangladesh\n\nEmail : dev.lincoln47@gmail.com
 
     </string>
     <string name="BackupData">Backup Data</string>

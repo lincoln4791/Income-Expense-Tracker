@@ -11,6 +11,6 @@ class MyApplication : Application() {
             this
         ) { }*/
 
-     //   appOpenManager =  AppOpenManager(this)
+     //   appOpenManager =  AppOpenManager(this
     }
 }

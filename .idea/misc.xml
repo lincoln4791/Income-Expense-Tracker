@@ -24,6 +24,8 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_full_report.xml" value="0.1" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_main2.xml" value="0.14270833333333333" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_monthly.xml" value="0.12447916666666667" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_monthly_category_wise.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_monthly_category_wise_details.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_monthly_report.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_pie_chart.xml" value="0.20416666666666666" />
@@ -31,17 +33,19 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_transactions.xml" value="0.18645833333333334" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/add_expense_fragment.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/content_main_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/demo_action_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_about.xml" value="0.33" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_add_more_card.xml" value="0.22" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_delete.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_delete_all.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_new_version_available.xml" value="0.25" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_select_date_time.xml" value="0.18" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_select_month.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dradable_bg.xml" value="0.1" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_income.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_transaction.xml" value="0.1515625" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_daily.xml" value="0.20416666666666666" />
-        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_full_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_full_report.xml" value="0.22" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_monthly.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_monthly_category_wise.xml" value="0.20416666666666666" />
@@ -50,16 +54,24 @@
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.21" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/header_navigation_drawer.xml" value="0.33" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_no_result_found.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_cardview.xml" value="0.25" />
-        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_full_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_full_report.xml" value="0.25" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_monthly_category_wise.xml" value="0.20416666666666666" />
-        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_transactions.xml" value="0.25" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_transactions.xml" value="0.22" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_transactions2.xml" value="0.22" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_transactions3.xml" value="0.22" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_transactions3.xml.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_transactions_small.xml" value="0.25" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/shimmer_layout_placeholder.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/shimmer_sample_transactions.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/menu/navigation_drawer.xml" value="0.2" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_home.xml" value="0.22826086956521738" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.22826086956521738" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

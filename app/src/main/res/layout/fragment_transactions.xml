@@ -97,7 +97,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <LinearLayout
         android:id="@+id/ll_topBar_transactions"
         android:layout_width="0dp"
@@ -396,9 +395,31 @@
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cvNoResultFound"
+        style="@style/cl_noResultFound"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rv_Transactions">
+
+        <ImageView
+            style="@style/iv_noResultFound"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/tv_noResultFound"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_Transactions"
         android:layout_width="match_parent"
+        android:minHeight="200dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="2dp"

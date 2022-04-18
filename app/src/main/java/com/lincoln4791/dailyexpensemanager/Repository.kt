@@ -22,7 +22,7 @@ class Repository(private val context: Context) {
         }
     }
 
-     fun getIncomes(callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun getIncomes(callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadTypeWise(
@@ -32,7 +32,7 @@ class Repository(private val context: Context) {
     }
 
 
-     fun getTransactions(callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun getTransactions(callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadAllTransactions())
@@ -40,7 +40,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadTypeWise(type:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadTypeWise(type:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadTypeWise(type))
@@ -48,7 +48,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearWise(year:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearWise(year:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearWise(year))
@@ -56,7 +56,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearTypeWise(year:String,type:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearTypeWise(year:String,type:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearTypeWise(year,type))
@@ -64,7 +64,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearCategoryWise(year:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearCategoryWise(year:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearCategoryWise(year,category))
@@ -72,7 +72,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearTypeCategoryWise(year:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearTypeCategoryWise(year:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearTypeCategoryWise(year,type,category))
@@ -80,7 +80,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearMonthWise(year:String,month:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthWise(year:String,month:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthWise(year,month))
@@ -88,7 +88,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearMonthTypeWise(year:String,month:String,type:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthTypeWise(year:String,month:String,type:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthTypeWise(year,month,type))
@@ -96,7 +96,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearMonthCategoryWise(year:String,month:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthCategoryWise(year:String,month:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthCategoryWise(year,month,category))
@@ -104,7 +104,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearMonthTypeCategoryWise(year:String,month:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthTypeCategoryWise(year:String,month:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthTypeCategoryWise(year,month,type,category))
@@ -112,7 +112,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearMonthDayWise(year:String,month:String,day:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthDayWise(year:String,month:String,day:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthDayWise(year,month,day))
@@ -120,7 +120,7 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun loadYearMonthDayTypeWise(year:String,month:String,day:String,type:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthDayTypeWise(year:String,month:String,day:String,type:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthDayTypeWise(year,month,day,type))
@@ -129,7 +129,7 @@ class Repository(private val context: Context) {
     }
 
 
-    fun loadYearMonthDayCategoryWise(year:String,month:String,day:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthDayCategoryWise(year:String,month:String,day:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthDayCategoryWise(year,month,day,category))
@@ -138,7 +138,7 @@ class Repository(private val context: Context) {
     }
 
 
-    fun loadYearMonthDayTypeCategoryWise(year:String,month:String,day:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
+    suspend fun loadYearMonthDayTypeCategoryWise(year:String,month:String,day:String,type:String,category:String,callback:(Resource<List<MC_Posts>>)->Unit){
         var value : Resource<List<MC_Posts>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthDayTypeCategoryWise(year,month,day,type,category))
@@ -147,7 +147,7 @@ class Repository(private val context: Context) {
     }
 
 
-    fun loadYearMonthTypeWiseByGroup(year:String, month:String,type:String, callback:(Resource<List<MC_MonthlyReport>>)->Unit){
+    suspend fun loadYearMonthTypeWiseByGroup(year:String, month:String,type:String, callback:(Resource<List<MC_MonthlyReport>>)->Unit){
         var value : Resource<List<MC_MonthlyReport>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthTypeWiseByGroup(year,month,type))
@@ -156,10 +156,19 @@ class Repository(private val context: Context) {
     }
 
 
+    suspend fun loadYearTypeWiseByGroup(year:String,type:String, callback:(Resource<List<MC_MonthlyReport>>)->Unit){
+        var value : Resource<List<MC_MonthlyReport>>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadYearTypeWiseByGroup(year,type))
+            callback(value as Resource.Success<List<MC_MonthlyReport>>)
+        }
+    }
+
+
 
 
     // Cards
-    fun getAllExpenseCards(callback:(Resource<List<MC_Cards>>)->Unit){
+    suspend fun getAllExpenseCards(callback:(Resource<List<MC_Cards>>)->Unit){
         var value : Resource<List<MC_Cards>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadAllExpenseCards(Constants.TYPE_EXPENSE))
@@ -167,7 +176,15 @@ class Repository(private val context: Context) {
         }
     }
 
-    fun getAllIncomeCards(callback:(Resource<List<MC_Cards>>)->Unit){
+    suspend fun getAllCardsByTypeArrayString(type:String,callback:(Resource<Array<String>>)->Unit){
+        var value : Resource<Array<String>>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.getAllCardsByTypeAsArrayString(type))
+            callback(value as Resource.Success<Array<String>>)
+        }
+    }
+
+    suspend fun getAllIncomeCards(callback:(Resource<List<MC_Cards>>)->Unit){
         var value : Resource<List<MC_Cards>>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadAllIncomeCards(Constants.TYPE_INCOME))
@@ -176,7 +193,7 @@ class Repository(private val context: Context) {
     }
 
 
-    fun loadYearMonthTypeTotal(year: String,month: String,type: String,callback:(Resource<Int>)->Unit){
+    suspend fun loadYearMonthTypeTotal(year: String,month: String,type: String,callback:(Resource<Int>)->Unit){
         var value : Resource<Int>? = null
         CoroutineScope(Dispatchers.IO).launch {
             value = Resource.Success(dao.loadYearMonthTypeTotal(year,month,type))
@@ -184,11 +201,27 @@ class Repository(private val context: Context) {
         }
     }
 
-
-    fun loadYearMonthBalance(year: String,month: String,callback:(Resource<Int>)->Unit){
+    suspend fun loadYearTypeTotal(year: String,type: String,callback:(Resource<Int>)->Unit){
         var value : Resource<Int>? = null
         CoroutineScope(Dispatchers.IO).launch {
-            value = Resource.Success(dao.loadYearMonthBalance(year,month,Constants.TYPE_EXPENSE,Constants.TYPE_EXPENSE))
+            value = Resource.Success(dao.loadYearTypeTotal(year,type))
+            callback(value as Resource.Success<Int>)
+        }
+    }
+
+
+    suspend fun loadYearMonthBalance(year: String,month: String,callback:(Resource<Int>)->Unit){
+        var value : Resource<Int>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadYearMonthBalance(year,month,Constants.TYPE_INCOME,Constants.TYPE_EXPENSE))
+            callback(value as Resource.Success<Int>)
+        }
+    }
+
+    suspend fun loadYeaBalance(year: String,month: String,callback:(Resource<Int>)->Unit){
+        var value : Resource<Int>? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            value = Resource.Success(dao.loadYearBalance(year,Constants.TYPE_INCOME,Constants.TYPE_EXPENSE))
             callback(value as Resource.Success<Int>)
         }
     }

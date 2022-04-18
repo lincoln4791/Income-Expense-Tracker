@@ -7,6 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class VM_MonthlyReport(application: Application) : AndroidViewModel(application) {
@@ -36,15 +39,20 @@ class VM_MonthlyReport(application: Application) : AndroidViewModel(application)
     }*/
 
 
-    fun loadYearMonthExpeneWiseByGroup(year:String, month:String, type : String){
+    suspend fun loadYearMonthExpeneWiseByGroup(year:String, month:String, type : String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        expenseList.value = Resource.Loading()
+        //expenseList.value = Resource.Loading()
         try {
             repository.loadYearMonthTypeWiseByGroup(year,month,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
+
+                CoroutineScope(Dispatchers.Main).launch {
                     expenseList.value = it
                 }
+
+               /* android.os.Handler(Looper.getMainLooper()).post{
+                    expenseList.value = it
+                }*/
             }
         }
         catch (e: Exception){
@@ -53,15 +61,20 @@ class VM_MonthlyReport(application: Application) : AndroidViewModel(application)
         // }
     }
 
-    fun loadYearMonthIncomeWiseByGroup(year:String, month:String,type : String){
+    suspend fun loadYearMonthIncomeWiseByGroup(year:String, month:String,type : String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        incomeList.value = Resource.Loading()
+       // incomeList.value = Resource.Loading()
         try {
             repository.loadYearMonthTypeWiseByGroup(year,month,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
+
+                CoroutineScope(Dispatchers.Main).launch {
                     incomeList.value = it
                 }
+
+                /*android.os.Handler(Looper.getMainLooper()).post{
+                    incomeList.value = it
+                }*/
             }
         }
         catch (e: Exception){
@@ -70,13 +83,16 @@ class VM_MonthlyReport(application: Application) : AndroidViewModel(application)
         // }
     }
 
-    fun loadYearMonthTypeTotalIncome(year:String, month:String,type : String){
-        totalIncome.value = Resource.Loading()
+   suspend fun loadYearMonthTypeTotalIncome(year:String, month:String,type : String){
+        //totalIncome.value = Resource.Loading()
         try {
             repository.loadYearMonthTypeTotal(year,month,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
+                CoroutineScope(Dispatchers.Main).launch {
                     totalIncome.value = it
                 }
+               /* android.os.Handler(Looper.getMainLooper()).post{
+
+                }*/
             }
         }
         catch (e: Exception){
@@ -85,13 +101,16 @@ class VM_MonthlyReport(application: Application) : AndroidViewModel(application)
     }
 
 
-    fun loadYearMonthTypeTotalExpense(year:String, month:String,type : String){
-        totalExpense.value = Resource.Loading()
+   suspend fun loadYearMonthTypeTotalExpense(year:String, month:String,type : String){
+        //totalExpense.value = Resource.Loading()
         try {
             repository.loadYearMonthTypeTotal(year,month,type) {
-                android.os.Handler(Looper.getMainLooper()).post{
+                CoroutineScope(Dispatchers.Main).launch {
                     totalExpense.value = it
                 }
+                //android.os.Handler(Looper.getMainLooper()).post{
+
+                //}
             }
         }
         catch (e: Exception){

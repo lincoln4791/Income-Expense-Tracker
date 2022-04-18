@@ -2,6 +2,7 @@ package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -130,7 +131,7 @@ class DailyFragment : Fragment() {
                 day = (day!!.toInt() - 1).toString()
             }
             date = "$day-$month-$year"
-            binding.tvCurrentBalanceValueToolBarMonthlyReport.text = date
+            binding.tvDateDailyReport.text = date
             //YearMonthDayTask().execute()
             viewModel.loadDailyTransactions(year!!, month!!, day!!)
         } else if (monthValue == 5 || monthValue == 7 || monthValue == 10 || monthValue == 12) {
@@ -337,8 +338,14 @@ class DailyFragment : Fragment() {
         binding.tvDateDailyReport.text = date
     }
 
-
-    private fun updateUI(){
+    private fun updateUI(postList: List<MC_Posts>){
+        if(postList.isEmpty()){
+            binding.cvNoResultFound.visibility = View.VISIBLE
+        }
+        else{
+            binding.cvNoResultFound.visibility = View.GONE
+        }
+        adapterDaily = Adapter_Daily(postList,requireContext(),this)
         binding.tvTotalIncomeValueDaily.text = totalIncome.toString()
         binding.tvTotalExpenseValueDaily.text = totalExpense.toString()
         binding.rvDailyReport.adapter = adapterDaily
@@ -346,7 +353,7 @@ class DailyFragment : Fragment() {
     }
 
     private fun calculateAll(postList:List<MC_Posts>) {
-        adapterDaily = Adapter_Daily(postList, requireContext(),this@DailyFragment)
+        //adapterDaily = Adapter_Daily(postList, requireContext(),this@DailyFragment)
         totalIncome = 0
         totalExpense = 0
         Log.d("tag", "list size : " + postList.size)
@@ -357,7 +364,7 @@ class DailyFragment : Fragment() {
                 totalExpense = totalExpense + postList[i].postAmount.toInt()
             }
         }
-        updateUI()
+        updateUI(postList)
     }
 
     fun deleteData(id: Int,callback : (isDeleted : Boolean,error:String?)->Unit) {
@@ -377,7 +384,6 @@ class DailyFragment : Fragment() {
 
     }
 
-
     fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
         DbAdapter.confirmDelete(requireContext(),id,amount,typeOfTheFile){
             if(it !=null){
@@ -391,6 +397,8 @@ class DailyFragment : Fragment() {
 
         }
     }
+
+
 
 /*    fun confirmDelete(id: Int) {
         val dialog = Dialog(requireContext())
@@ -417,4 +425,6 @@ class DailyFragment : Fragment() {
         view.findViewById<View>(R.id.btn_no_alertImage_dialog_delete)
             .setOnClickListener { dialog.dismiss() }
     }*/
+
+
 }
