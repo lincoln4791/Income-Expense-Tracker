@@ -8,6 +8,7 @@ import com.google.firebase.ktx.Firebase
 
 class Util(){
     companion object{
+
         fun getMonthNameFromMonthNumber(monthNumber : String):String{
             var monthName = ""
             when (monthNumber) {
@@ -64,6 +65,16 @@ class Util(){
             //bundle.putString("TestCustomEvent", "I am test Custom Event")
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
             Log.d("Analytics","Screen Recorded")
+        }
+
+
+        fun recordNotificationEvent(title:String){
+            val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+            val bundle = Bundle()
+            //bundle.putString("title","myTitle")
+            bundle.putString("title",title)
+            firebaseAnalytics.logEvent("notification_received", bundle)
+            Log.d("Analytics","Screen Recorded -> $title")
         }
 
         fun isEnglishWord(name: String): Boolean {

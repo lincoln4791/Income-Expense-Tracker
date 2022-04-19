@@ -44,7 +44,6 @@ import java.util.*
 class HomeFragment : Fragment() {
     private val sdf = SimpleDateFormat("yyyy-MM-dd")
 
-
     private lateinit var binding : FragmentHomeBinding
     private lateinit var viewModel: VM_MainActivity
     private lateinit var navCon : NavController
@@ -348,12 +347,13 @@ class HomeFragment : Fragment() {
     private fun getAndSaveFCM() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.d(TAG, "Fetching FCM registration token failed", task.exception)
+                Log.d("FCM", "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
 
             // Get new FCM registration token
             val token = task.result
+            Log.d("FCM","FCM is  -> ${task.result}")
             prefManager.fcmToken = token ?: ""
             if (!prefManager.isUserLoggedIn) {
                 saveFCMInFirebase(token!!)
@@ -402,7 +402,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
 
     private fun setDate() {
         val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
