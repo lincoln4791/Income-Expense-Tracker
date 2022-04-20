@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -43,6 +44,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment CreateView")
         // Inflate the layout for this fragment
         binding = FragmentMonthlyCategoryWiseBinding.inflate(layoutInflater)
         return binding.root
@@ -51,7 +53,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Create")
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
@@ -75,6 +77,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment ViewCreated")
 
         Util.recordScreenEvent("monthly_category_wise_fragment","MainActivity")
 
@@ -166,6 +169,49 @@ class MonthlyCategoryWiseFragment : Fragment() {
             val action = MonthlyCategoryWiseFragmentDirections.actionMonthlyCategoryWiseFragmentToMonthlyFragment(year,month)
             navCon.navigate(action)
         }
+        this.onDestroy()
+        this.onDetach()
+    }
+
+
+    override fun onDestroy() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Destroyed")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment DestroyedView")
+        super.onDestroyView()
+    }
+
+    override fun onStop() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Stop")
+        super.onStop()
+    }
+
+    override fun onPause() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Paused")
+        super.onPause()
+    }
+
+    override fun onAttach(context: Context) {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Attached")
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Detached")
+        super.onDetach()
+    }
+
+    override fun onStart() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment Started")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d("LifeCycle", "MonthlyCategoryWise Fragment resumed")
+        super.onResume()
     }
 
 }

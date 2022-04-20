@@ -1,6 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -53,6 +54,9 @@ class TransactionsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("LifeCycle","Transactions Fragment Create")
+
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
@@ -69,6 +73,7 @@ class TransactionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        Log.d("LifeCycle","Transactions Fragment Create View")
         // Inflate the layout for this fragment
         binding = FragmentTransactionsBinding.inflate(layoutInflater)
         return binding.root
@@ -76,7 +81,7 @@ class TransactionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("LifeCycle","Transactions Fragment ViewCreated")
         Util.recordScreenEvent("transactions_fragment","MainActivity")
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,"home_fragment")
@@ -267,17 +272,63 @@ class TransactionsFragment : Fragment() {
     private fun goBack(){
         val homeAction = TransactionsFragmentDirections.actionTransactionsFragmentToHomeFragment()
         navCon.navigate(homeAction)
+        this.onDestroy()
+        this.onDetach()
+       // navCon.navigateUp()
     }
 
     fun navigateToDetails(year:String,month:String,type:String,category:String){
         val action = TransactionsFragmentDirections.actionTransactionsFragmentToMonthlyCategoryWiseFragment(year,month,type,category,Constants.FRAGMENT_TRANSACTION,transactionType)
         navCon.navigate(action)
+        this.onDestroy()
+        this.onDetach()
     }
 
 /*    override fun onBackPressed() {
         finish()
         super.onBackPressed()
     }*/
+
+
+    override fun onDestroy() {
+        Log.d("LifeCycle", "Transactions Fragment Destroyed")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("LifeCycle", "Transactions Fragment DestroyedView")
+        super.onDestroyView()
+    }
+
+    override fun onStop() {
+        Log.d("LifeCycle", "Transactions Fragment Stop")
+        super.onStop()
+    }
+
+    override fun onPause() {
+        Log.d("LifeCycle", "Transactions Fragment Paused")
+        super.onPause()
+    }
+
+    override fun onAttach(context: Context) {
+        Log.d("LifeCycle", "Transactions Fragment Attached")
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        Log.d("LifeCycle", "Transactions Fragment Detached")
+        super.onDetach()
+    }
+
+    override fun onStart() {
+        Log.d("LifeCycle", "Transactions Fragment Started")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d("LifeCycle", "Transactions Fragment resumed")
+        super.onResume()
+    }
 
 
 

@@ -1,5 +1,8 @@
 package com.lincoln4791.dailyexpensemanager.common.util
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -77,6 +80,15 @@ class Util(){
             Log.d("Analytics","Screen Recorded -> $title")
         }
 
+        fun recordNotificationEvent2(title:String){
+            val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+            val bundle = Bundle()
+            //bundle.putString("title","myTitle")
+            bundle.putString("notification_received_cd_demo",title)
+            firebaseAnalytics.logEvent("notification_received_event_demo", bundle)
+            Log.d("Analytics","Screen Recorded -> $title")
+        }
+
         fun isEnglishWord(name: String): Boolean {
             var isEnglish = true
             if(name.isNotEmpty()){
@@ -92,6 +104,20 @@ class Util(){
 
             }
             return isEnglish
+        }
+
+
+        fun goToFacebookPage(context: Context){
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/104842935132029"))
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                val intent =
+                    Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://www.facebook.com/IncomeExpenseManager/"))
+                context.startActivity(intent)
+                e.printStackTrace()
+            }
         }
 
     }

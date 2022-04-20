@@ -2,12 +2,11 @@ package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.TextView
@@ -19,6 +18,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -26,11 +29,12 @@ import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.itmedicus.patientaid.utils.CurrentDate
 import com.itmedicus.patientaid.utils.DayDifference.Companion.getDaysDifference
-import com.lincoln4791.dailyexpensemanager.BuildConfig
+//import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.Extras
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.slider.SliderAdapter
+import com.lincoln4791.dailyexpensemanager.common.slider.SliderItems
 import com.lincoln4791.dailyexpensemanager.common.util.FirebaseUtil
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
 import com.lincoln4791.dailyexpensemanager.common.util.Util
@@ -39,27 +43,32 @@ import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 
 class HomeFragment : Fragment() {
     private val sdf = SimpleDateFormat("yyyy-MM-dd")
 
-    private lateinit var binding : FragmentHomeBinding
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: VM_MainActivity
-    private lateinit var navCon : NavController
-    private lateinit var prefManager : PrefManager
+    private lateinit var navCon: NavController
+    private lateinit var prefManager: PrefManager
     private var day: String? = null
     private var month: String? = null
     private var year: String? = null
+    private val sliderHandler: Handler = Handler()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("LifeCycle","Home Fragment Create")
+
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
-                    Log.d("tag","OnBackPressCalled -> MonthlyCategoryWise")
+                    Log.d("tag", "OnBackPressCalled -> MonthlyCategoryWise")
                     //navCon.navigateUp()
                     goback()
 
@@ -72,6 +81,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        Log.d("LifeCycle","Home Fragment CreateView")
         binding = FragmentHomeBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
         return binding.root
@@ -80,17 +90,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         prefManager = PrefManager(requireContext())
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("LifeCycle","Home Fragment ViewCreated")
         val window = requireActivity().window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        //window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(R.color.primary)
 
         setDate()
         getAndSaveFCM()
-        Util.recordScreenEvent("home_fragment","MainActivity")
+        Util.recordScreenEvent("home_fragment", "MainActivity")
         FirebaseUtil.fetchDataFromRemoteConfig(requireContext())
         InitCheckAppVersion()
         initAdMob()
+        imageSlider()
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
@@ -110,22 +121,27 @@ class HomeFragment : Fragment() {
         })
 
 
-
         //*************************************************** Click Listeners****************************************
         binding.cvAddIncomeMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToAddIncomeFragment()
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
         })
 
         binding.cvAddExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToAddExpenseFragment()
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
 
         })
 
         binding.cvFullReportMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-            val action = HomeFragmentDirections.actionHomeFragmentToFullReportFragment(  )
+            val action = HomeFragmentDirections.actionHomeFragmentToFullReportFragment()
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
         })
 
         binding.cvTransactionsMainActivity.setOnClickListener {
@@ -136,6 +152,8 @@ class HomeFragment : Fragment() {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
 
         }
 
@@ -143,27 +161,37 @@ class HomeFragment : Fragment() {
             /*val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
             transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
             startActivity(transactionsIntent)*/
-            val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_INCOME)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_INCOME)
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
         })
         binding.cvExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
+            /*  val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
             transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
             startActivity(transactionsIntent)*/
-            val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_EXPENSE)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_EXPENSE)
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
         })
         binding.cvDailyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToDailyFragment()
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
             //startActivity(Intent(requireContext(),DailyActivity::class.java))
         })
         binding.cvMonthlyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-           /* startActivity(Intent(this@MainActivity,
+            /* startActivity(Intent(this@MainActivity,
                 MonthlyReport::class.java))*/
 
-            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(year,month)
+            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(year, month)
             navCon.navigate(action)
+            this.onDestroy()
+            this.onDetach()
 
             /*val monthlyIntent = Intent(requireContext(),MonthlyActivity::class.java)
             monthlyIntent.putExtra("year","2022")
@@ -172,12 +200,12 @@ class HomeFragment : Fragment() {
 
         })
         binding.cvTotalIncomesTopBarMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  val incomeIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
+            /*  val incomeIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
             incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
             startActivity(incomeIntent)*/
         })
         binding.cvTotalExpensesTopBarMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  val expenseIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
+            /*  val expenseIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
             expenseIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
             startActivity(expenseIntent)*/
         })
@@ -185,9 +213,14 @@ class HomeFragment : Fragment() {
             openAbout()
         }
         binding.cvBackupDataMainActivity.setOnClickListener {
-            Toast.makeText(requireContext().applicationContext,"Coming Soon",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext().applicationContext, "Coming Soon", Toast.LENGTH_SHORT)
+                .show()
         }
-        binding.cvRestoreDataMainActivity.setOnClickListener { Toast.makeText(context,"Coming Soon",Toast.LENGTH_SHORT).show() }
+        binding.cvRestoreDataMainActivity.setOnClickListener {
+            Toast.makeText(context,
+                "Coming Soon",
+                Toast.LENGTH_SHORT).show()
+        }
 
         binding.ivNavMenu.setOnClickListener {
             binding.drawerLayout.open()
@@ -197,13 +230,13 @@ class HomeFragment : Fragment() {
             it.isChecked = true
             binding.drawerLayout.close()
 
-            if (it.itemId == R.id.menu_profile){
+            if (it.itemId == R.id.menu_profile) {
                 val goToProfile = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
                 navCon.navigate(goToProfile)
-            }
-
-            else if(it.itemId == R.id.menu_DarkTheme){
-                Toast.makeText(requireContext().applicationContext,"Coming Soon",Toast.LENGTH_SHORT).show()
+            } else if (it.itemId == R.id.menu_DarkTheme) {
+                Toast.makeText(requireContext().applicationContext,
+                    "Coming Soon",
+                    Toast.LENGTH_SHORT).show()
                 /*if(prefManager.isDarkThemeEnabled){
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     prefManager.isDarkThemeEnabled = false
@@ -214,32 +247,16 @@ class HomeFragment : Fragment() {
                     prefManager.isDarkThemeEnabled = true
                     it.title = "Dark Theme"
                 }*/
-            }
-            else if(it.itemId == R.id.menu_facebookPage){
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/104842935132029"))
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    val intent =
-                        Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://www.facebook.com/IncomeExpenseManager/"))
-                    startActivity(intent)
-                    e.printStackTrace()
-                }
-            }
+            } else if (it.itemId == R.id.menu_facebookPage) {
 
-            else if(it.itemId == R.id.menu_checkUpdate){
+              Util.goToFacebookPage(requireContext())
+            } else if (it.itemId == R.id.menu_checkUpdate) {
                 goToPlayStore(requireContext())
-            }
-
-            else if (it.itemId == R.id.menu_rateUs){
+            } else if (it.itemId == R.id.menu_rateUs) {
                 goToPlayStore(requireContext())
-            }
-            else if (it.itemId == R.id.menu_aboutUs){
+            } else if (it.itemId == R.id.menu_aboutUs) {
                 openAbout()
-            }
-
-            else if(it.itemId == R.id.menu_privacyPolicy){
+            } else if (it.itemId == R.id.menu_privacyPolicy) {
                 val intent =
                     Intent(Intent.ACTION_VIEW,
                         Uri.parse(Constants.PRIVACY_POLICY_LINK))
@@ -252,32 +269,63 @@ class HomeFragment : Fragment() {
                         Uri.parse(" https://play.google.com/store/apps/developer?id=Mahmudul+Karim+Lincoln&hl=en&gl=US"))
                 startActivity(intent)
             }*/
-
-
-            else if (it.itemId == R.id.menu_shareApp){
+            else if (it.itemId == R.id.menu_shareApp) {
                 val sharingIntent = Intent(Intent.ACTION_SEND)
                 sharingIntent.type = "text/plain"
                 val shareBodyText =
                     "Income Expense Manager - Your Daily Financial Calculator.\n\n" + "Download Income Expense Manager from google play:\n\n ${Constants.PLAY_STORE_APP_LINK}"
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Keep Track Of Your Daily Transactions.")
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+                    "Keep Track Of Your Daily Transactions.")
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                 startActivity(Intent.createChooser(sharingIntent, "Share Income Expense Manager"))
-            }
-
-            else if (it.itemId == R.id.menu_loginLogout){
-                Toast.makeText(requireContext().applicationContext,"Coming Soon",Toast.LENGTH_SHORT).show()
+            } else if (it.itemId == R.id.menu_loginLogout) {
+                Toast.makeText(requireContext().applicationContext,
+                    "Coming Soon",
+                    Toast.LENGTH_SHORT).show()
             }
 
             true
         }
 
         binding.navigationView.itemIconTintList = null
-        binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
+       // binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
 
 
         //**********************************************Starting Methods***************************************
         viewModel.getIncomeExpenseData()
         initDarkTheme()
+
+    }
+
+    private fun imageSlider() {
+
+        val sliderItems: MutableList<SliderItems> = ArrayList()
+        sliderItems.add(SliderItems(R.drawable.cover_1))
+        sliderItems.add(SliderItems(R.drawable.cover_2))
+
+        binding.viewPagerImageSlider.adapter = SliderAdapter(sliderItems, binding.viewPagerImageSlider,this@HomeFragment)
+
+        binding.viewPagerImageSlider.clipToPadding = false
+        binding.viewPagerImageSlider.clipChildren = false
+        binding.viewPagerImageSlider.offscreenPageLimit = 3
+        binding.viewPagerImageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+
+        val compositePageTransformer = CompositePageTransformer()
+        compositePageTransformer.addTransformer(MarginPageTransformer(30))
+
+        compositePageTransformer.addTransformer { page, position ->
+            val r: Float = 1 - (abs(position))
+            page.scaleY = 0.85f + r * 0.15f
+        }
+
+        binding.viewPagerImageSlider.setPageTransformer(compositePageTransformer);
+        binding.viewPagerImageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                sliderHandler.removeCallbacks(sliderRunnable)
+                sliderHandler.postDelayed(sliderRunnable, 4000) // slide duration 2 seconds
+            }
+        })
 
     }
 
@@ -309,11 +357,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun goback(){
-        if(binding.drawerLayout.isOpen){
+    private fun goback() {
+        if (binding.drawerLayout.isOpen) {
             binding.drawerLayout.closeDrawers()
-        }
-        else{
+        } else {
             confirmQuit()
         }
 
@@ -333,12 +380,11 @@ class HomeFragment : Fragment() {
             .setOnClickListener { dialog.dismiss() }
     }
 
-    private fun initDarkTheme(){
-        if(prefManager.isDarkThemeEnabled){
+    private fun initDarkTheme() {
+        if (prefManager.isDarkThemeEnabled) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             binding.navigationView.menu.findItem(R.id.menu_DarkTheme).title = "Day Theme"
-        }
-        else{
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             binding.navigationView.menu.findItem(R.id.menu_DarkTheme).title = "Dark Theme"
         }
@@ -353,15 +399,14 @@ class HomeFragment : Fragment() {
 
             // Get new FCM registration token
             val token = task.result
-            Log.d("FCM","FCM is  -> ${task.result}")
+            Log.d("FCM", "FCM is  -> ${task.result}")
             prefManager.fcmToken = token ?: ""
             if (!prefManager.isUserLoggedIn) {
                 saveFCMInFirebase(token!!)
-            }
-            else  {
+            } else {
                 //FcmSave()
             }
-            Log.d("FCM","FCM is $token")
+            Log.d("FCM", "FCM is $token")
 
         })
     }
@@ -390,16 +435,19 @@ class HomeFragment : Fragment() {
     private fun initAdMob() {
 
         val lastAdShowDate = prefManager.lastBannerAdShownHomeF
-
         if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            binding.adView.visibility = View.VISIBLE
             MobileAds.initialize(requireContext()) {
                 val bannerAdHelper = BannerAddHelper(requireContext())
-                bannerAdHelper.loadBannerAd(binding.adView){
-                    if(it){
+                bannerAdHelper.loadBannerAd(binding.adView) {
+                    if (it) {
                         prefManager.lastBannerAdShownHomeF = CurrentDate.currentTime24H
                     }
                 }
             }
+        }
+        else{
+            binding.adView.visibility = View.GONE
         }
     }
 
@@ -413,5 +461,52 @@ class HomeFragment : Fragment() {
         /*date = "$day-$month-$year"
         binding.tvDateDailyReport.text = date*/
     }
+
+    override fun onDestroy() {
+        Log.d("LifeCycle", "Home Fragment Destroyed")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("LifeCycle", "Home Fragment DestroyedView")
+        super.onDestroyView()
+    }
+
+    override fun onStop() {
+        Log.d("LifeCycle", "Home Fragment Stop")
+        super.onStop()
+    }
+
+    override fun onPause() {
+        Log.d("LifeCycle", "Home Fragment Paused")
+        super.onPause()
+        sliderHandler.removeCallbacks(sliderRunnable);
+    }
+
+    override fun onAttach(context: Context) {
+        Log.d("LifeCycle", "Home Fragment Attached")
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        Log.d("LifeCycle", "Home Fragment Detached")
+        super.onDetach()
+    }
+
+    override fun onStart() {
+        Log.d("LifeCycle", "Home Fragment Started")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d("LifeCycle", "Home Fragment resumed")
+        super.onResume()
+        sliderHandler.postDelayed(sliderRunnable, 4000);
+    }
+
+    private val sliderRunnable =
+        Runnable { binding.viewPagerImageSlider.currentItem = binding.viewPagerImageSlider.currentItem + 1 }
+
+
 
 }

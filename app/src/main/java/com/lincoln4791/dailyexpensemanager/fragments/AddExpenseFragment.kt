@@ -3,6 +3,7 @@ package com.lincoln4791.dailyexpensemanager.fragments
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -57,6 +58,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("LifeCycle", "AddExpense Fragment create")
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
@@ -73,13 +75,14 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        Log.d("LifeCycle", "AddExpense Fragment createView")
         binding = AddExpenseFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("LifeCycle", "AddExpense Fragment ViewCreated")
         Util.recordScreenEvent("add_expense_fragment","MainActivity")
 
         viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
@@ -710,6 +713,47 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
     private fun goBack(){
         navCon.navigateUp()
+    }
+
+
+    override fun onDestroy() {
+        Log.d("LifeCycle", "AddExpense Fragment Destroyed")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("LifeCycle", "AddExpense Fragment DestroyedView")
+        super.onDestroyView()
+    }
+
+    override fun onStop() {
+        Log.d("LifeCycle", "AddExpense Fragment Stop")
+        super.onStop()
+    }
+
+    override fun onPause() {
+        Log.d("LifeCycle", "AddExpense Fragment Paused")
+        super.onPause()
+    }
+
+    override fun onAttach(context: Context) {
+        Log.d("LifeCycle", "AddExpense Fragment Attached")
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        Log.d("LifeCycle", "AddExpense Fragment Detached")
+        super.onDetach()
+    }
+
+    override fun onStart() {
+        Log.d("LifeCycle", "AddExpense Fragment Started")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d("LifeCycle", "AddExpense Fragment resumed")
+        super.onResume()
     }
 
 }

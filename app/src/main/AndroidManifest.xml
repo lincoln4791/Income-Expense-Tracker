@@ -15,18 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DailyExpenseManager">
         <activity
-            android:name=".view.DailyActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.TransactionsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.MonthlyCategoryWiseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.MonthlyActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait">

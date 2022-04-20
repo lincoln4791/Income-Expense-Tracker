@@ -21,8 +21,10 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.databinding.ActivityMainBinding
 import java.io.*
 import android.os.Build
-
-
+import android.util.Log
+import android.view.Window
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 
 
 class MainActivity() : AppCompatActivity() {
@@ -32,8 +34,8 @@ class MainActivity() : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-/*        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)*/
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(binding.root)
 
     //**********************************************Initializations****************************************
@@ -165,14 +167,11 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
-/*    override fun onSupportNavigateUp(): Boolean {
+    override fun onSupportNavigateUp(): Boolean {
 
         Log.d("tag","Back Prressed")
-        val cl: calll = MonthlyFragment()
-        cl.callMe()
 
-        //return navController.navigateUp() || super.onSupportNavigateUp()
-        return  true
-    }*/
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
 
 }

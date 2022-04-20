@@ -26,6 +26,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         Log.d("tag","fcm message received")
         Util.recordNotificationEvent(remoteMessage.notification!!.title.toString())
+        Util.recordNotificationEvent2(remoteMessage.notification!!.title.toString())
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
