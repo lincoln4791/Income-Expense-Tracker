@@ -5,9 +5,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.work.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
+import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
+import java.util.concurrent.TimeUnit
 
 class Util(){
     companion object{
@@ -119,6 +123,7 @@ class Util(){
                 e.printStackTrace()
             }
         }
+
 
     }
 }

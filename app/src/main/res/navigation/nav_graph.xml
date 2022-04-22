@@ -50,6 +50,16 @@
             app:destination="@id/transactionsFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/addExpenseFragment"
@@ -199,4 +209,14 @@
         android:name="com.lincoln4791.dailyexpensemanager.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.view.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>

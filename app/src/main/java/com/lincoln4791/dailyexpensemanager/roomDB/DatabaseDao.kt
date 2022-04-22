@@ -5,6 +5,7 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 
 @Dao
 interface DatabaseDao{
@@ -110,7 +111,25 @@ interface DatabaseDao{
     @Query("Delete from mc_cards where cardName =:cardName AND cardType = :cardType ")
     suspend fun deleteExpenseCardByName(cardName : String,cardType: String)
 
-    @Query("Delete from mc_cards where cardName =:cardName AND cardType =:cardType ")
+    @Query("Delete from mc_cards where cardName =:cardName AND cardType =:cardType")
     suspend fun deleteIncomeCardByName(cardName : String,cardType: String)
+
+
+
+    //Banners
+    @Query("SELECT * FROM banner")
+    suspend fun getAllBanner() : MutableList<Banner>
+
+    @Query("SELECT * FROM banner WHERE isActive=:value")
+    suspend fun getAllActiveBanner(value:String) : MutableList<Banner>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBanner(vararg banner: Banner)
+
+    @Delete
+    suspend fun deleteBanner(vararg banner: Banner)
+
+    @Query("DELETE FROM banner")
+    suspend fun deleteAllBanners()
 
 }

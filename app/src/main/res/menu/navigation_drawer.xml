@@ -52,6 +52,6 @@
             android:id="@+id/menu_loginLogout"
             android:icon="@drawable/ic_login_24"
             android:title="Login"
-            android:visible="false"/>
+            android:visible="true"/>
     </group>
 </menu>

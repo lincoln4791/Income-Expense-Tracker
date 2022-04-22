@@ -87,7 +87,7 @@ object FileUtils {
     fun saveImageToAppSpecificStorageFromUrl(context: Context, fileName: String?,imageUrl : String?){
         CoroutineScope(Dispatchers.IO).launch {
             val outFileName = "$fileName.png"
-            val outFile = File(context.getExternalFilesDir("PatientAid"), outFileName)
+            val outFile = File(context.getExternalFilesDir("IncomeExpenseManager"), outFileName)
             try{
                 val stringUrl = URL(imageUrl)
                 val bitmap =
@@ -108,9 +108,9 @@ object FileUtils {
     }
 
 
-/*    private fun loadImage() {
+/*    private fun loadImage(context: Context,imageName : String) {
         val inFileName = "myImage.png"
-        val inFile = File(getExternalFilesDir("MyImageFolder"), inFileName)
+        val inFile = File(context.getExternalFilesDir("MyImageFolder"), inFileName)
         val bitmap = BitmapFactory.decodeStream(FileInputStream(inFile))
         binding.iv.setImageBitmap(bitmap)
 

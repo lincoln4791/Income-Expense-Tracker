@@ -60,4 +60,22 @@ class PrefManager(val context : Context) {
         set(value) {editor.putString("lastBannerAdShownHomeF",value).commit()}
 
 
+    //Sync
+    var lastBannerSyncTime:Long
+        get() = pref.getLong("lastBannerSyncTime", 1640973600000)// 1st January 2022
+        set(value) {editor.putLong("lastBannerSyncTime",value).commit()}
+
+
+    var isPeriodicSyncLaunched:Boolean
+        get() = pref.getBoolean("isPeriodicSyncLaunched",false)
+        set(value) {editor.putBoolean("isPeriodicSyncLaunched", value).commit()}
+
+
+    //user stts
+
+    var isLoggedIn:Boolean
+        get() = pref.getBoolean("isLoggedIn",false)
+        set(value) {editor.putBoolean("isLoggedIn", value).commit()}
+
+
 }

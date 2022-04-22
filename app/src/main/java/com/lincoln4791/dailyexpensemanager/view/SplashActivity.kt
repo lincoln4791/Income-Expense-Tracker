@@ -17,9 +17,9 @@ import com.lincoln4791.dailyexpensemanager.view.MainActivity
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private var animation_iv: Animation? = null
-    private val animation_tv: Animation? = null
-
     private lateinit var binding : ActivitySplashBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)

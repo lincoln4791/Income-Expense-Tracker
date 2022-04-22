@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -22,8 +23,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import androidx.work.*
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
@@ -31,18 +38,24 @@ import com.itmedicus.patientaid.utils.CurrentDate
 import com.itmedicus.patientaid.utils.DayDifference.Companion.getDaysDifference
 //import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
+import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
+import com.lincoln4791.dailyexpensemanager.common.BannerUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderAdapter
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderItems
-import com.lincoln4791.dailyexpensemanager.common.util.FirebaseUtil
-import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
-import com.lincoln4791.dailyexpensemanager.common.util.Util
-import com.lincoln4791.dailyexpensemanager.common.util.VersionControl
+import com.lincoln4791.dailyexpensemanager.common.util.*
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
+import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 
@@ -62,7 +75,7 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("LifeCycle","Home Fragment Create")
+        Log.d("LifeCycle", "Home Fragment Create")
 
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
@@ -81,7 +94,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("LifeCycle","Home Fragment CreateView")
+        Log.d("LifeCycle", "Home Fragment CreateView")
         binding = FragmentHomeBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
         return binding.root
@@ -90,7 +103,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         prefManager = PrefManager(requireContext())
         super.onViewCreated(view, savedInstanceState)
-        Log.d("LifeCycle","Home Fragment ViewCreated")
+        Log.d("LifeCycle", "Home Fragment ViewCreated")
         val window = requireActivity().window
         //window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(R.color.primary)
@@ -100,6 +113,7 @@ class HomeFragment : Fragment() {
         Util.recordScreenEvent("home_fragment", "MainActivity")
         FirebaseUtil.fetchDataFromRemoteConfig(requireContext())
         InitCheckAppVersion()
+        scheduleSyncTask()
         initAdMob()
         imageSlider()
 
@@ -210,7 +224,8 @@ class HomeFragment : Fragment() {
             startActivity(expenseIntent)*/
         })
         binding.cvAboutMainActivity.setOnClickListener {
-            openAbout()
+            //openAbout()
+            syncNow(requireContext())
         }
         binding.cvBackupDataMainActivity.setOnClickListener {
             Toast.makeText(requireContext().applicationContext, "Coming Soon", Toast.LENGTH_SHORT)
@@ -249,7 +264,7 @@ class HomeFragment : Fragment() {
                 }*/
             } else if (it.itemId == R.id.menu_facebookPage) {
 
-              Util.goToFacebookPage(requireContext())
+                Util.goToFacebookPage(requireContext())
             } else if (it.itemId == R.id.menu_checkUpdate) {
                 goToPlayStore(requireContext())
             } else if (it.itemId == R.id.menu_rateUs) {
@@ -279,16 +294,25 @@ class HomeFragment : Fragment() {
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                 startActivity(Intent.createChooser(sharingIntent, "Share Income Expense Manager"))
             } else if (it.itemId == R.id.menu_loginLogout) {
-                Toast.makeText(requireContext().applicationContext,
-                    "Coming Soon",
-                    Toast.LENGTH_SHORT).show()
+                if(!prefManager.isLoggedIn){
+                    val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
+                    navCon.navigate(action)
+                    this.onDestroy()
+                    this.onDetach()
+                }
+                else{
+                    /*val action = HomeFragmentDirections.actionHomeFragmentToRegistrationFragment()
+                    navCon.navigate(action)
+                    this.onDestroy()
+                    this.onDetach()*/
+                }
             }
 
             true
         }
 
         binding.navigationView.itemIconTintList = null
-       // binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
+        // binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
 
 
         //**********************************************Starting Methods***************************************
@@ -300,10 +324,30 @@ class HomeFragment : Fragment() {
     private fun imageSlider() {
 
         val sliderItems: MutableList<SliderItems> = ArrayList()
-        sliderItems.add(SliderItems(R.drawable.cover_1))
-        sliderItems.add(SliderItems(R.drawable.cover_2))
+        /*    sliderItems.add(SliderItems(R.drawable.cover_1))
+            sliderItems.add(SliderItems(R.drawable.cover_2))*/
 
-        binding.viewPagerImageSlider.adapter = SliderAdapter(sliderItems, binding.viewPagerImageSlider,this@HomeFragment)
+        CoroutineScope(Dispatchers.IO).launch {
+            BannerUtil.getAllActiveBanners(requireContext()) { bannerList: MutableList<Banner>? ->
+                if (!bannerList.isNullOrEmpty()) {
+                    binding.viewPagerImageSlider.adapter =
+                        SliderAdapter(bannerList, binding.viewPagerImageSlider, this@HomeFragment)
+                } else {
+                    val defaultList: MutableList<Banner> = mutableListOf()
+                    val b1 = Banner("21-4-2022",
+                        "",
+                        "1",
+                        "www.iem.com",
+                        "https://firebasestorage.googleapis.com/v0/b/dailyexpensemanager-16f91.appspot.com/o/banner%2Fcover_1.png?alt=media&token=dc866b43-c46b-4ca9-8425-0e2bd62361d2",
+                        "cover_1")
+                    defaultList.add(b1)
+                    binding.viewPagerImageSlider.adapter =
+                        SliderAdapter(defaultList, binding.viewPagerImageSlider, this@HomeFragment)
+                }
+
+            }
+        }
+
 
         binding.viewPagerImageSlider.clipToPadding = false
         binding.viewPagerImageSlider.clipChildren = false
@@ -339,6 +383,8 @@ class HomeFragment : Fragment() {
             } else {
                 Log.d("appVersion", "VC will be checked tomorrow")
             }
+        } else {
+            Log.d("appVersion", "No Internet")
         }
     }
 
@@ -445,8 +491,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
-        }
-        else{
+        } else {
             binding.adView.visibility = View.GONE
         }
     }
@@ -505,8 +550,56 @@ class HomeFragment : Fragment() {
     }
 
     private val sliderRunnable =
-        Runnable { binding.viewPagerImageSlider.currentItem = binding.viewPagerImageSlider.currentItem + 1 }
+        Runnable {
+            binding.viewPagerImageSlider.currentItem = binding.viewPagerImageSlider.currentItem + 1
+        }
 
 
+    fun syncNow(context: Context) {
+        //Log.d(SyncWorker.TAG, "One Time Work request for sync is scheduled")
 
+        val constraints = Constraints.Builder().apply {
+            setRequiredNetworkType(NetworkType.CONNECTED)
+        }.build()
+
+        val work = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .addTag("bannerSync")
+            .build()
+
+//        prefManager.SYNC=0
+
+        val syncWorker = WorkManager.getInstance(context)
+        syncWorker.enqueue(work)
+    }
+
+
+    private fun scheduleSyncTask() {
+
+        if (!prefManager.isPeriodicSyncLaunched) {
+            Log.d(PeriodicSyncWorker.TAG, "Periodic Sync Work Scheduled")
+
+            val constraints = Constraints.Builder().apply {
+                setRequiredNetworkType(NetworkType.CONNECTED)
+            }.build()
+
+            val workRequest = PeriodicWorkRequestBuilder<PeriodicSyncWorker>(60, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .addTag(PeriodicSyncWorker.TAG)
+                .build()
+
+
+            Log.d(PeriodicSyncWorker.TAG, "Periodic Work request for sync is scheduled")
+
+            WorkManager.getInstance()
+                .enqueueUniquePeriodicWork(
+                    PeriodicSyncWorker.TAG,
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    workRequest
+                )
+
+            prefManager.isPeriodicSyncLaunched=true
+
+        }
+    }
 }
