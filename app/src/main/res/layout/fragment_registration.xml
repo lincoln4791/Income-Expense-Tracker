@@ -8,6 +8,78 @@
     tools:context=".view.RegistrationFragment"
     android:background="@color/primary">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_img"
+            style="@style/cv_backButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/iv_toolbar_back"
+                style="@style/iv_toolBar" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_MonthlyReport"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
+            app:layout_constraintStart_toEndOf="@+id/cv_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Registration"
+            app:titleTextColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_MonthlyReport"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_MonthlyReport"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_MonthlyReport"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,34 +109,37 @@
                 android:background="@drawable/custom_login">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/name"
+                    android:id="@+id/nameR"
                     style="@style/et_auth"
                     android:hint="Name"
                     android:background="@drawable/rounded_corner"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/email"
+                    android:id="@+id/emailR"
                     style="@style/et_auth"
                     android:hint="Email"
-                    android:background="@drawable/rounded_corner"/>
+                    android:background="@drawable/rounded_corner"
+                    android:visibility="gone"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/phone"
+                    android:id="@+id/phoneR"
                     style="@style/et_auth"
-                    android:hint="Phone (Optional)"/>
+                    android:hint="Phone"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/password"
+                    android:id="@+id/passwordR"
                     style="@style/et_auth"
-                    android:hint="Password"/>
+                    android:hint="Password"
+                    android:visibility="gone"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/cPassword"
+                    android:id="@+id/cPasswordR"
                     style="@style/et_auth"
-                    android:hint="Confirm Password"/>
+                    android:hint="Confirm Password"
+                    android:visibility="gone"/>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/registration"
+                    android:id="@+id/registrationR"
                     style="@style/btn_auth"
                     android:layout_marginTop="40dp"
                     android:text="Register"

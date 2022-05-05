@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.example.mvvm_bilalkhan.ui.base.ViewModelFactory
-import com.lincoln4791.network.RemoteDataSource
+import com.lincoln4791.dailyexpensemanager.network.RemoteDataSource
 
 abstract class BaseFragment <VM:ViewModel, B : ViewBinding, R: BaseRepository> : Fragment() {
 

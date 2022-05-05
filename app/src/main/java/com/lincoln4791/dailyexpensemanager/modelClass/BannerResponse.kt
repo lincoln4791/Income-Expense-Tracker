@@ -1,5 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.modelClass
 
-data class BannerResponse(
-    val banners: List<Banner>
-)
+import java.io.Serializable
+
+ data class BannerResponse(
+    var banners: List<Banner>
+) : Serializable

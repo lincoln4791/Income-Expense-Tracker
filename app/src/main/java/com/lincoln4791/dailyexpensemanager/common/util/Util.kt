@@ -11,6 +11,11 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
 import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
+import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class Util(){
@@ -122,6 +127,33 @@ class Util(){
                 context.startActivity(intent)
                 e.printStackTrace()
             }
+        }
+
+
+        fun initAdRemoveByAd(context: Context){
+             CoroutineScope(Dispatchers.IO).launch {
+                 val prefManager = PrefManager(context.applicationContext)
+                 val expireTime = prefManager.adRemoveExpireTime
+
+                 if(expireTime>System.currentTimeMillis()){
+                     val difference = expireTime-System.currentTimeMillis()
+                     val expireTimeThreshold = (prefManager.adRemoveDurationDayByAd.toLong())*(Constants.INTERVAL_DAILY.toLong())
+                     if(difference>expireTimeThreshold){
+                         //User Showed an reward add when user's phones clock time was not correct
+                         val newExpireTime = System.currentTimeMillis()+expireTimeThreshold
+                         prefManager.adRemoveExpireTime = newExpireTime
+                         Log.d("rewardAd","Reward Ad Expired Time reset, new time is -> $newExpireTime ")
+                     }
+                     Log.d("rewardAd","Reward Ad not Expired, expired time is  -> $expireTime ")
+                     prefManager.isAdRemoved=true
+
+                 }
+                 else{
+                     Log.d("rewardAd","Reward Ad Expired Time Expired ")
+                     prefManager.isAdRemoved=false
+                 }
+             }
+
         }
 
 

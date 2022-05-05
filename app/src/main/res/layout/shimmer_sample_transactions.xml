@@ -147,7 +147,7 @@
 
 
                 <ImageView
-                    android:id="@+id/iv_edit_sampleTransactions"
+
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_marginStart="8dp"

@@ -1,34 +1,73 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.app.Dialog
+import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.lincoln4791.dailyexpensemanager.AuthRepository
 import com.lincoln4791.dailyexpensemanager.R
-import com.lincoln4791.dailyexpensemanager.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentLoginBinding
-import com.lincoln4791.dailyexpensemanager.databinding.FragmentRegistrationBinding
-import com.lincoln4791.dailyexpensemanager.viewModels.AuthViewModel
-import com.lincoln4791.network.AuthApi
+
 
 class LoginFragment : Fragment() {
+    private val REQ_ONE_TAP = 1
+
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var navCon : NavController
+    private lateinit var prefManager : PrefManager
+    private lateinit var dialogLoading : Dialog
+
+    //One Tap
+    private lateinit var oneTapClient: SignInClient
+    private lateinit var signUpRequest: BeginSignInRequest
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                    Log.d("tag","OnBackPressCalled -> Login")
+                    //navCon.navigateUp()
+                    goBack()
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
+        prefManager = PrefManager(requireContext())
         binding = FragmentLoginBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -36,12 +75,81 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = Firebase.auth
+        init(view)
+
+        initOneTapClient()
+
+
+        // Set the dimensions of the sign-in button.
+        // Set the dimensions of the sign-in button.
+        binding.signInButton.setSize(SignInButton.SIZE_WIDE)
 
         binding.login2.setOnClickListener {
-            login(binding.email2.text.toString(),binding.password2.text.toString())
+            //login(binding.email2.text.toString(),binding.password2.text.toString())
+            validate()
         }
 
+        binding.signInButton.setOnClickListener {
+            signInWithGoogle()
+        }
+
+        binding.tvRegistration.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToRegistrationFragment()
+            navCon.navigate(action)
+            onDestroy()
+            onDetach()
+
+        }
+
+        binding.ivToolbarBack.setOnClickListener {
+            goBack()
+        }
+    }
+
+    private fun init(view:View) {
+        auth = Firebase.auth
+        navCon = Navigation.findNavController(view)
+        dialogLoading = Dialog(requireContext())
+        val loadingView = layoutInflater.inflate(R.layout.dialog_content_loading,null,false)
+        dialogLoading.setCancelable(false)
+        dialogLoading.setContentView(loadingView)
+    }
+
+    private fun initOneTapClient() {
+        oneTapClient = Identity.getSignInClient(requireActivity())
+        signUpRequest = BeginSignInRequest.builder()
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    // Your server's client ID, not your Android client ID.
+                    .setServerClientId(getString(R.string.your_web_client_id))
+                    // Show all accounts on the device.
+                    .setFilterByAuthorizedAccounts(false)
+                    .build())
+            .build()
+    }
+
+
+    private fun validate(){
+        binding.phone.error = null
+        when {
+            binding.phone.text.isNullOrEmpty() -> binding.phone.error = "Please enter phone Number"
+            binding.phone.text!!.length != 11 -> binding.phone.error = "Phone number should be 11 digit"
+            else -> {
+                Log.d("Registration","Ready To Register")
+                navigateToOtpActivity()
+            }
+        }
+    }
+
+    private fun navigateToOtpActivity() {
+            val action = LoginFragmentDirections.actionLoginFragmentToOtpValidationFragment2(
+                "",
+                binding.phone.text.toString()
+            )
+            navCon.navigate(action)
+             this.onDestroy()
+             this.onDetach()
     }
 
 
@@ -52,10 +160,11 @@ class LoginFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
 
                     Log.d("Login", "signInWithEmail:success")
-                    Toast.makeText(requireContext(), "Authentication failed.",
+                    Toast.makeText(requireContext(), "Authentication Success.",
                         Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
-                    //Log.d("Login", "signInWithEmail:success -> ${user.}")
+                    //Log.d("Login", "signIn :success -> ${task.result.credential.}")
+                    Log.d("Login", "signIn :success -> ${user}")
                     //updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -66,5 +175,155 @@ class LoginFragment : Fragment() {
                 }
             }
     }
+
+
+    //Google Sign in
+
+    private fun signInWithGoogle() {
+        oneTapClient.beginSignIn(signUpRequest)
+            .addOnSuccessListener {result ->
+                try {
+                   /* mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso!!);
+                    val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
+                    startActivityForResult(signInIntent, 1)*/
+                    startIntentSenderForResult(
+                        result.pendingIntent.intentSender, REQ_ONE_TAP,
+                        null, 0, 0, 0,null)
+                } catch (e: IntentSender.SendIntentException) {
+                    Log.e("Login", "Couldn't start One Tap UI: ${e.localizedMessage}")
+                }
+            }
+            .addOnFailureListener {e->
+                // No Google Accounts found. Just continue presenting the signed-out UI.
+                Log.d("Login", e.localizedMessage)
+            }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            REQ_ONE_TAP -> {
+                try {
+                    val credential = oneTapClient.getSignInCredentialFromIntent(data)
+                    val idToken = credential.googleIdToken
+                    when {
+                        idToken != null -> {
+                            // Got an ID token from Google. Use it to authenticate
+                            // with Firebase.
+                            dialogLoading.show()
+                            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+                            auth.signInWithCredential(firebaseCredential)
+                                .addOnCompleteListener {task->
+                                    if (task.isSuccessful) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d("Login", "signInWithCredential:success")
+                                        val user = auth.currentUser
+
+                                        Firebase.database.reference.child(Constants.USER_DATA).child(
+                                            task.result.user!!.uid).addListenerForSingleValueEvent(object :
+                                            ValueEventListener {
+                                            override fun onDataChange(snapshot: DataSnapshot) {
+                                                if(snapshot.exists()){
+                                                    //User Already Exists
+                                                    val profile = HashMap<String,Any>()
+                                                    profile[Constants.NAME] = if(user!!.displayName.isNullOrEmpty()){""} else user.displayName!!
+                                                    profile[Constants.PHONE] = if(user.phoneNumber.isNullOrEmpty()){""} else user.phoneNumber!!
+                                                    profile[Constants.EMAIL] = if(user.email.isNullOrEmpty()){""} else user.email!!
+                                                    profile[Constants.PROFILE_PIC_URI] = ""
+                                                    if(user.photoUrl!=null){
+                                                        if(user.photoUrl.toString().isEmpty()){
+                                                            profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
+                                                        }
+                                                    }
+                                                    Firebase.database.reference.child(Constants.USER_DATA).child(task.result.user!!.uid).child(
+                                                        Constants.PROFILE).updateChildren(profile).addOnCompleteListener {
+                                                        updateUI(user)
+                                                    }
+                                                }
+                                                else{
+                                                    //New User, Never Registered Before
+                                                    val profile = HashMap<String,String>()
+                                                    profile[Constants.NAME] = if(user!!.displayName.isNullOrEmpty()){""} else user.displayName!!
+                                                    profile[Constants.PHONE] = if(user.phoneNumber.isNullOrEmpty()){""} else user.phoneNumber!!
+                                                    profile[Constants.EMAIL] = if(user.email.isNullOrEmpty()){""} else user.email!!
+                                                    profile[Constants.PROFILE_PIC_URI] = ""
+                                                    if(user.photoUrl!=null){
+                                                        if(user.photoUrl.toString().isEmpty()){
+                                                            profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
+                                                        }
+                                                    }
+                                                    Firebase.database.reference.child(Constants.USER_DATA).child(task.result.user!!.uid).child(
+                                                        Constants.PROFILE).setValue(profile).addOnCompleteListener {
+                                                        updateUI(user)
+                                                    }
+
+                                                }
+                                            }
+
+                                            override fun onCancelled(error: DatabaseError) {
+                                                updateUI(user)
+                                                Log.e("Login","Database Error in checki gexisting user -> ${error.message}:: code ->${error.code}")
+                                                Toast.makeText(requireContext(),"Something went wrong, please try again later",Toast.LENGTH_LONG).show()
+                                            }
+                                        })
+
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Log.w("Login", "signInWithCredential:failure", task.exception)
+                                        updateUI(null)
+                                    }
+                                }
+                        }
+                        else -> {
+                            // Shouldn't happen.
+                            Log.d("Login", "No ID token!")
+                        }
+                    }
+                } catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+
+
+    private fun updateUI(account:FirebaseUser?){
+        if(account!=null){
+            prefManager.email = account.email.toString()
+            prefManager.isLoggedIn = true
+            prefManager.name = account.displayName.toString()
+            prefManager.UID = account.uid
+
+            Log.d("Login","name->${account.displayName}::uid -> ${account.uid}")
+
+        }
+        else{
+            Toast.makeText(requireContext(),"Something is wrong",Toast.LENGTH_SHORT).show()
+        }
+        navigateToHome()
+    }
+
+    private fun navigateToHome() {
+        dialogLoading.dismiss()
+        Toast.makeText(requireContext(),"Login Success",Toast.LENGTH_LONG).show()
+        val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+        navCon.navigate(action)
+        onDestroy()
+        onDetach()
+    }
+
+
+    private fun goBack(){
+        val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+        navCon.navigate(action)
+        onDestroy()
+        onDetach()
+    }
+
+
+
 
 }

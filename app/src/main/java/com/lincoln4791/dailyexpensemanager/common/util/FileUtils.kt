@@ -84,7 +84,7 @@ object FileUtils {
     }
 
 
-    fun saveImageToAppSpecificStorageFromUrl(context: Context, fileName: String?,imageUrl : String?){
+    suspend fun saveImageToAppSpecificStorageFromUrl(context: Context, fileName: String?,imageUrl : String?){
         CoroutineScope(Dispatchers.IO).launch {
             val outFileName = "$fileName.png"
             val outFile = File(context.getExternalFilesDir("IncomeExpenseManager"), outFileName)

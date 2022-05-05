@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Income Expense Manager</string>
     <string name="income">income</string>
     <string name="expense">expense</string>
@@ -325,10 +325,16 @@
         Contact Me: \n\nMahmudul Karim Lincoln\nM.Sc in Software Engineering\nEast West University, Dhaka, Bangladesh\n\nEmail : dev.lincoln47@gmail.com
 
     </string>
+
+    <string name="RewardAd_AddRemove" translatable="false" tools:ignore="ExtraTranslation">
+        ca-app-pub-5778949627900306/6855958900
+    </string>
+
     <string name="BackupData">Backup Data</string>
     <string name="RestoreData">Restore Data</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="your_web_client_id">495460956348-o2r53p9uvgdjln542gmlkah97uvrjt48.apps.googleusercontent.com</string>
 
 
 </resources>

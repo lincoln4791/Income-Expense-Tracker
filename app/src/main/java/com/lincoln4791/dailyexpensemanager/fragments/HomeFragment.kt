@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -26,16 +25,14 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.work.*
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
-import com.itmedicus.patientaid.utils.CurrentDate
-import com.itmedicus.patientaid.utils.DayDifference.Companion.getDaysDifference
+import com.lincoln4791.dailyexpensemanager.BuildConfig
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 //import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
@@ -43,6 +40,7 @@ import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
 import com.lincoln4791.dailyexpensemanager.common.BannerUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderAdapter
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderItems
 import com.lincoln4791.dailyexpensemanager.common.util.*
@@ -52,10 +50,10 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashMap
 import kotlin.math.abs
 
 
@@ -71,7 +69,6 @@ class HomeFragment : Fragment() {
     private var year: String? = null
     private val sliderHandler: Handler = Handler()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,7 +81,6 @@ class HomeFragment : Fragment() {
                     Log.d("tag", "OnBackPressCalled -> MonthlyCategoryWise")
                     //navCon.navigateUp()
                     goback()
-
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -109,13 +105,18 @@ class HomeFragment : Fragment() {
         window.statusBarColor = resources.getColor(R.color.primary)
 
         setDate()
+        setLoginAndLogoutData()
         getAndSaveFCM()
         Util.recordScreenEvent("home_fragment", "MainActivity")
-        FirebaseUtil.fetchDataFromRemoteConfig(requireContext())
+        FirebaseUtil.fetchCommonDataFromRemoteConfig(requireContext())
+        initCheckSubscription()
         InitCheckAppVersion()
         scheduleSyncTask()
         initAdMob()
         imageSlider()
+        initPremiumBadge()
+        Util.initAdRemoveByAd(requireContext())
+
 
         navCon = Navigation.findNavController(view)
         viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
@@ -230,6 +231,12 @@ class HomeFragment : Fragment() {
         binding.cvBackupDataMainActivity.setOnClickListener {
             Toast.makeText(requireContext().applicationContext, "Coming Soon", Toast.LENGTH_SHORT)
                 .show()
+
+          /*  val d = HashMap<String,String>()
+            d["name"] = Random().nextInt().toString()
+            d["phone"] = Random().nextInt().toString()
+            Firebase.database.reference.child(Constants.USER_DATA).child(prefManager.UID).child("test").setValue(d)*/
+
         }
         binding.cvRestoreDataMainActivity.setOnClickListener {
             Toast.makeText(context,
@@ -248,10 +255,16 @@ class HomeFragment : Fragment() {
             if (it.itemId == R.id.menu_profile) {
                 val goToProfile = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
                 navCon.navigate(goToProfile)
-            } else if (it.itemId == R.id.menu_DarkTheme) {
-                Toast.makeText(requireContext().applicationContext,
+            } else if (it.itemId == R.id.menu_NoAds) {
+
+                val action = HomeFragmentDirections.actionHomeFragmentToSubscription()
+                navCon.navigate(action)
+                this.onDestroy()
+                this.onDetach()
+
+              /*  Toast.makeText(requireContext().applicationContext,
                     "Coming Soon",
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT).show()*/
                 /*if(prefManager.isDarkThemeEnabled){
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     prefManager.isDarkThemeEnabled = false
@@ -293,32 +306,56 @@ class HomeFragment : Fragment() {
                     "Keep Track Of Your Daily Transactions.")
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
                 startActivity(Intent.createChooser(sharingIntent, "Share Income Expense Manager"))
-            } else if (it.itemId == R.id.menu_loginLogout) {
-                if(!prefManager.isLoggedIn){
+            }
+            else if (it.itemId == R.id.menu_loginLogout) {
                     val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
                     navCon.navigate(action)
                     this.onDestroy()
                     this.onDetach()
-                }
-                else{
-                    /*val action = HomeFragmentDirections.actionHomeFragmentToRegistrationFragment()
-                    navCon.navigate(action)
-                    this.onDestroy()
-                    this.onDetach()*/
-                }
             }
 
             true
         }
 
         binding.navigationView.itemIconTintList = null
-        // binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
+        binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
 
 
         //**********************************************Starting Methods***************************************
         viewModel.getIncomeExpenseData()
         initDarkTheme()
 
+    }
+
+    private fun initPremiumBadge() {
+        if(prefManager.isPremiumUser){
+            binding.premiumBadge.visibility=View.VISIBLE
+        }
+        else{
+            binding.premiumBadge.visibility=View.GONE
+        }
+    }
+
+    private fun initCheckSubscription() {
+        SubscriptionUtil.initBillingClient(requireContext().applicationContext)
+    }
+
+    private fun setLoginAndLogoutData() {
+
+        val navigationView = view?.findViewById<View>(R.id.navigationView) as NavigationView
+
+        val menu = navigationView.menu
+
+
+        if (!prefManager.isLoggedIn) {
+            menu.findItem(R.id.menu_loginLogout).title = "Login"
+            menu.findItem(R.id.menu_loginLogout).isVisible = true
+            menu.findItem(R.id.menu_profile).isVisible = false
+        }
+        else{
+            menu.findItem(R.id.menu_loginLogout).isVisible = false
+            menu.findItem(R.id.menu_profile).isVisible = true
+        }
     }
 
     private fun imageSlider() {
@@ -330,8 +367,9 @@ class HomeFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             BannerUtil.getAllActiveBanners(requireContext()) { bannerList: MutableList<Banner>? ->
                 if (!bannerList.isNullOrEmpty()) {
+                    val shuffledList = bannerList.shuffled().toMutableList()
                     binding.viewPagerImageSlider.adapter =
-                        SliderAdapter(bannerList, binding.viewPagerImageSlider, this@HomeFragment)
+                        SliderAdapter(shuffledList, binding.viewPagerImageSlider, this@HomeFragment)
                 } else {
                     val defaultList: MutableList<Banner> = mutableListOf()
                     val b1 = Banner("21-4-2022",
@@ -374,17 +412,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun InitCheckAppVersion() {
-        if (NetworkCheck.isConnect(requireContext())) {
-            //VersionControl.checkVersion(requireContext())
-            val lastVersionControlCheckDate = sdf.parse(prefManager.versionControlCheckLastDate)
-            if (getDaysDifference(lastVersionControlCheckDate, sdf.parse(currentTime)) >= 1) {
-                VersionControl.checkVersion(requireContext())
-                Log.d("appVersion", "VC checked")
+        if(System.currentTimeMillis()-prefManager.lastAppVersionRemoteConfigDataFetchTime>=Constants.INTERVAL_DAILY){
+            if (NetworkCheck.isConnect(requireContext())) {
+                //VersionControl.checkVersion(requireContext())
+                    VersionControl.checkVersion(requireContext())
+                    Log.d("appVersion", "VC checked")
             } else {
-                Log.d("appVersion", "VC will be checked tomorrow")
+                Log.d("appVersion", "No Internet")
             }
-        } else {
-            Log.d("appVersion", "No Internet")
+        }
+        else{
+            Log.d("appVersion","App Version Will Check Tomorrow")
         }
     }
 
@@ -447,7 +485,7 @@ class HomeFragment : Fragment() {
             val token = task.result
             Log.d("FCM", "FCM is  -> ${task.result}")
             prefManager.fcmToken = token ?: ""
-            if (!prefManager.isUserLoggedIn) {
+            if (!prefManager.isLoggedIn) {
                 saveFCMInFirebase(token!!)
             } else {
                 //FcmSave()
@@ -482,9 +520,11 @@ class HomeFragment : Fragment() {
 
         val lastAdShowDate = prefManager.lastBannerAdShownHomeF
         if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            Log.d(tag,"Banner Ad Home will load")
+
             binding.adView.visibility = View.VISIBLE
             MobileAds.initialize(requireContext()) {
-                val bannerAdHelper = BannerAddHelper(requireContext())
+                val bannerAdHelper = BannerAddHelper(requireContext().applicationContext)
                 bannerAdHelper.loadBannerAd(binding.adView) {
                     if (it) {
                         prefManager.lastBannerAdShownHomeF = CurrentDate.currentTime24H
@@ -493,6 +533,7 @@ class HomeFragment : Fragment() {
             }
         } else {
             binding.adView.visibility = View.GONE
+            Log.d(tag,"Banner Ad Home Not Shown")
         }
     }
 
@@ -602,4 +643,12 @@ class HomeFragment : Fragment() {
 
         }
     }
+
+
+
+
+
+
+
+
 }

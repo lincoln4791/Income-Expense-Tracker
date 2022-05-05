@@ -65,7 +65,26 @@ object Constants {
         const val PRIVACY_POLICY_LINK =
             "https://www.freeprivacypolicy.com/live/99f6d75d-0da4-4e65-b9f8-b29cda9349e4"
 
-        const val ADD_INTERVAL = "ad_interval"
+        const val AD_INTERVAL = "ad_interval"
+        const val AD_REMOVE_DURATION_BY_AD = "ad_remove_duration_day_by_ad"
+        const val BANNER_SYNC = "banner_sync"
+        const val APP_VERSION = "appVersion"
+        const val APP_VERSION_CONTROL = "AppVersionControl"
+
+
+        const val SUBSCRIPTION_MONTHLY = "no_ads_monthly"
+        const val SUBSCRIPTION_YEARLY = "no_ads_yearly"
+
+        const val NAME = "name"
+        const val PHONE = "phone"
+        const val EMAIL = "email"
+        const val PROFILE_PIC_URI = "profile_pic_uri"
+        const val USER_DATA = "UserData"
+        const val USERS = "Users"
+        const val PROFILE = "Profile"
+        const val Common = "Common"
+        const val BANNER = "Banner"
+        const val BANNERS = "banners"
 
 
 

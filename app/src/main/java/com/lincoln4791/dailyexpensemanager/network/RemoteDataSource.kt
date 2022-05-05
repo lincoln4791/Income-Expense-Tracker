@@ -1,4 +1,4 @@
-package com.lincoln4791.network
+package com.lincoln4791.dailyexpensemanager.network
 
 import androidx.viewbinding.BuildConfig
 import okhttp3.OkHttpClient

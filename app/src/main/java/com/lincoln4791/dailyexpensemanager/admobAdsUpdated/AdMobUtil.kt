@@ -3,15 +3,16 @@ package com.itmedicus.patientaid.ads.admobAdsUpdated
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import com.itmedicus.patientaid.utils.CurrentDate
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
 import java.text.SimpleDateFormat
+import kotlin.math.abs
 
 class AdMobUtil {
     companion object{
-        private val tag = "tag"
+        private val tag = "AdMob"
 
         val TEST_AD_ID = "ca-app-pub-3940256099942544~3347511713"
 
@@ -29,10 +30,11 @@ class AdMobUtil {
                 val minute = difference % 3600 / 60 // Calculating minutes if there is any minutes difference
                 min = minute + hours * 60 // This will be our final minutes. Multiplying by 60 as 1 hour contains 60 mins
             } catch (e: Throwable) {
+                Log.d(tag,"exception in getting dff time of can ad show method -> ${e.message}")
                 e.printStackTrace()
             }
-            Log.d("tag", "$min of difference")
-            return min
+            Log.d("AdMob", "$min of difference")
+            return abs(min)
         }
 
 
@@ -42,19 +44,30 @@ class AdMobUtil {
             var error = ""
 
             if(NetworkCheck.isConnect(context)){
+                if(prefManager.isPremiumUser || prefManager.isAdRemoved){
+                    Log.d("AdMob","Ad wont show because this is premium user")
+                }
+                else{
                     if (lastAdShownDate!=""){
                         if (diffTime(lastAdShownDate).toInt() >= prefManager.adInterval.toInt()) {
-                            info(tag," Ad shown because difference is greater than 3")
+                            //if (diffTime(lastAdShownDate).toInt() >=0) {
+                            info(tag," Ad shown because difference is greater than ${prefManager.adInterval}")
                             canAdShow = true
                         } else {
-                            info(tag," AD not loaded because difference is less than 3")
+                            info(tag," AD not loaded because difference is less than ${prefManager.adInterval}")
                             error = "AD not loaded because difference is less than 1"
                             canAdShow  = false
                         }
-                    } else {
+                    }
+
+
+
+                    else {
                         info(tag," AD loaded because difference is either empty or less then 3")
                         canAdShow  = true
                     }
+                }
+
             }
             else{
                 error = "No Internet Connection"
@@ -62,7 +75,7 @@ class AdMobUtil {
 
             }
 
-            Log.d("AdMobUtil","AdCanShow -> $canAdShow ::: message -> $error ")
+            Log.d("AdMob","AdCanShow -> $canAdShow ::: message -> $error ")
 
             return canAdShow
         }
@@ -72,7 +85,7 @@ class AdMobUtil {
             val prefManager = PrefManager(context)
             val dif = diffTime(prefManager.appInstallDate)
 
-            Log.d("Add"," Inter AD diff is -> $dif ")
+            Log.d("AdMob"," Inter AD diff is -> $dif ")
 
             if(dif>3){
                 isInstalled = true

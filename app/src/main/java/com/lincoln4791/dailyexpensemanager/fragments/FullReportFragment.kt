@@ -13,10 +13,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.lincoln4791.dailyexpensemanager.Adapters.*
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.InterstistialAdHelper
 import com.lincoln4791.dailyexpensemanager.common.*
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
@@ -31,16 +37,23 @@ class FullReportFragment : Fragment() {
     private var adapterIncomes: Adapter_FullReportIncome? = null
     private var totalIncome = 0
     private var totalExpense = 0
+    private var isAdLoaded = false
 
     private lateinit var vm_fullReport: VM_FullReport
     private lateinit var binding : FragmentFullReportBinding
     private lateinit var navCon : NavController
     private lateinit var dateTimedialogView : View
-    private lateinit var dateTimeDialog : Dialog
+    private lateinit var dateTimeDialog : BottomSheetDialog
+    private lateinit var prefManager : PrefManager
+
+    private lateinit var interAd: InterstistialAdHelper
+    var mInterstitialAd: InterstitialAd? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        prefManager = PrefManager(requireContext())
         // Inflate the layout for this fragment
         binding = FragmentFullReportBinding.inflate(layoutInflater)
         return binding.root
@@ -50,6 +63,7 @@ class FullReportFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Util.recordScreenEvent("fullReport_fragment","MainActivity")
+        initInterstitialAd()
 
         navCon = Navigation.findNavController(view)
         vm_fullReport = ViewModelProvider(this)[VM_FullReport::class.java]
@@ -58,7 +72,7 @@ class FullReportFragment : Fragment() {
         linearLayoutManager.stackFromEnd = true
 
         dateTimedialogView = layoutInflater.inflate(R.layout.dialog_select_date_time,null,false)
-        dateTimeDialog = Dialog(requireContext())
+        dateTimeDialog = BottomSheetDialog(requireContext())
 
         binding.rvReportDetailsFullReport.layoutManager = linearLayoutManager
         binding.rvReportDetailsFullReport.adapter=adapterFullReport
@@ -101,7 +115,8 @@ class FullReportFragment : Fragment() {
 
         dateTimedialogView.findViewById<Button>(R.id.btnSubmit).setOnClickListener {
             dateTimeDialog.dismiss()
-            selectQuery()
+            showInterAd()
+            //selectQuery()
         }
 
         observers()
@@ -110,7 +125,6 @@ class FullReportFragment : Fragment() {
         initMonthSpinner()
         initYearSpinner()
         initTypeSpinner(dateTimedialogView)
-
     }
 
     private fun observers() {
@@ -775,5 +789,40 @@ class FullReportFragment : Fragment() {
     private fun  updateBalance(){
         binding.tvBalanceValueTopBarFullReport.text = "${totalIncome-totalExpense} tk"
     }
+
+
+
+    private fun initInterstitialAd() {
+        interAd = InterstistialAdHelper(requireContext(), requireActivity(),mInterstitialAd)
+        val lastAdShown = prefManager.lastInterstitialAdShownFRF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShown)) {
+            interAd.loadinterAd(AdUnitIds.INTERSTITIAL_FULL_REPORT) {
+                Log.d("InterAd", "Inter ad loaded -> $it")
+                isAdLoaded = it
+            }
+        }
+    }
+
+
+    private fun showInterAd() {
+        if (isAdLoaded) {
+            Log.d("InterAD", "InterAd Loaded")
+            interAd.showInterAd { isShown: Boolean, error: String? ->
+                if (isShown) {
+                    Log.d("InterAD", "InterAd has been shown")
+                    prefManager.lastInterstitialAdShownFRF = CurrentDate.currentTime24H
+                    isAdLoaded = false
+                    selectQuery()
+                } else {
+                    Log.d("InterAD", "InterAd Not been shown->$error")
+                    selectQuery()
+                }
+            }
+        } else {
+            Log.d("InterAD", "InterAd Not Loaded yet")
+            selectQuery()
+        }
+    }
+
 
 }

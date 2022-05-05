@@ -3,8 +3,6 @@ package com.lincoln4791.dailyexpensemanager.fragments
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,14 +17,19 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
@@ -37,7 +40,6 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class TransactionsFragment : Fragment() {
     val args: TransactionsFragmentArgs by navArgs()
@@ -47,6 +49,7 @@ class TransactionsFragment : Fragment() {
     private lateinit var transactionType :String
 
     private lateinit var binding : FragmentTransactionsBinding
+    private lateinit var prefManager : PrefManager
     private var vm_transactions: VM_Transactions? = null
     private lateinit var navCon : NavController
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -72,9 +75,10 @@ class TransactionsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         Log.d("LifeCycle","Transactions Fragment Create View")
         // Inflate the layout for this fragment
+        prefManager = PrefManager(requireContext())
         binding = FragmentTransactionsBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -91,6 +95,8 @@ class TransactionsFragment : Fragment() {
 
         navCon = Navigation.findNavController(view)
 
+        initAdMob()
+
         toolbar = view.findViewById(R.id.toolbar_Transactions)
         transactionType = args.type
 
@@ -100,7 +106,6 @@ class TransactionsFragment : Fragment() {
         vm_transactions = ViewModelProvider(this)[VM_Transactions::class.java]
 
         setUpTabLayout()
-
 
         vm_transactions!!.postsList.observe(viewLifecycleOwner, Observer {
             Log.d("Transaction", "observed")
@@ -282,6 +287,24 @@ class TransactionsFragment : Fragment() {
         navCon.navigate(action)
         this.onDestroy()
         this.onDetach()
+    }
+
+    private fun initAdMob() {
+
+        val lastAdShowDate = prefManager.lastBannerAdShownTransactionsF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            binding.adView.visibility = View.VISIBLE
+            MobileAds.initialize(requireContext()) {
+                val bannerAdHelper = BannerAddHelper(requireContext())
+                bannerAdHelper.loadBannerAd(binding.adView) {
+                    if (it) {
+                        prefManager.lastBannerAdShownTransactionsF = CurrentDate.currentTime24H
+                    }
+                }
+            }
+        } else {
+            binding.adView.visibility = View.GONE
+        }
     }
 
 /*    override fun onBackPressed() {

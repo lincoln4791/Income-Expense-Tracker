@@ -129,24 +129,25 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_contentMain"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar_MonthlyReport"
-        android:visibility="gone">
+        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar_MonthlyReport">
 
         <LinearLayout
             android:id="@+id/linearLayout31_MonthlyReport"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="6dp"
+            android:visibility="visible"
             android:weightSum="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="visible">
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_spinnerYearly_MonthlyReport"
@@ -178,17 +179,15 @@
             </com.google.android.material.card.MaterialCardView>
 
 
-
-
         </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/adView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linearLayout31_MonthlyReport">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -202,11 +201,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
+                    android:visibility="gone"
                     android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cv_totalIncomes_MonthlyReport"
@@ -307,11 +306,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
+                    android:visibility="gone"
                     android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_topBar_MonthlyReport"
-                    android:visibility="gone">
+                    app:layout_constraintTop_toBottomOf="@id/ll_topBar_MonthlyReport">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cv_totalIncomesValue_MonthlyReport"
@@ -413,11 +412,11 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
+                    android:visibility="gone"
                     android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_topBarValues_MonthlyReport"
-                    android:visibility="gone">
+                    app:layout_constraintTop_toBottomOf="@id/ll_topBarValues_MonthlyReport">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cv_daily_MonthlyReport"
@@ -430,8 +429,8 @@
                             style="@style/tv_topBar_Transactions"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="@string/Daily"
-                            android:drawableStart="@drawable/daily24"/>
+                            android:drawableStart="@drawable/daily24"
+                            android:text="@string/Daily" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -446,8 +445,8 @@
                             style="@style/tv_topBar_Transactions"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="@string/Full_Report"
-                            android:drawableStart="@drawable/ic_report"/>
+                            android:drawableStart="@drawable/ic_report"
+                            android:text="@string/Full_Report" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -462,8 +461,8 @@
                             style="@style/tv_topBar_Transactions"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="@string/Transactions"
-                            android:drawableStart="@drawable/ic_all_transactions"/>
+                            android:drawableStart="@drawable/ic_all_transactions"
+                            android:text="@string/Transactions" />
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -474,26 +473,26 @@
                     android:id="@+id/view_MonthlyReport"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
-                    android:layout_marginStart="15dp"
                     android:background="@color/pink"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="invisible"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_titleExpenses_MonthlyReport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/Expenses"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/Expenses"
                     android:textColor="@color/black"
                     android:textStyle="bold|italic"
-                    app:layout_constraintTop_toBottomOf="@id/view_MonthlyReport"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_MonthlyReport" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cvNoResultFoundExpenses"
@@ -518,15 +517,13 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvExpense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginEnd="2dp"
+                    android:minHeight="100dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_titleExpenses_MonthlyReport" />
@@ -534,25 +531,24 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_totalExpenses_bot_MonthlyReport"
-                    app:cardBackgroundColor="@color/pink"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="24dp"
                     android:layout_width="200dp"
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
+                    app:cardBackgroundColor="@color/pink"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rvExpense">
 
                     <TextView
                         android:id="@+id/tv_totalExpense_bot_MonthlyReport"
-                        android:layout_height="match_parent"
                         android:layout_width="match_parent"
-                        android:text="@string/value"
+                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
+                        android:text="@string/value"
                         android:textColor="@color/white"
-                        />
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -561,8 +557,8 @@
                     android:id="@+id/view2_MonthlyReport"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
                     android:background="@color/pink"
                     app:layout_constraintEnd_toEndOf="@+id/view_MonthlyReport"
@@ -894,8 +890,7 @@
                         style="@style/tv_noResultFound"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        />
+                        app:layout_constraintStart_toStartOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -903,9 +898,9 @@
                     android:id="@+id/rvIncome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginEnd="2dp"
+                    android:minHeight="100dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_titleIncome_MonthlyReport" />
@@ -914,8 +909,8 @@
                     android:id="@+id/cv_totalIncome_bot_MonthlyReport"
                     android:layout_width="200dp"
                     android:layout_height="30dp"
-                    app:cardBackgroundColor="@color/green"
                     android:layout_marginEnd="10dp"
+                    app:cardBackgroundColor="@color/green"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -937,8 +932,8 @@
                     android:id="@+id/view3_MonthlyReport"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
                     android:background="@color/pink"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -961,27 +956,27 @@
                     android:id="@+id/cv_balance_bot_MonthlyReport"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="20dp"
                     app:cardBackgroundColor="@color/purple_500"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="24dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_titleBalance_MonthlyReport"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_titleBalance_MonthlyReport">
 
                     <LinearLayout
-                        android:weightSum="2"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:weightSum="2">
 
                         <TextView
-                            android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="Balance"
                             android:textColor="@color/white"
@@ -991,9 +986,9 @@
 
                         <TextView
                             android:id="@+id/tv_balance_bot_MonthlyReport"
-                            android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/value"
                             android:textColor="@color/white"
@@ -1003,13 +998,25 @@
                     </LinearLayout>
 
 
-
                 </androidx.cardview.widget.CardView>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            app:adSize="SMART_BANNER"
+            app:adUnitId="ca-app-pub-5778949627900306/2304660131"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

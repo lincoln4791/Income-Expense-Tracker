@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keep class * extends androidx.fragment.app.Fragment{}
+
+-keepclassmembers class com.lincoln4791.dailyexpensemanager.modelClass.** { <fields>; }
+-keepclassmembers class com.lincoln4791.dailyexpensemanager.modelClass** { *; }
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+-keep class com.lincoln4791.dailyexpensemanager.modelClass.** { *; }

@@ -464,10 +464,23 @@
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toEndOf="@+id/ll_detailsReport_Transactions"
         app:layout_constraintStart_toStartOf="@+id/ll_detailsReport_Transactions"
         app:layout_constraintTop_toBottomOf="@+id/ll_detailsReport_Transactions"
         android:visibility="visible"/>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="SMART_BANNER"
+        app:adUnitId="ca-app-pub-5778949627900306/8490794536"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

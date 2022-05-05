@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.roomDB
 
 import androidx.room.*
-import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -120,7 +119,7 @@ interface DatabaseDao{
     @Query("SELECT * FROM banner")
     suspend fun getAllBanner() : MutableList<Banner>
 
-    @Query("SELECT * FROM banner WHERE isActive=:value")
+    @Query("SELECT * FROM banner WHERE is_active=:value")
     suspend fun getAllActiveBanner(value:String) : MutableList<Banner>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

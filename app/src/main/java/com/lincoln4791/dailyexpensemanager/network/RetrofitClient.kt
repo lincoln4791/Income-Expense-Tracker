@@ -1,4 +1,4 @@
-package com.lincoln4791.network;
+package com.lincoln4791.dailyexpensemanager.network;
 
 
 import com.google.gson.Gson

@@ -1,11 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
-import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.MobileAds
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Daily
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
@@ -27,12 +27,7 @@ import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentDailyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Daily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,11 +47,13 @@ class DailyFragment : Fragment() {
     private lateinit var viewModel: VM_Daily
     private lateinit var binding : FragmentDailyBinding
     private lateinit var navCon : NavController
+    private lateinit var prefManager : PrefManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        prefManager = PrefManager(requireContext())
         // Inflate the layout for this fragment
         binding = FragmentDailyBinding.inflate(layoutInflater,container,false)
         return binding.root
@@ -65,6 +62,7 @@ class DailyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdMob()
         Util.recordScreenEvent("daily_fragment","MainActivity")
 
         viewModel = ViewModelProvider(this)[VM_Daily::class.java]
@@ -395,6 +393,24 @@ class DailyFragment : Fragment() {
                 }
             }
 
+        }
+    }
+
+
+    private fun initAdMob() {
+        val lastAdShowDate = prefManager.lastBannerAdShownMonthlyF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            binding.adView.visibility = View.VISIBLE
+            MobileAds.initialize(requireContext()) {
+                val bannerAdHelper = BannerAddHelper(requireContext())
+                bannerAdHelper.loadBannerAd(binding.adView) {
+                    if (it) {
+                        prefManager.lastBannerAdShownMonthlyF = CurrentDate.currentTime24H
+                    }
+                }
+            }
+        } else {
+            binding.adView.visibility = View.GONE
         }
     }
 

@@ -3,7 +3,12 @@
 <defaultsMap>
     <entry>
         <key>ad_interval</key>
-        <value>5</value>
+        <value>4</value>
+    </entry>
+
+    <entry>
+        <key>ad_remove_duration_day_by_ad</key>
+        <value>3</value>
     </entry>
 
 </defaultsMap>

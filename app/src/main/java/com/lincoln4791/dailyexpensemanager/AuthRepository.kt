@@ -2,7 +2,7 @@ package com.lincoln4791.dailyexpensemanager
 
 import android.util.Log
 import com.lincoln4791.dailyexpensemanager.base.BaseRepository
-import com.lincoln4791.network.AuthApi
+import com.lincoln4791.dailyexpensemanager.network.AuthApi
 
 class AuthRepository(private val api : AuthApi) : BaseRepository() {
 

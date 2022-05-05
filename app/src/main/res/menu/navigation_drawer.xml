@@ -12,7 +12,13 @@
         <item
             android:id="@+id/menu_DarkTheme"
             android:icon="@drawable/ic_darkmoon_24"
-            android:title="Dark Theme" />
+            android:title="Dark Theme"
+            android:visible="false"/>
+
+        <item
+            android:id="@+id/menu_NoAds"
+            android:icon="@drawable/premium_yellow32"
+            android:title="Premium" />
         <item
             android:id="@+id/menu_facebookPage"
             android:icon="@drawable/ic_facebook_icon"

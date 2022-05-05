@@ -61,12 +61,23 @@
                 </com.google.android.material.card.MaterialCardView>
 
 
+                <ImageView
+                    android:id="@+id/premiumBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/premium_yellow32"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/cv_img"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="gone"/>
+
+
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar_MainActivity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout"
-                    app:layout_constraintStart_toEndOf="@+id/cv_img"
+                    app:layout_constraintStart_toEndOf="@+id/premiumBadge"
                     app:layout_constraintTop_toTopOf="parent"
                     app:title="@string/Home"
                     app:titleTextColor="@color/white" />
@@ -88,7 +99,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/redressed_regular"
                         android:gravity="bottom|center"
-                        android:text="@string/CurrentBalance"
+                        android:text="Balance"
                         android:textAlignment="gravity"
                         android:textSize="16sp" />
 

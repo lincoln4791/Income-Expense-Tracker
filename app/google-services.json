@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "495460956348-1cd8h2c0a69ukps0bha7qn0ljom5sqmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lincoln4791.dailyexpensemanager",
+            "certificate_hash": "18184811a1343beea54c09cd792dee60fc85f48b"
+          }
+        },
+        {
           "client_id": "495460956348-o2r53p9uvgdjln542gmlkah97uvrjt48.apps.googleusercontent.com",
           "client_type": 3
         }

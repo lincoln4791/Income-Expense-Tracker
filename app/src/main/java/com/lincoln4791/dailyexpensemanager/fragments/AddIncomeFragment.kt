@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
@@ -20,10 +19,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddIncome
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.NativeAdUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
@@ -50,6 +55,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     lateinit var vm_addIncome : VM_AddIncome
     private lateinit var binding : FragmentAddIncomeBinding
     private lateinit var navCon : NavController
+    private lateinit var prefManager : PrefManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +75,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        prefManager = PrefManager(requireContext())
         // Inflate the layout for this fragment
         binding = FragmentAddIncomeBinding.inflate(layoutInflater,container,false)
         return binding.root
@@ -77,6 +84,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        showNativeAdd()
         Util.recordScreenEvent("add_income_fragment","MainActivity")
 
         vm_addIncome = ViewModelProvider(this)[VM_AddIncome::class.java]
@@ -514,7 +522,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         Log.d("tag","Add Card Called")
 
         val viewAddCard = layoutInflater.inflate(R.layout.dialog_add_more_card,null,false)
-        val dialog = Dialog(requireContext())
+        val dialog = BottomSheetDialog(requireContext())
         dialog.setContentView(viewAddCard)
         dialog.show()
 
@@ -569,6 +577,26 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             }
         }
 
+    }
+
+    private fun showNativeAdd() {
+        val lastAdShowDate = prefManager.lastNativeAdShownAIF
+
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            val nativeAd = NativeAdUtil(requireContext().applicationContext)
+            nativeAd.loadNativeAd(requireActivity(),
+                binding.nativeAd,
+                AdUnitIds.NATIVE_ADD_INCOME) {
+                if (it) {
+                    binding.nativeAd.visibility = View.VISIBLE
+                    Log.d("Native", "Native Ad Shown")
+                    prefManager.lastNativeAdShownAIF = CurrentDate.currentTime24H
+                }
+            }
+        }
+        else{
+            binding.nativeAd.visibility = View.GONE
+        }
     }
 
     override fun onPause() {

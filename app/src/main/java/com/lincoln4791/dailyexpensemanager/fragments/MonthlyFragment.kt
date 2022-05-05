@@ -15,6 +15,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.ads.MobileAds
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportExpense
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportIncome
 import com.lincoln4791.dailyexpensemanager.R
@@ -52,6 +56,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private lateinit var linearLayoutManager2 : LinearLayoutManager
     private lateinit var expenseAdapterExpense : Adapter_MonthlyReportExpense
     private lateinit var incomeAdapterIncome : Adapter_MonthlyReportIncome
+    private lateinit var prefManager : PrefManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +78,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        prefManager = PrefManager(requireContext())
         // Inflate the layout for this fragment
         binding = FragmentMonthlyBinding.inflate(layoutInflater)
         return binding.root
@@ -81,6 +87,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdMob()
         Util.recordScreenEvent("monthly_fragment","MainActivity")
 
         binding.shimmerViewContainer.startShimmer()
@@ -445,6 +452,24 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     fun navigateToDetails(type:String,category:String){
         val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,type,category,Constants.FRAGMENT_MONTHLY,null)
         navCon.navigate(action)
+    }
+
+
+    private fun initAdMob() {
+        val lastAdShowDate = prefManager.lastBannerAdShownMonthlyF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            binding.adView.visibility = View.VISIBLE
+            MobileAds.initialize(requireContext()) {
+                val bannerAdHelper = BannerAddHelper(requireContext())
+                bannerAdHelper.loadBannerAd(binding.adView) {
+                    if (it) {
+                        prefManager.lastBannerAdShownMonthlyF = CurrentDate.currentTime24H
+                    }
+                }
+            }
+        } else {
+            binding.adView.visibility = View.GONE
+        }
     }
 
 

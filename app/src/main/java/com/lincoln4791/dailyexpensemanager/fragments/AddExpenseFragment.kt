@@ -1,10 +1,8 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.TextUtils
@@ -22,17 +20,22 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddExpense
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.NativeAdUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +55,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     var vm_addExpenses: VM_AddExpenses? = null
 
     lateinit var viewModel: VM_AddExpenses
+    lateinit var prefManager: PrefManager
     private lateinit var binding : AddExpenseFragmentBinding
     private lateinit var navCon : NavController
 
@@ -75,6 +79,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        prefManager = PrefManager(requireContext().applicationContext)
         Log.d("LifeCycle", "AddExpense Fragment createView")
         binding = AddExpenseFragmentBinding.inflate(layoutInflater)
         return binding.root
@@ -83,6 +88,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("LifeCycle", "AddExpense Fragment ViewCreated")
+        showNativeAdd()
         Util.recordScreenEvent("add_expense_fragment","MainActivity")
 
         viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
@@ -483,7 +489,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         Log.d("tag","Add Card Called")
 
         val viewAddCard = layoutInflater.inflate(R.layout.dialog_add_more_card,null,false)
-        val dialog = Dialog(requireContext())
+        val dialog = BottomSheetDialog(requireContext())
         dialog.setContentView(viewAddCard)
         dialog.show()
 
@@ -709,6 +715,25 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.tvSelectedMoreCard.text = ""
         binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvSelectedMoreCard.visibility = View.INVISIBLE
+    }
+
+    private fun showNativeAdd() {
+        val lastAdShowDate = prefManager.lastNativeAdShownAEF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            val nativeAd = NativeAdUtil(requireContext().applicationContext)
+            nativeAd.loadNativeAd(requireActivity(),
+                binding.nativeAd,
+                AdUnitIds.NATIVE_ADD_EXPENSE) {
+                if (it) {
+                    binding.nativeAd.visibility = View.VISIBLE
+                    Log.d("Native", "Native Ad Shown")
+                    prefManager.lastNativeAdShownAEF = CurrentDate.currentTime24H
+                }
+            }
+        }
+        else{
+            binding.nativeAd.visibility = View.GONE
+        }
     }
 
     private fun goBack(){

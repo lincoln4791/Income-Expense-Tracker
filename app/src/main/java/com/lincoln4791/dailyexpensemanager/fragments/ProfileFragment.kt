@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentProfileBinding
@@ -19,6 +20,7 @@ class ProfileFragment : Fragment() {
     private lateinit var viewModel: VM_Profile
     private lateinit var binding : FragmentProfileBinding
     private lateinit var navCon : NavController
+    private lateinit var prefManager : PrefManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        prefManager = PrefManager(requireContext())
 
         Util.recordScreenEvent("profile_fragment","MainActivity")
 
@@ -55,6 +58,10 @@ class ProfileFragment : Fragment() {
         }
 
         binding.tvCurrentBalanceValueToolBarProfile.text = GlobalVariabls.currentBalance.toString()
+
+        binding.name.text = "Name : ${prefManager.name}"
+        binding.phone.text = "Phone : ${prefManager.phone}"
+        binding.email.text = "Email : ${prefManager.email}"
 
     }
 

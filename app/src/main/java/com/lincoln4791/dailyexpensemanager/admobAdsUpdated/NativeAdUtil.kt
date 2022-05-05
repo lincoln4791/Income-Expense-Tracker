@@ -1,5 +1,4 @@
-/*
-package com.itmedicus.patientaid.ads.admobAdsUpdated
+package com.lincoln4791.dailyexpensemanager.admobAdsUpdated
 
 import android.app.Activity
 import android.content.Context
@@ -56,4 +55,4 @@ class NativeAdUtil(private val context: Context) {
 
         adLoader.loadAd(AdRequest.Builder().build())
     }
-}*/
+}

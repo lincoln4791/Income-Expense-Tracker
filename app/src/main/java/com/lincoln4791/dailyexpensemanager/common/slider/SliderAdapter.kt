@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.lincoln4791.dailyexpensemanager.common.util.Util
@@ -35,7 +34,7 @@ class SliderAdapter internal constructor(
 
     override fun onBindViewHolder(@NonNull holder: SliderViewHolder, position: Int) {
         //holder.setImage(sliderItems[position])
-        if(sliderItems[position].isActive=="1") {
+        if(sliderItems[position].is_active=="1") {
             try {
                 val inFileName = "${sliderItems[position].name}.png"
                 val inFile =
