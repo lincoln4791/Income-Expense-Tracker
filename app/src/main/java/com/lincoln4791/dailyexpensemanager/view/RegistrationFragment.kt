@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.view
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -11,12 +12,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.bumptech.glide.Glide.init
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.AuthRepository
+import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentRegistrationBinding
 import com.lincoln4791.dailyexpensemanager.viewModels.AuthViewModel
@@ -29,6 +32,7 @@ class RegistrationFragment : Fragment() {
 
     private lateinit var navCon : NavController
     private lateinit var binding : FragmentRegistrationBinding
+    private lateinit var dialogLoading : Dialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +66,8 @@ class RegistrationFragment : Fragment() {
         auth = Firebase.auth
         navCon = Navigation.findNavController(view)
 
+        init()
+
         binding.registrationR.setOnClickListener {
             validate()
         }
@@ -70,6 +76,13 @@ class RegistrationFragment : Fragment() {
             goBack()
         }
 
+    }
+
+    private fun init() {
+        dialogLoading = Dialog(requireContext())
+        val loadingView = layoutInflater.inflate(R.layout.dialog_content_loading,null,false)
+        dialogLoading.setCancelable(false)
+        dialogLoading.setContentView(loadingView)
     }
 
 

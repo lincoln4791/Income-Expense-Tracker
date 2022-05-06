@@ -144,9 +144,9 @@ class PeriodicSyncWorker(var context: Context, workerParameter: WorkerParameters
                         else{
 
                             for(banner in subscriptionData.banners){
-                                if(banner.is_active == "1"){
+                                //if(banner.is_active == "1"){
                                     listOfBanners.add(banner)
-                                }
+                                //}
                             }
 
 

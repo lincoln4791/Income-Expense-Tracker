@@ -8,11 +8,17 @@ import android.os.Bundle
 import com.lincoln4791.dailyexpensemanager.R
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import com.lincoln4791.dailyexpensemanager.databinding.ActivitySplashBinding
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -33,10 +39,16 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(1000)
+            Handler(Looper.getMainLooper()).post {
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                finish()
+            }
+        }
 
 
-
-        animation_iv = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
+/*        animation_iv = AnimationUtils.loadAnimation(this, R.anim.splash_animation)
         animation_iv!!.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {}
             override fun onAnimationEnd(animation: Animation) {
@@ -46,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onAnimationRepeat(animation: Animation) {}
         })
-        binding.ivSplash.startAnimation(animation_iv)
+        binding.ivSplash.startAnimation(animation_iv)*/
     }
 
     override fun onStart() {

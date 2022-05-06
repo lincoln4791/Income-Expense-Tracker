@@ -42,6 +42,7 @@ class OtpValidationFragment : Fragment() {
     private lateinit var database: DatabaseReference
     private var mAuth = FirebaseAuth.getInstance()
     private lateinit var prefManager : PrefManager
+    private lateinit var dialogLoading : Dialog
 
     private var name = ""
     private var phone = ""
@@ -105,6 +106,7 @@ class OtpValidationFragment : Fragment() {
                     binding.btnVerifyOtpCode.visibility = View.INVISIBLE
                     val credential = PhoneAuthProvider.getCredential(verificationCode!!,
                         providedCode)
+                    dialogLoading.show()
                     signInWithCredential(credential)
                 }
                 else{
@@ -200,8 +202,6 @@ class OtpValidationFragment : Fragment() {
                     prefManager.UID = task.result.user?.uid.toString()
                     val user = FirebaseAuth.getInstance().currentUser
                     Log.d(TAG,"UID is -> ${task.result.user!!.uid} :: name -> $name :: phone: $phone")
-
-
 
                     if(name.isNotEmpty()){
 
@@ -316,6 +316,7 @@ class OtpValidationFragment : Fragment() {
 
 
                 } else {
+                    dialogLoading.dismiss()
                     binding.tvOptStatusOtpActivity.text = "Please Enter The Correct OTP"
                     binding.tvOptStatusOtpActivity.setTextColor(ContextCompat.getColor(requireContext(),R.color.red))
                     binding.btnVerifyOtpCode.visibility = View.VISIBLE
@@ -327,12 +328,14 @@ class OtpValidationFragment : Fragment() {
     private fun navigateToHomePage() {
         prefManager.isLoggedIn = true
         prefManager.phone = phone
-        val action = OtpValidationFragmentDirections.actionOtpValidationFragment2ToHomeFragment()
-        navCon.navigate(action)
         Toast.makeText(requireContext(),"Login Success",Toast.LENGTH_LONG).show()
+        Log.d(TAG,"Login Successful")
+        val action = OtpValidationFragmentDirections.actionOtpValidationFragment2ToHomeFragment()
+        dialogLoading.dismiss()
+        navCon.navigate(action)
+
         onDestroy()
         onDetach()
-        Log.d(TAG,"Login Successful")
     }
 
 

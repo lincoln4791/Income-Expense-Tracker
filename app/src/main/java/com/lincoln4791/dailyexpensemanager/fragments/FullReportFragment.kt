@@ -29,6 +29,10 @@ import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FullReportFragment : Fragment() {
     private val linearLayoutManager = LinearLayoutManager(context)
@@ -125,6 +129,10 @@ class FullReportFragment : Fragment() {
         initMonthSpinner()
         initYearSpinner()
         initTypeSpinner(dateTimedialogView)
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(300)
+            selectSearchCriteria()
+        }
     }
 
     private fun observers() {
@@ -422,10 +430,13 @@ class FullReportFragment : Fragment() {
             ) {
 
                 vm_fullReport.category = if(position==0){
+                    Log.d("FullReport","position -> $position:: item -> ${expenseCards[position]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
                     Constants.CATEGORY_All
+
                 }
                 else{
-                    expenseCards[position]
+                    Log.d("FullReport","position -> $position:: item -> ${expenseCards[position-1]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
+                    expenseCards[(position-1)]
                 }
             }
 

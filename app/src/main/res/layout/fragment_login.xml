@@ -126,7 +126,11 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/phone"
                     style="@style/et_auth"
-                    android:hint="Phone"/>
+                    android:hint="Phone (01XXXXXXXXX)"
+                    android:singleLine="true"
+                    android:maxLength="11"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/login2"

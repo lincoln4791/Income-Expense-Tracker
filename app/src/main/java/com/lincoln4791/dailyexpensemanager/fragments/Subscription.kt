@@ -170,7 +170,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
         adLoadingBar.setCancelable(false)
 
 
-        binding.tvAdDetails.text = "Watch one video ad\nto remove ad for ${prefManager.adRemoveDurationDayByAd} days"
+        binding.tvAdDetails.text = "Watch one video ad\nto remove ad for ${prefManager.adRemoveDurationDayByAd} day"
 
   /*      if(prefManager.isAdRemoved){
             binding.cvWatchAd.visibility = View.INVISIBLE

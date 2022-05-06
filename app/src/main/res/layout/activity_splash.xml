@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@color/primary"
     android:weightSum="2"
     tools:context=".view.SplashActivity">
@@ -13,9 +14,8 @@
     <ImageView
         android:id="@+id/iv_splash"
         android:layout_weight="1"
-        android:layout_width="match_parent"
+        android:layout_width="120dp"
         android:layout_height="0dp"
-        android:layout_margin="60dp"
         android:src="@drawable/applogo128"/>
 
     <LinearLayout

@@ -124,12 +124,17 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/phoneR"
                     style="@style/et_auth"
-                    android:hint="Phone"/>
+                    android:hint="Phone (01XXXXXXXXX)"
+                    android:singleLine="true"
+                    android:maxLength="11"
+                    android:maxLines="1"
+                    android:inputType="numberDecimal"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/passwordR"
                     style="@style/et_auth"
                     android:hint="Password"
+
                     android:visibility="gone"/>
 
                 <androidx.appcompat.widget.AppCompatEditText

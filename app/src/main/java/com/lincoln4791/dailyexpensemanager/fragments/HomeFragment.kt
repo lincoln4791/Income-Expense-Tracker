@@ -225,7 +225,7 @@ class HomeFragment : Fragment() {
             startActivity(expenseIntent)*/
         })
         binding.cvAboutMainActivity.setOnClickListener {
-            //openAbout()
+            openAbout()
             syncNow(requireContext())
         }
         binding.cvBackupDataMainActivity.setOnClickListener {
