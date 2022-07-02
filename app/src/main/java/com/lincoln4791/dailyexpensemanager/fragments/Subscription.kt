@@ -15,7 +15,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.android.billingclient.api.*
-import com.bumptech.glide.Glide.init
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -24,15 +23,13 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
-import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentSubscriptionBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.SubscriptionInfoFromGoogle
@@ -99,8 +96,8 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
                     Log.d("tag", "OnBackPressCalled -> Monthly")
-                    //navCon.navigateUp()
-                    goBack()
+                    navCon.navigateUp()
+                    //goBack()
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -404,8 +401,8 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
     fun loadRewardedAd() {
         Log.d("RewardAd", "load Reward Ad Called")
         // Use the test ad unit ID to load an ad.
-        RewardedAd.load(requireContext(), "ca-app-pub-5778949627900306/4518129627",
-            AdRequest.Builder().build(), object : RewardedAdLoadCallback() {
+        RewardedAd.load(requireContext(), AdUnitIds.REWARDED_AD_REMOVE,
+            AdRequest.Builder().setHttpTimeoutMillis(Constants.REWARD_AD_TIMEOUT).build(), object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
                     rewardedAd = ad
                     Log.d("RewardAd", "onAdLoaded -> ${ad.responseInfo}")

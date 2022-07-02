@@ -11,7 +11,7 @@ import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 
-@Database(entities = [MC_Posts::class,MC_Cards::class,MC_MonthlyReport::class, Banner::class], version = 1,exportSchema = false)
+@Database(entities = [MC_Posts::class,MC_Cards::class,MC_MonthlyReport::class, Banner::class], version = 2,exportSchema = false)
 abstract class AppDatabase() : RoomDatabase() {
     abstract fun dbDao(): DatabaseDao
     companion object DatabaseBuilder {

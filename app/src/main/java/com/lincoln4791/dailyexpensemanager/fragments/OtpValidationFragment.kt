@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import com.lincoln4791.dailyexpensemanager.R
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
@@ -26,7 +27,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentOtpBinding
@@ -123,8 +123,6 @@ class OtpValidationFragment : Fragment() {
 
         sendOptRequest()
         setOtpTimeOut()
-
-
 
         Log.d("OtpActivity","$name::$phone :: $password :: $cPassword")
 

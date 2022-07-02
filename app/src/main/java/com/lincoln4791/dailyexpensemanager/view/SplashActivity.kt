@@ -3,7 +3,6 @@ package com.lincoln4791.dailyexpensemanager.view
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.view.animation.Animation
-import android.widget.TextView
 import android.os.Bundle
 import com.lincoln4791.dailyexpensemanager.R
 import android.content.Intent
@@ -11,10 +10,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import com.lincoln4791.dailyexpensemanager.databinding.ActivitySplashBinding
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,7 +36,7 @@ class SplashActivity : AppCompatActivity() {
 
 
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1000)
+            delay(500)
             Handler(Looper.getMainLooper()).post {
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()

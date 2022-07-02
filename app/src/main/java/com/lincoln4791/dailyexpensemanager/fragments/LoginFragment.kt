@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import com.lincoln4791.dailyexpensemanager.R
 import android.app.Dialog
 import android.content.Intent
 import android.content.IntentSender
@@ -16,11 +17,8 @@ import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
@@ -29,7 +27,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentLoginBinding
@@ -148,8 +145,7 @@ class LoginFragment : Fragment() {
                 binding.phone.text.toString()
             )
             navCon.navigate(action)
-             this.onDestroy()
-             this.onDetach()
+
     }
 
 
@@ -319,8 +315,6 @@ class LoginFragment : Fragment() {
     private fun goBack(){
         val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
         navCon.navigate(action)
-        onDestroy()
-        onDetach()
     }
 
 

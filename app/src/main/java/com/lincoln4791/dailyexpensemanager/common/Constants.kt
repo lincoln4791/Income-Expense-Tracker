@@ -87,5 +87,8 @@ object Constants {
         const val BANNERS = "banners"
 
 
+        const val REWARD_AD_TIMEOUT = 30000 // 30 sec
+
+
 
 }

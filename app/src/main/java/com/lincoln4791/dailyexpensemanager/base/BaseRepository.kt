@@ -3,7 +3,6 @@ import com.lincoln4791.dailyexpensemanager.Resource2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.lang.Exception
 
 abstract class BaseRepository {
 

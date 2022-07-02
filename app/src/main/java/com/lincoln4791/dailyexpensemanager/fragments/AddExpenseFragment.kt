@@ -68,8 +68,8 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
                     Log.d("tag","OnBackPressCalled -> Monthly")
-                    //navCon.navigateUp()
-                    goBack()
+                  goBack()
+
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -237,8 +237,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                     CoroutineScope(Dispatchers.Main).launch {
                         GlobalVariabls.currentBalance = GlobalVariabls.currentBalance - amount.toInt()
                         Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
-                        val action = AddExpenseFragmentDirections.actionAddExpenseFragmentToHomeFragment()
-                        navCon.navigate(action)
+                        navCon.navigateUp()
                     }
                 }
 

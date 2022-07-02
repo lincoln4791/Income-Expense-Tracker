@@ -1,10 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.view
 
-import android.Manifest
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.Spinner
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import android.os.Bundle
 import com.lincoln4791.dailyexpensemanager.R
 import android.content.Intent
@@ -19,12 +16,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.databinding.ActivityMainBinding
-import java.io.*
 import android.os.Build
 import android.util.Log
 import android.view.Window
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 
 
 class MainActivity() : AppCompatActivity() {

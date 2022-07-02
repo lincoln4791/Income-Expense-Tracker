@@ -3,7 +3,6 @@ package com.lincoln4791.dailyexpensemanager.modelClass
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.firebase.database.PropertyName
 import java.io.Serializable
 
 @Entity

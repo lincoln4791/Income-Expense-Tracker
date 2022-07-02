@@ -5,18 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.work.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
-import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 class Util(){
     companion object{
@@ -130,7 +126,7 @@ class Util(){
         }
 
 
-        fun initAdRemoveByAd(context: Context){
+        fun initAdRemoveByRewardAd(context: Context){
              CoroutineScope(Dispatchers.IO).launch {
                  val prefManager = PrefManager(context.applicationContext)
                  val expireTime = prefManager.adRemoveExpireTime

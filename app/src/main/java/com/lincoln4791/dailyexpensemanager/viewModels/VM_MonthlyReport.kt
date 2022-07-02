@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
 import android.app.Application
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.lincoln4791.dailyexpensemanager.Repository

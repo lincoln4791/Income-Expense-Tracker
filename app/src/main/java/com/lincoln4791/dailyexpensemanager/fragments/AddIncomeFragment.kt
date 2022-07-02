@@ -220,8 +220,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
                    /* startActivity(Intent(this@AddIncome, MainActivity::class.java))
                     finish()*/
                     Toast.makeText(context, "Success ", Toast.LENGTH_SHORT).show()
-                    val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
-                    navCon.navigate(action)
+                    goBack()
                 }
             }
 

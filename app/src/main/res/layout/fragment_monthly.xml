@@ -88,7 +88,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_toolbar_MonthlyReport"
         tools:visibility="gone"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,7 +130,7 @@
         android:id="@+id/cl_contentMain"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -535,8 +535,8 @@
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
                     app:cardBackgroundColor="@color/pink"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="24dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rvExpense">
 
@@ -911,8 +911,8 @@
                     android:layout_height="30dp"
                     android:layout_marginEnd="10dp"
                     app:cardBackgroundColor="@color/green"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="24dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rvIncome">
 
@@ -961,8 +961,8 @@
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="20dp"
                     app:cardBackgroundColor="@color/purple_500"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="24dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

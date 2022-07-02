@@ -129,8 +129,7 @@ class PieChartFragment : Fragment() {
     }
 
     private fun goBack() {
-        val action = PieChartFragmentDirections.actionPieChartFragmentToMonthlyFragment(year,month)
-        navCon.navigate(action)
+
     }
 
 

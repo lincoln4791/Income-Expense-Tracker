@@ -1,29 +1,17 @@
 package com.lincoln4791.dailyexpensemanager.Adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
-import com.lincoln4791.dailyexpensemanager.fragments.AddExpenseFragment
 import com.lincoln4791.dailyexpensemanager.fragments.AddIncomeFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
-import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.logging.Handler
 
 class Adapter_AddIncome(private val list: List<MC_Cards>,
                         private val context: Context,

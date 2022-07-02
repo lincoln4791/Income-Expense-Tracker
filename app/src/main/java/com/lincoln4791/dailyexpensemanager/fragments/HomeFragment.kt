@@ -26,15 +26,12 @@ import androidx.work.*
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 //import com.lincoln4791.dailyexpensemanager.BuildConfig
-import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
 import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
 import com.lincoln4791.dailyexpensemanager.common.BannerUtil
@@ -53,8 +50,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 import kotlin.math.abs
+import com.lincoln4791.dailyexpensemanager.R
 
 
 class HomeFragment : Fragment() {
@@ -106,16 +103,16 @@ class HomeFragment : Fragment() {
 
         setDate()
         setLoginAndLogoutData()
-        getAndSaveFCM()
+        //getAndSaveFCM()
         Util.recordScreenEvent("home_fragment", "MainActivity")
         FirebaseUtil.fetchCommonDataFromRemoteConfig(requireContext())
         initCheckSubscription()
         InitCheckAppVersion()
         scheduleSyncTask()
-        initAdMob()
+        //initAdMob()
         imageSlider()
         initPremiumBadge()
-        Util.initAdRemoveByAd(requireContext())
+        Util.initAdRemoveByRewardAd(requireContext())
 
 
         navCon = Navigation.findNavController(view)
@@ -167,8 +164,6 @@ class HomeFragment : Fragment() {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
             navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
 
         }
 
@@ -179,8 +174,7 @@ class HomeFragment : Fragment() {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_INCOME)
             navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
+
         })
         binding.cvExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             /*  val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
@@ -189,8 +183,6 @@ class HomeFragment : Fragment() {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_EXPENSE)
             navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
         })
         binding.cvDailyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
             val action = HomeFragmentDirections.actionHomeFragmentToDailyFragment()
@@ -226,7 +218,8 @@ class HomeFragment : Fragment() {
         })
         binding.cvAboutMainActivity.setOnClickListener {
             openAbout()
-            syncNow(requireContext())
+            //syncNow(requireContext())
+            getBackStackCount()
         }
         binding.cvBackupDataMainActivity.setOnClickListener {
             Toast.makeText(requireContext().applicationContext, "Coming Soon", Toast.LENGTH_SHORT)
@@ -258,9 +251,9 @@ class HomeFragment : Fragment() {
             } else if (it.itemId == R.id.menu_NoAds) {
 
                 val action = HomeFragmentDirections.actionHomeFragmentToSubscription()
+                //navCon.popBackStack()
                 navCon.navigate(action)
-                this.onDestroy()
-                this.onDetach()
+                //navCon.popBackStack()
 
               /*  Toast.makeText(requireContext().applicationContext,
                     "Coming Soon",
@@ -310,8 +303,6 @@ class HomeFragment : Fragment() {
             else if (it.itemId == R.id.menu_loginLogout) {
                     val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
                     navCon.navigate(action)
-                    this.onDestroy()
-                    this.onDetach()
             }
 
             true
@@ -642,6 +633,14 @@ class HomeFragment : Fragment() {
             prefManager.isPeriodicSyncLaunched=true
 
         }
+    }
+
+
+
+    fun getBackStackCount(){
+        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val backStackEntryCount = navHostFragment?.childFragmentManager?.backStackEntryCount
+        Log.d("backstack","count is -> $backStackEntryCount")
     }
 
 

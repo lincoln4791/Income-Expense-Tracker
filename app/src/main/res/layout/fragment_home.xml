@@ -179,9 +179,6 @@
                             android:gravity="center"
                             android:orientation="vertical"
                             android:weightSum="3">
-
-                            `
-
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_totalIncomes_topBar_MainActivity"
                                 style="@style/cv_topBar_MainActivity"
@@ -313,45 +310,33 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:orientation="vertical"
+                        android:background="@color/transparent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/linearLayout_FullReport">
 
                         <LinearLayout
                             android:id="@+id/ll_horizontalView_MainActivity"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@color/transparent"
                             android:weightSum="3">
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_transactions_MainActivity"
-                                style="@style/CV_horizontalScroll_MainActivity"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
+                                style="@style/CV_horizontalScroll_MainActivity">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:weightSum="4">
+                                    style="@style/ll2_horizontalScroll_MainActivity">
 
                                     <ImageView
                                         style="@style/iv_horizontalScroll_MainActivity"
-                                        android:layout_width="120dp"
-                                        android:layout_height="0dp"
-                                        android:layout_weight="3"
                                         android:src="@drawable/transections" />
 
                                     <TextView
                                         style="@style/tv_horizontalScroll_MainActivity"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="14dp"
-                                        android:layout_weight="1"
                                         android:text="@string/Transactions"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                      />
 
                                 </LinearLayout>
 
@@ -361,32 +346,19 @@
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_income_MainActivity"
                                 style="@style/CV_horizontalScroll_MainActivity"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
+                                >
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:weightSum="4">
+                                    style="@style/ll2_horizontalScroll_MainActivity">
 
                                     <ImageView
                                         style="@style/iv_horizontalScroll_MainActivity"
-                                        android:layout_width="120dp"
-                                        android:layout_height="0dp"
-                                        android:layout_weight="3"
                                         android:src="@drawable/incomes" />
 
                                     <TextView
                                         style="@style/tv_horizontalScroll_MainActivity"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="14dp"
-                                        android:layout_weight="1"
                                         android:text="@string/Incomes"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                      />
 
                                 </LinearLayout>
 
@@ -395,33 +367,18 @@
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_expenses_MainActivity"
-                                style="@style/CV_horizontalScroll_MainActivity"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
+                                style="@style/CV_horizontalScroll_MainActivity">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:weightSum="4">
+                                    style="@style/ll2_horizontalScroll_MainActivity">
 
                                     <ImageView
                                         style="@style/iv_horizontalScroll_MainActivity"
-                                        android:layout_width="120dp"
-                                        android:layout_height="0dp"
-                                        android:layout_weight="3"
                                         android:src="@drawable/expenses" />
 
                                     <TextView
                                         style="@style/tv_horizontalScroll_MainActivity"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="14dp"
-                                        android:layout_weight="1"
-                                        android:text="@string/Expenses"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                        android:text="@string/Expenses" />
 
                                 </LinearLayout>
 
@@ -431,40 +388,26 @@
 
                         <LinearLayout
                             android:id="@+id/ll_horizontalView_MainActivity2"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:weightSum="3">
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_fullReport_MainActivity"
-                                style="@style/CV_horizontalScroll_MainActivity"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
+                                style="@style/CV_horizontalScroll_MainActivity">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:weightSum="4">
+                                    style="@style/ll2_horizontalScroll_MainActivity">
 
                                     <ImageView
                                         style="@style/iv_horizontalScroll_MainActivity"
-                                        android:layout_width="120dp"
-                                        android:layout_height="0dp"
-                                        android:layout_weight="3"
                                         android:src="@drawable/report" />
 
                                     <TextView
                                         style="@style/tv_horizontalScroll_MainActivity"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="14dp"
-                                        android:layout_weight="1"
-                                        android:text="@string/Full_Report"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                        android:text="Full\nReport"
+                                         />
 
                                 </LinearLayout>
 
@@ -473,34 +416,20 @@
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_daily_MainActivity"
-                                style="@style/CV_horizontalScroll_MainActivity"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
+                                style="@style/CV_horizontalScroll_MainActivity">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:weightSum="4">
+                                    style="@style/ll2_horizontalScroll_MainActivity"
+                                    >
 
                                     <ImageView
                                         style="@style/iv_horizontalScroll_MainActivity"
-                                        android:layout_width="120dp"
-                                        android:layout_height="0dp"
-                                        android:layout_weight="3"
                                         android:src="@drawable/daily" />
 
                                     <TextView
                                         style="@style/tv_horizontalScroll_MainActivity"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="13dp"
-                                        android:layout_marginBottom="5dp"
-                                        android:layout_weight="1"
-                                        android:text="Daily Report"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                        android:text="Daily\nReport"
+                                       />
 
                                 </LinearLayout>
 
@@ -509,34 +438,20 @@
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/cv_monthly_MainActivity"
-                                style="@style/CV_horizontalScroll_MainActivity"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1">
+                                style="@style/CV_horizontalScroll_MainActivity">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:weightSum="4">
+                                    style="@style/ll2_horizontalScroll_MainActivity"
+                                   >
 
                                     <ImageView
                                         style="@style/iv_horizontalScroll_MainActivity"
-                                        android:layout_width="120dp"
-                                        android:layout_height="0dp"
-                                        android:layout_weight="3"
                                         android:src="@drawable/monthly" />
 
                                     <TextView
                                         style="@style/tv_horizontalScroll_MainActivity"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="13dp"
-                                        android:layout_marginBottom="5dp"
-                                        android:layout_weight="1"
-                                        android:text="Monthly Report"
-                                        android:textAlignment="center"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp" />
+                                        android:text="Monthly\nReport"
+                                       />
 
                                 </LinearLayout>
 

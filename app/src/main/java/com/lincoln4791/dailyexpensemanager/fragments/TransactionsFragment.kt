@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -40,6 +41,7 @@ import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class TransactionsFragment : Fragment() {
     val args: TransactionsFragmentArgs by navArgs()
@@ -290,11 +292,14 @@ class TransactionsFragment : Fragment() {
     }
 
     private fun initAdMob() {
-
         val lastAdShowDate = prefManager.lastBannerAdShownTransactionsF
         if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
             binding.adView.visibility = View.VISIBLE
+
             MobileAds.initialize(requireContext()) {
+              /*  val testDeviceIds = Arrays.asList("CECB82F928EFB5B4CA0B77EBD0375477")
+                val configuration = RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build()
+                MobileAds.setRequestConfiguration(configuration)*/
                 val bannerAdHelper = BannerAddHelper(requireContext())
                 bannerAdHelper.loadBannerAd(binding.adView) {
                     if (it) {

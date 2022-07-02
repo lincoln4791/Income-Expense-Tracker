@@ -1,8 +1,5 @@
 package com.lincoln4791.dailyexpensemanager.network
 
-import retrofit2.Call
-import retrofit2.http.*
-
 interface Api {
 
 /*    @FormUrlEncoded

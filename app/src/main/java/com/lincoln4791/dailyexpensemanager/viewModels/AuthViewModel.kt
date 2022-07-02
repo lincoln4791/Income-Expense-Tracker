@@ -1,11 +1,7 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.lincoln4791.dailyexpensemanager.AuthRepository
-import kotlinx.coroutines.launch
 
 class AuthViewModel(private val repository: AuthRepository):ViewModel() {
 

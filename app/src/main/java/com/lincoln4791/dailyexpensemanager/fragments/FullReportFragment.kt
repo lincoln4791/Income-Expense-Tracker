@@ -1,6 +1,5 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
-import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -31,7 +30,6 @@ import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FullReportFragment : Fragment() {
@@ -130,7 +128,6 @@ class FullReportFragment : Fragment() {
         initYearSpinner()
         initTypeSpinner(dateTimedialogView)
         CoroutineScope(Dispatchers.Main).launch {
-            delay(300)
             selectSearchCriteria()
         }
     }

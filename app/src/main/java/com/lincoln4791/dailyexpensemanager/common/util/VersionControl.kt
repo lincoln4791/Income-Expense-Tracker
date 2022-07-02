@@ -9,6 +9,9 @@ import android.widget.ImageView
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
@@ -21,7 +24,7 @@ object VersionControl {
         Log.d("appVersion","Called")
 
 
-        Firebase.database.reference.child(Constants.Common).child(Constants.APP_VERSION_CONTROL)
+/*        Firebase.database.reference.child(Constants.Common).child(Constants.APP_VERSION_CONTROL)
             .child(Constants.APP_VERSION).addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val version  = snapshot.getValue(String::class.java)
@@ -43,10 +46,9 @@ object VersionControl {
                 override fun onCancelled(error: DatabaseError) {
                    Log.e("appVersion","Version Control Error -> ${error.message}: code ${error.code} ")
                 }
-            })
+            })*/
 
 
-/*
 
         val firebaseRemoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         Log.d("Remote","Remote Config Inited")
@@ -79,19 +81,19 @@ object VersionControl {
             } else {
                 Log.d("appVersion", "fetch Failed")
             }
-        }*/
+        }
     }
 
     fun showNewVersionAvailableDialog(context: Context){
         try {
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_new_version_available,null,false)
+            val view = LayoutInflater.from(context).inflate(com.lincoln4791.dailyexpensemanager.R.layout.dialog_new_version_available,null,false)
             val dialog = Dialog(context)
             dialog.setContentView(view)
             dialog.show()
             val prefManager = PrefManager(context)
             prefManager.lastAppVersionRemoteConfigDataFetchTime=System.currentTimeMillis()
 
-            view.findViewById<ImageView>(R.id.ivClose).setOnClickListener { dialog.dismiss() }
+            view.findViewById<ImageView>(com.lincoln4791.dailyexpensemanager.R.id.ivClose).setOnClickListener { dialog.dismiss() }
             view.findViewById<Button>(R.id.btnUpdate).setOnClickListener {
                 dialog.dismiss()
                 HomeFragment.goToPlayStore(context)
