@@ -19,14 +19,7 @@ import com.lincoln4791.dailyexpensemanager.databinding.ActivityMainBinding
 import android.os.Build
 import android.util.Log
 import android.view.Window
-import android.widget.Toast
-import com.lincoln4791.dailyexpensemanager.Repository
-import com.lincoln4791.dailyexpensemanager.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
 @AndroidEntryPoint

@@ -1,23 +1,17 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
-import android.app.Application
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.crashlytics.internal.common.CrashlyticsReportWithSessionId
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
-import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
 class VM_FullReport(val repository: Repository) : ViewModel() {
 
@@ -36,7 +30,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
     var income = 0
 
     fun loadYearMonthDayTypeCategoryWise(year:String,month:String,day:String,type:String,category:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthDayTypeCategoryWise(year,month,day,type,category) {
@@ -48,13 +42,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthTypeCategoryWise(year:String,month:String,type:String,category:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthTypeCategoryWise(year,month,type,category) {
@@ -66,13 +60,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthDayTypeWise(year:String,month:String,day:String,type:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthDayTypeWise(year,month,day,type) {
@@ -84,13 +78,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthDayCategoryWise(year:String,month:String,day:String,category:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthDayCategoryWise(year,month,day,category) {
@@ -102,12 +96,12 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
     fun loadYearMonthDayWise(year:String,month:String,day:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthDayWise(year,month,day) {
@@ -119,13 +113,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthTypeWise(year:String,month:String,type:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthTypeWise(year,month,type) {
@@ -137,13 +131,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthCategoryWise(year:String,month:String,category:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthCategoryWise(year,month,category) {
@@ -155,13 +149,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthCategoryWise(year:String,month:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthWise(year,month) {
@@ -173,12 +167,12 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
     fun loadYearTypeWise(year:String,type:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearTypeWise(year,type) {
@@ -190,12 +184,12 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
     fun loadYearTypeCategoryWise(year:String,type:String,category:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearTypeCategoryWise(year,type, category) {
@@ -207,13 +201,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthWise(year:String,month:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthWise(year,month) {
@@ -225,12 +219,12 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
     fun loadYearWise(year:String){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearWise(year) {
@@ -242,13 +236,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun getAllCardsByTypeArrayString(type : String){
-        categoryCards.value = Resource.Loading()
+        categoryCards.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.getAllCardsByTypeArrayString(type) {
@@ -260,7 +254,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
@@ -269,7 +263,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
     fun loadYearMonthExpeneWiseByGroup(year:String, month:String, type : String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        expenseList.value = Resource.Loading()
+        expenseList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthTypeWiseByGroup(year,month,type) {
@@ -281,7 +275,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
         // }
     }
@@ -289,7 +283,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
     fun loadYearMonthIncomeWiseByGroup(year:String, month:String, type : String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        incomeList.value = Resource.Loading()
+        incomeList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthTypeWiseByGroup(year,month,type) {
@@ -301,7 +295,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
         // }
     }
@@ -309,7 +303,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
     fun loadYearExpeneWiseByGroup(year:String, type : String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        expenseList.value = Resource.Loading()
+        expenseList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearTypeWiseByGroup(year,type) {
@@ -321,7 +315,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
         // }
     }
@@ -329,7 +323,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
     fun loadYearIncomeWiseByGroup(year:String,type : String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        incomeList.value = Resource.Loading()
+        incomeList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearTypeWiseByGroup(year,type) {
@@ -341,14 +335,14 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
         // }
     }
 
 
     fun loadYearMonthIncomeTotal(year:String,month: String,type : String){
-        totalIncome.value = Resource.Loading()
+        totalIncome.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthTypeTotal(year,month,type) {
@@ -360,13 +354,13 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            totalIncome.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //totalIncome.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
 
     fun loadYearMonthExpenseTotal(year:String,month: String,type : String){
-        totalExpense.value = Resource.Loading()
+        totalExpense.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthTypeTotal(year,month,type) {
@@ -378,12 +372,12 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            totalExpense.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //totalExpense.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 
     fun loadYearMonthBalance(year:String,month: String){
-        balance.value = Resource.Loading()
+        balance.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.loadYearMonthBalance(year,month) {
@@ -395,7 +389,7 @@ class VM_FullReport(val repository: Repository) : ViewModel() {
 
         }
         catch (e: Exception){
-            balance.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //balance.value = Resource.Error("Failed to retrive data -> ${e.message}")
         }
     }
 

@@ -1,15 +1,12 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
-import android.app.Application
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +24,7 @@ class VM_Transactions @Inject constructor (val repository: Repository) : ViewMod
      fun  loadAllTransactions(){
      /*   CoroutineScope(Dispatchers.IO).launch {*/
             //postsList.value = repository.loadAllTransactions()
-            postsList.value = Resource.Loading()
+            postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.getTransactions {
@@ -39,7 +36,7 @@ class VM_Transactions @Inject constructor (val repository: Repository) : ViewMod
 
         }
             catch (e:Exception){
-                postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+                //postsList.value = Resource.Failure("Failed to retrive data -> ${e.message}")
             }
        // }
     }
@@ -47,7 +44,7 @@ class VM_Transactions @Inject constructor (val repository: Repository) : ViewMod
     fun loadAllIncomes(){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
            CoroutineScope(Dispatchers.IO).launch {
                repository.getIncomes {
@@ -58,7 +55,7 @@ class VM_Transactions @Inject constructor (val repository: Repository) : ViewMod
            }
         }
         catch (e:Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
         // }
     }
@@ -75,7 +72,7 @@ class VM_Transactions @Inject constructor (val repository: Repository) : ViewMod
             }
         }
         catch (e:Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
         // }
     }

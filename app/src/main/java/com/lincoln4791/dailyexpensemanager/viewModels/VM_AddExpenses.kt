@@ -1,21 +1,15 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
-import android.app.Application
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
-import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
 
 class VM_AddExpenses(val repository: Repository) :ViewModel() {
@@ -35,7 +29,7 @@ class VM_AddExpenses(val repository: Repository) :ViewModel() {
 
 
     fun loadAllCards(callback : (isLoaded : Boolean)-> Unit){
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
             CoroutineScope(Dispatchers.IO).launch {
                 repository.getAllExpenseCards {
@@ -48,7 +42,7 @@ class VM_AddExpenses(val repository: Repository) :ViewModel() {
 
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+           // postsList.value = Resource.Failure(,"Failed to retrive data -> ${e.message}")
         }
     }
 

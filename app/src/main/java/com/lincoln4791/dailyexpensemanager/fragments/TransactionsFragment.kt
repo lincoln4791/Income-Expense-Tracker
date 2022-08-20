@@ -13,13 +13,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -39,10 +37,6 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.VMFAddExpense
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.VMFTransactions
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -125,8 +119,8 @@ class TransactionsFragment() : Fragment() {
                      when (it) {
                          is Resource.Loading -> Log.d("Transaction", "Loading...")
                          //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                         is Resource.Success ->  Log.d("tag","Success -> list sizze -> ${it.data.size}")
-                         is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                         is Resource.Success ->  Log.d("tag","Success -> list sizze -> ${it.value.size}")
+                         is Resource.Failure -> Toast.makeText(context, it.errorBody.toString(), Toast.LENGTH_LONG).show()
                      }
                  }
              }
@@ -136,8 +130,8 @@ class TransactionsFragment() : Fragment() {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success ->  update(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> ->  update(it.value as List<MC_Posts>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         })
 

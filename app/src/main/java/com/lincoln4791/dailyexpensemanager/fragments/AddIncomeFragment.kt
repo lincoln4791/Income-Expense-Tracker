@@ -37,7 +37,6 @@ import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddIncome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -109,10 +108,10 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success ->  updateUI(it.data){
+                is Resource.Success<*> ->  updateUI(it.value as List<MC_Cards>){
 
                 }
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 

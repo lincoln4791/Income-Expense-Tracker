@@ -100,13 +100,13 @@ class PieChartFragment : Fragment() {
         year = args.year!!
         month = args.month!!
 
-        viewModel.postsList.observe(viewLifecycleOwner, {
+        viewModel.postsList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  calculateAll(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> calculateAll(it.value as List<MC_Posts>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
-        })
+        }
 
 
         setReportTime()

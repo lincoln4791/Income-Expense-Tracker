@@ -1,19 +1,14 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
-import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
 class VM_MonthlyReport(val repository: Repository) : ViewModel() {
 
@@ -58,7 +53,7 @@ class VM_MonthlyReport(val repository: Repository) : ViewModel() {
             }
         }
         catch (e: Exception){
-            expenseList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //expenseList.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
         // }
     }
@@ -80,7 +75,7 @@ class VM_MonthlyReport(val repository: Repository) : ViewModel() {
             }
         }
         catch (e: Exception){
-            incomeList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //incomeList.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
         // }
     }
@@ -98,7 +93,7 @@ class VM_MonthlyReport(val repository: Repository) : ViewModel() {
             }
         }
         catch (e: Exception){
-            totalIncome.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //totalIncome.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
     }
 
@@ -116,7 +111,7 @@ class VM_MonthlyReport(val repository: Repository) : ViewModel() {
             }
         }
         catch (e: Exception){
-            totalExpense.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //totalExpense.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
     }
 

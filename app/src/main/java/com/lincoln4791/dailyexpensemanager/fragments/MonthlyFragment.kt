@@ -176,8 +176,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateExpenseUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateExpenseUI(it.value as List<MC_MonthlyReport>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -185,8 +185,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateIncomeUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateIncomeUI(it.value as List<MC_MonthlyReport>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -194,8 +194,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateTotalExpenseUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateTotalExpenseUI(it.value as Int)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -203,8 +203,8 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateTotalIncomeUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateTotalIncomeUI(it.value as Int)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 

@@ -37,7 +37,6 @@ import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.VMFAddExpense
 import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import dagger.hilt.android.AndroidEntryPoint
@@ -119,10 +118,10 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success ->  updateUI(it.data){
+                is Resource.Success<*> ->  updateUI(it.value as List<MC_Cards>){
 
                 }
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
 

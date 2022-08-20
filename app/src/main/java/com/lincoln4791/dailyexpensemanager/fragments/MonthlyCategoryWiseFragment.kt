@@ -16,13 +16,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyCategoryWiseReport
 import com.lincoln4791.dailyexpensemanager.R
-import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyCategoryWiseBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
+import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 
@@ -109,8 +109,10 @@ class MonthlyCategoryWiseFragment : Fragment() {
         viewModel.postsList.observe(viewLifecycleOwner, Observer {
             when(it){
                 //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success ->  updateUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> ->  updateUI(it.value as List<MC_Posts>)
+                is Resource.Failure -> {
+                    //Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
             }
         })
 

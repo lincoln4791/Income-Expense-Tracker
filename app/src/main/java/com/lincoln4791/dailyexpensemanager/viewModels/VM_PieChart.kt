@@ -8,12 +8,10 @@ import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
 class VM_PieChart(application: Application) : AndroidViewModel(application) {
 
@@ -23,7 +21,7 @@ class VM_PieChart(application: Application) : AndroidViewModel(application) {
     fun loadYearMonth(year:String,month:String){
         /*   CoroutineScope(Dispatchers.IO).launch {*/
         //postsList.value = repository.loadAllTransactions()
-        postsList.value = Resource.Loading()
+        postsList.value = Resource.Loading
         try {
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -35,7 +33,7 @@ class VM_PieChart(application: Application) : AndroidViewModel(application) {
             }
         }
         catch (e: Exception){
-            postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+            //postsList.value = Resource.Failure("Failed to retrive data -> ${e.message}")
         }
         // }
     }
