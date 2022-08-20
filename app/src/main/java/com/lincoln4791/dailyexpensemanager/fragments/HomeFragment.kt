@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -52,19 +53,27 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
+import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.MainViewModelFactory
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private val sdf = SimpleDateFormat("yyyy-MM-dd")
-
+    @Inject protected lateinit var sdf : SimpleDateFormat
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var viewModel: VM_MainActivity
+    //private lateinit var viewModel: VM_MainActivity
     private lateinit var navCon: NavController
     private lateinit var prefManager: PrefManager
     private var day: String? = null
     private var month: String? = null
     private var year: String? = null
     private val sliderHandler: Handler = Handler()
+    @Inject lateinit var dao : DatabaseDao
+    private val viewModel by viewModels<VM_MainActivity>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +125,7 @@ class HomeFragment : Fragment() {
 
 
         navCon = Navigation.findNavController(view)
-        viewModel = ViewModelProvider(this)[VM_MainActivity::class.java]
+        //viewModel =ViewModelProvider(this@HomeFragment, MainViewModelFactory(dao))[VM_MainActivity::class.java]
 
 
         viewModel.totalIncome.observe(viewLifecycleOwner, Observer {

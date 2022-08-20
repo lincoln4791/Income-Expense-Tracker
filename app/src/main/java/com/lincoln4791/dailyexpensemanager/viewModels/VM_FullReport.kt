@@ -5,16 +5,21 @@ import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.google.firebase.crashlytics.internal.common.CrashlyticsReportWithSessionId
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
+import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class VM_FullReport(application: Application) : AndroidViewModel(application) {
+class VM_FullReport(val repository: Repository) : ViewModel() {
 
     var expenseList: MutableLiveData<Resource<List<MC_MonthlyReport>>> = MutableLiveData<Resource<List<MC_MonthlyReport>>>()
     var incomeList: MutableLiveData<Resource<List<MC_MonthlyReport>>> = MutableLiveData<Resource<List<MC_MonthlyReport>>>()
@@ -23,7 +28,6 @@ class VM_FullReport(application: Application) : AndroidViewModel(application) {
     var totalIncome: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()
     var totalExpense: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()
     var balance: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()
-    private var repository : Repository = Repository(application.applicationContext)
     var year = Constants.YEAR_DEFAULT
     var month = Constants.MONTH_All
     var day = Constants.DAY_ALL

@@ -25,6 +25,7 @@ import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddExpense
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
 import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.NativeAdUtil
@@ -36,14 +37,19 @@ import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.VMFAddExpense
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddExpenseFragment : Fragment(), View.OnClickListener {
     private var hour = 0
     private var minute = 0
@@ -58,6 +64,8 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     lateinit var prefManager: PrefManager
     private lateinit var binding : AddExpenseFragmentBinding
     private lateinit var navCon : NavController
+    @Inject
+    lateinit var repository: Repository
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +99,8 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         showNativeAdd()
         Util.recordScreenEvent("add_expense_fragment","MainActivity")
 
-        viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
+        //viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
+        viewModel = ViewModelProvider(this,ViewModelFactory(repository))[VM_AddExpenses::class.java]
         navCon = Navigation.findNavController(view)
 
         vm_addExpenses = ViewModelProvider(this)[VM_AddExpenses::class.java]

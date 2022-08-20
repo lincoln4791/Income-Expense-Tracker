@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -28,6 +29,7 @@ import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Transactions
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
@@ -37,13 +39,20 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.VMFAddExpense
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.VMFTransactions
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class TransactionsFragment : Fragment() {
+@AndroidEntryPoint
+class TransactionsFragment() : Fragment() {
     val args: TransactionsFragmentArgs by navArgs()
     private val linearLayoutManager = LinearLayoutManager(context)
     private var toolbar: Toolbar? = null
@@ -52,9 +61,11 @@ class TransactionsFragment : Fragment() {
 
     private lateinit var binding : FragmentTransactionsBinding
     private lateinit var prefManager : PrefManager
-    private var vm_transactions: VM_Transactions? = null
+    //private var vm_transactions: VM_Transactions? = null
+    private val vm_transactions by viewModels<VM_Transactions>()
     private lateinit var navCon : NavController
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    @Inject lateinit var repository: Repository
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,9 +116,20 @@ class TransactionsFragment : Fragment() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         binding.rvTransactions.layoutManager = linearLayoutManager
-        vm_transactions = ViewModelProvider(this)[VM_Transactions::class.java]
+        //vm_transactions = ViewModelProvider(this, ViewModelFactory(repository))[VM_Transactions::class.java]
 
         setUpTabLayout()
+
+                CoroutineScope(Dispatchers.IO).launch {
+                 repository.loadYearWise("2022"){
+                     when (it) {
+                         is Resource.Loading -> Log.d("Transaction", "Loading...")
+                         //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
+                         is Resource.Success ->  Log.d("tag","Success -> list sizze -> ${it.data.size}")
+                         is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                     }
+                 }
+             }
 
         vm_transactions!!.postsList.observe(viewLifecycleOwner, Observer {
             Log.d("Transaction", "observed")

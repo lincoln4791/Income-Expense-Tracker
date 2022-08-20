@@ -5,16 +5,20 @@ import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class VM_Transactions( application: Application) : AndroidViewModel(application) {
-    private var repository : Repository = Repository(application.applicationContext)
+@HiltViewModel
+class VM_Transactions @Inject constructor (val repository: Repository) : ViewModel() {
     var postsList: MutableLiveData<Resource<List<MC_Posts>>> = MutableLiveData<Resource<List<MC_Posts>>>()
     var totalIncome : MutableLiveData<Int> = MutableLiveData(0)
     var totalExpense : MutableLiveData<Int> = MutableLiveData(0)

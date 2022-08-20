@@ -2,6 +2,8 @@ package com.lincoln4791.dailyexpensemanager.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.AndroidEntryPoint
+
 
 class VM_EditDataExpense : ViewModel() {
     var category = ""

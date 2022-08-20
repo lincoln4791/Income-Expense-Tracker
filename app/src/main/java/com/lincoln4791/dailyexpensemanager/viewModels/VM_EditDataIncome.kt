@@ -3,6 +3,7 @@ package com.lincoln4791.dailyexpensemanager.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 
+
 class VM_EditDataIncome : ViewModel() {
     var category = ""
     var amount = ""

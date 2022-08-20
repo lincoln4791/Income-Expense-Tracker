@@ -1,4 +1,4 @@
-package com.example.mvvm_bilalkhan.ui.base
+package com.lincoln4791.dailyexpensemanager.viewModelFactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,7 +8,7 @@ import com.lincoln4791.dailyexpensemanager.viewModels.AuthViewModel
 import java.lang.IllegalStateException
 
 @Suppress("Unchecked Cast")
-class ViewModelFactory(
+class BaseViewModelFactory(
     private val repository : BaseRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 

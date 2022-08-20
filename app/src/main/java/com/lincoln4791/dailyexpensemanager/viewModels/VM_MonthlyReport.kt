@@ -3,17 +3,20 @@ package com.lincoln4791.dailyexpensemanager.viewModels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
+import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class VM_MonthlyReport(application: Application) : AndroidViewModel(application) {
+class VM_MonthlyReport(val repository: Repository) : ViewModel() {
 
-    private var repository : Repository = Repository(application.applicationContext)
     var expenseList: MutableLiveData<Resource<List<MC_MonthlyReport>>> = MutableLiveData<Resource<List<MC_MonthlyReport>>>()
     var incomeList: MutableLiveData<Resource<List<MC_MonthlyReport>>> = MutableLiveData<Resource<List<MC_MonthlyReport>>>()
     var totalIncome: MutableLiveData<Resource<Int>> = MutableLiveData<Resource<Int>>()

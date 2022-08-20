@@ -20,6 +20,7 @@ import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_Daily
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.*
 import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
@@ -27,10 +28,15 @@ import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentDailyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_Daily
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DailyFragment : Fragment() {
 
     private var adapterDaily: Adapter_Daily? = null
@@ -48,6 +54,8 @@ class DailyFragment : Fragment() {
     private lateinit var binding : FragmentDailyBinding
     private lateinit var navCon : NavController
     private lateinit var prefManager : PrefManager
+    @Inject
+    lateinit var repository : Repository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +73,7 @@ class DailyFragment : Fragment() {
         initAdMob()
         Util.recordScreenEvent("daily_fragment","MainActivity")
 
-        viewModel = ViewModelProvider(this)[VM_Daily::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory(repository))[VM_Daily::class.java]
         navCon = Navigation.findNavController(view)
 
 

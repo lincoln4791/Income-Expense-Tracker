@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.lincoln4791.dailyexpensemanager.Adapters.*
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
 import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.InterstistialAdHelper
@@ -27,11 +28,16 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FullReportFragment : Fragment() {
     private val linearLayoutManager = LinearLayoutManager(context)
     private var adapterFullReport: Adapter_FullReport? = null
@@ -47,6 +53,8 @@ class FullReportFragment : Fragment() {
     private lateinit var dateTimedialogView : View
     private lateinit var dateTimeDialog : BottomSheetDialog
     private lateinit var prefManager : PrefManager
+    @Inject
+    lateinit var repository: Repository
 
     private lateinit var interAd: InterstistialAdHelper
     var mInterstitialAd: InterstitialAd? = null
@@ -68,7 +76,7 @@ class FullReportFragment : Fragment() {
         initInterstitialAd()
 
         navCon = Navigation.findNavController(view)
-        vm_fullReport = ViewModelProvider(this)[VM_FullReport::class.java]
+        vm_fullReport = ViewModelProvider(this, ViewModelFactory(repository))[VM_FullReport::class.java]
 
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true

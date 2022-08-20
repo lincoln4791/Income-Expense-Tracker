@@ -1,20 +1,27 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class VM_MainActivity(application: Application) : AndroidViewModel(application) {
-    val dao = AppDatabase.getInstance(application.applicationContext).dbDao()
+@HiltViewModel
+class VM_MainActivity @Inject constructor (val dao: DatabaseDao) : ViewModel() {
     var totalIncome: MutableLiveData<Int> = MutableLiveData()
     var totalExpense: MutableLiveData<Int> = MutableLiveData()
     var currentBalance: MutableLiveData<Int> = MutableLiveData()

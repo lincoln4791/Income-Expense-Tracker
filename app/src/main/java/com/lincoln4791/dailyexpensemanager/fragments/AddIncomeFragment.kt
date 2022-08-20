@@ -25,6 +25,7 @@ import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddIncome
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.NativeAdUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
@@ -35,6 +36,8 @@ import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
+import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddIncome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +45,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class AddIncomeFragment : Fragment(), View.OnClickListener {
     private var hour = 0
@@ -56,6 +60,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     private lateinit var binding : FragmentAddIncomeBinding
     private lateinit var navCon : NavController
     private lateinit var prefManager : PrefManager
+    @Inject lateinit var repository : Repository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +92,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         showNativeAdd()
         Util.recordScreenEvent("add_income_fragment","MainActivity")
 
-        vm_addIncome = ViewModelProvider(this)[VM_AddIncome::class.java]
+        vm_addIncome = ViewModelProvider(this, ViewModelFactory(repository))[VM_AddIncome::class.java]
         navCon = Navigation.findNavController(view)
 
         val calendar = Calendar.getInstance()

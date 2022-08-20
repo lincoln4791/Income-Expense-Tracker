@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.example.mvvm_bilalkhan.ui.base.ViewModelFactory
 import com.lincoln4791.dailyexpensemanager.network.RemoteDataSource
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.BaseViewModelFactory
 
 abstract class BaseFragment <VM:ViewModel, B : ViewBinding, R: BaseRepository> : Fragment() {
 
@@ -22,7 +22,7 @@ abstract class BaseFragment <VM:ViewModel, B : ViewBinding, R: BaseRepository> :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val factory = ViewModelFactory(getFragmentRepository())
+        val factory = BaseViewModelFactory(getFragmentRepository())
         viewModel = ViewModelProvider(this,factory)[getViewModel()]
 
         binding = getFragmentBinding(inflater,container)

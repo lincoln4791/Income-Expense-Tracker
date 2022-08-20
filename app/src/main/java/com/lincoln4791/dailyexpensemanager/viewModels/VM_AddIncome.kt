@@ -4,17 +4,21 @@ import android.app.Application
 import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
+import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class VM_AddIncome(application: Application) : AndroidViewModel(application) {
 
-    private var repository : Repository = Repository(application.applicationContext)
+class VM_AddIncome(val repository: Repository) : ViewModel() {
+
     var postsList: MutableLiveData<Resource<List<MC_Cards>>> = MutableLiveData<Resource<List<MC_Cards>>>()
 
     var category = ""

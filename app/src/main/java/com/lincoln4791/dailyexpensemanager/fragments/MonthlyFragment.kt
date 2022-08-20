@@ -22,6 +22,7 @@ import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportExpense
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportIncome
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.*
@@ -29,14 +30,18 @@ import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
+import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
 import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private val args: MonthlyFragmentArgs by navArgs()
     private var tIncome = 0.0
@@ -47,6 +52,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     private var currentMonthPosition = 0
     private var currentMonth = 0
     private var currentYear = 0
+    @Inject lateinit var repository : Repository
 
 
     private lateinit var viewModel: VM_MonthlyReport
@@ -93,7 +99,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         binding.shimmerViewContainer.startShimmer()
 
         navCon = Navigation.findNavController(view)
-        viewModel = ViewModelProvider(this)[VM_MonthlyReport::class.java]
+        viewModel = ViewModelProvider(this,ViewModelFactory(repository))[VM_MonthlyReport::class.java]
 
         linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
