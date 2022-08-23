@@ -20,7 +20,7 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyCategoryWiseBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyCategoryWise
+import com.lincoln4791.dailyexpensemanager.viewModels.VMMonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
@@ -37,7 +37,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
     private lateinit var fragmentFrom: String
     private lateinit var selectedTransactionType: String
     val args: MonthlyCategoryWiseFragmentArgs by navArgs()
-    private lateinit var viewModel: VM_MonthlyCategoryWise
+    private lateinit var viewModel: VMMonthlyCategoryWise
     private lateinit var binding : FragmentMonthlyCategoryWiseBinding
     private lateinit var navCon : NavController
     override fun onCreateView(
@@ -82,7 +82,7 @@ class MonthlyCategoryWiseFragment : Fragment() {
         Util.recordScreenEvent("monthly_category_wise_fragment","MainActivity")
 
         navCon = Navigation.findNavController(view)
-        viewModel = ViewModelProvider(this)[VM_MonthlyCategoryWise::class.java]
+        viewModel = ViewModelProvider(this)[VMMonthlyCategoryWise::class.java]
 
         year = args.year
         month = args.month

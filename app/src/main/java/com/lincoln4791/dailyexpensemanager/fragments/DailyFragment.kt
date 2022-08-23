@@ -1,19 +1,18 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.android.gms.ads.MobileAds
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
@@ -28,43 +27,25 @@ import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentDailyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_Daily
+import com.lincoln4791.dailyexpensemanager.viewModels.VMDaily
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DailyFragment : Fragment() {
+class DailyFragment : BaseFragment<FragmentDailyBinding>(FragmentDailyBinding::inflate) {
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var repository : Repository
+
+    private val viewModel by viewModels<VMDaily>()
+    private lateinit var navCon : NavController
 
     private var adapterDaily: Adapter_Daily? = null
     private var linearLayoutManager: LinearLayoutManager? = null
-    private var day: String? = null
-    private var month: String? = null
-    private var year: String? = null
-    private var date: String? = null
-    private var totalIncome = 0
-    private var totalExpense = 0
     private var tempMonth = 0
     private var tempYear = 0
     private var tempDay = 0
-    private lateinit var viewModel: VM_Daily
-    private lateinit var binding : FragmentDailyBinding
-    private lateinit var navCon : NavController
-    private lateinit var prefManager : PrefManager
-    @Inject
-    lateinit var repository : Repository
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        prefManager = PrefManager(requireContext())
-        // Inflate the layout for this fragment
-        binding = FragmentDailyBinding.inflate(layoutInflater,container,false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,14 +53,12 @@ class DailyFragment : Fragment() {
         initAdMob()
         Util.recordScreenEvent("daily_fragment","MainActivity")
 
-        viewModel = ViewModelProvider(this, ViewModelFactory(repository))[VM_Daily::class.java]
         navCon = Navigation.findNavController(view)
 
 
         linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager!!.reverseLayout = true
         linearLayoutManager!!.stackFromEnd = true
-        //adapterDaily = Adapter_Daily(viewModel.postsList!!.value, requireContext())
         binding.rvDailyReport.layoutManager = linearLayoutManager
         binding.rvDailyReport.adapter = adapterDaily
         val calendar = Calendar.getInstance()
@@ -87,196 +66,211 @@ class DailyFragment : Fragment() {
         tempYear = calendar[Calendar.YEAR]
         tempDay = calendar[Calendar.DAY_OF_MONTH]
 
-        viewModel.postsList.observe(viewLifecycleOwner,Observer{
-            when (it) {
-                is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success<*> ->  calculateAll(it.value as List<MC_Posts>)
-                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-            }
-        })
+
 
         binding.cvDateDailyReport.setOnClickListener { changeDateAndFetchNewData() }
         binding.ibNextDateDailyReport.setOnClickListener { loadNextDateData() }
         binding.ibPreviousDateDailyReport.setOnClickListener { loadPreviousDateData() }
-        binding.cvFullReportDailyReport.setOnClickListener {
-            /* startActivity(Intent(this@Daily,
-                 FullReport::class.java))*/
-        }
-        binding.cvMonthlyTransactionsDailyReport.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  startActivity(Intent(this@Daily,
-                MonthlyReport::class.java))*/
-        })
-        binding.cvTransactionsDailyReport.setOnClickListener(View.OnClickListener { v: View? ->
-            /*val intent = Intent(this@Daily, Transactions::class.java)
-            intent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
-            startActivity(intent)*/
-        })
         binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
         navCon.navigateUp()
         })
 
 
-        setDate()
+        viewModel.setDate()
         binding.tvCurrentBalanceValueToolBarMonthlyReport.text = GlobalVariabls.currentBalance.toString()
-       viewModel.loadDailyTransactions(year!!,month!!,day!!)
+        viewModel.loadDailyTransactions(viewModel.year.toString(),viewModel.month.toString(), viewModel.day.toString())
 
+        observe()
+
+    }
+
+    private fun observe() {
+        viewModel.postsList.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success<*> ->  calculateAll(it.value as List<MC_Posts>)
+                is Resource.Success<*> -> {
+                    viewModel.calculateAll(it.value as List<MC_Posts>)
+                    updateUI(it.value)
+                }
+                else -> {}
+            }
+        }
+
+
+        viewModel.date.observe(viewLifecycleOwner){
+            binding.tvDateDailyReport.text=it
+        }
     }
 
 
     private fun loadPreviousDateData() {
-        var monthValue = month!!.toInt()
-        var dayValue = day!!.toInt()
-        if (monthValue == 2 || monthValue == 4 || monthValue == 6 || monthValue == 8 || monthValue == 9 || monthValue == 11) {
-            if (dayValue == 1) {
-                monthValue = monthValue - 1
-                dayValue = 31
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() - 1).toString()
+        var monthValue = viewModel.month!!.toInt()
+        var dayValue = viewModel.day!!.toInt()
+        when (monthValue) {
+            2, 4, 6, 8, 9, 11 -> {
+                if (dayValue == 1) {
+                    monthValue -= 1
+                    dayValue = 31
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() - 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!,viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-        } else if (monthValue == 5 || monthValue == 7 || monthValue == 10 || monthValue == 12) {
-            if (dayValue == 1) {
-                monthValue = monthValue - 1
-                dayValue = 30
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() - 1).toString()
+            5, 7, 10, 12 -> {
+                if (dayValue == 1) {
+                    monthValue -= 1
+                    dayValue = 30
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() - 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-        } else if (monthValue == 3) {
-            if (dayValue == 1) {
-                monthValue = monthValue - 1
-                dayValue = 28
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() - 1).toString()
+            3 -> {
+                if (dayValue == 1) {
+                    monthValue -= 1
+                    dayValue = 28
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.date.value = (viewModel.day!!.toInt() - 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-        } else if (monthValue == 1) {
-            if (dayValue == 1) {
-                year = (year!!.toInt() - 1).toString()
-                monthValue = 12
-                dayValue = 31
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() - 1).toString()
+            1 -> {
+                if (dayValue == 1) {
+                    viewModel.year = (viewModel.year!!.toInt() - 1).toString()
+                    monthValue = 12
+                    dayValue = 31
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() - 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
         }
     }
 
     private fun loadNextDateData() {
-        var monthValue = month!!.toInt()
-        var dayValue = day!!.toInt()
-        if (monthValue == 1 || monthValue == 3 || monthValue == 5 || monthValue == 7 || monthValue == 8 || monthValue == 10) {
-            if (dayValue == 31) {
-                monthValue = monthValue + 1
-                dayValue = 1
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() + 1).toString()
+        var monthValue = viewModel.month!!.toInt()
+        var dayValue = viewModel.day!!.toInt()
+        when (monthValue) {
+            1, 3, 5, 7, 8, 10 -> {
+                if (dayValue == 31) {
+                    monthValue += 1
+                    dayValue = 1
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() + 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-        } else if (monthValue == 4 || monthValue == 6 || monthValue == 9 || monthValue == 11) {
-            if (dayValue == 30) {
-                monthValue = monthValue + 1
-                dayValue = 1
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() + 1).toString()
+            4, 6, 9, 11 -> {
+                if (dayValue == 30) {
+                    monthValue += 1
+                    dayValue = 1
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() + 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-        } else if (monthValue == 2) {
-            if (dayValue == 28) {
-                monthValue = monthValue + 1
-                dayValue = 1
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() + 1).toString()
+            2 -> {
+                if (dayValue == 28) {
+                    monthValue += 1
+                    dayValue = 1
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() + 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-        } else if (monthValue == 12) {
-            if (dayValue == 31) {
-                year = (year!!.toInt() + 1).toString()
-                monthValue = 1
-                dayValue = 1
-                setMonthPlain(monthValue)
-                setDay(dayValue)
-            } else {
-                day = (day!!.toInt() + 1).toString()
+            12 -> {
+                if (dayValue == 31) {
+                    viewModel.year = (viewModel.year!!.toInt() + 1).toString()
+                    monthValue = 1
+                    dayValue = 1
+                    setMonthPlain(monthValue)
+                    setDay(dayValue)
+                } else {
+                    viewModel.day = (viewModel.day!!.toInt() + 1).toString()
+                }
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!, viewModel.month!!, viewModel.day!!)
             }
-            date = "$day-$month-$year"
-            binding.tvDateDailyReport.text = date
-            //YearMonthDayTask().execute()
-            viewModel.loadDailyTransactions(year!!, month!!, day!!)
         }
     }
 
     private fun setMonthPlain(monthh: Int) {
-        month = if (monthh == 1) {
-            getString(R.string.digit01)
-        } else if (monthh == 2) {
-            getString(R.string.digit02)
-        } else if (monthh == 3) {
-            getString(R.string.digit03)
-        } else if (monthh == 4) {
-            getString(R.string.digit04)
-        } else if (monthh == 5) {
-            getString(R.string.digit05)
-        } else if (monthh == 6) {
-            getString(R.string.digit06)
-        } else if (monthh == 7) {
-            getString(R.string.digit07)
-        } else if (monthh == 8) {
-            getString(R.string.digit08)
-        } else if (monthh == 9) {
-            getString(R.string.digit09)
-        } else {
-            monthh.toString()
+        viewModel.month = when (monthh) {
+            1 -> {
+                getString(R.string.digit01)
+            }
+            2 -> {
+                getString(R.string.digit02)
+            }
+            3 -> {
+                getString(R.string.digit03)
+            }
+            4 -> {
+                getString(R.string.digit04)
+            }
+            5 -> {
+                getString(R.string.digit05)
+            }
+            6 -> {
+                getString(R.string.digit06)
+            }
+            7 -> {
+                getString(R.string.digit07)
+            }
+            8 -> {
+                getString(R.string.digit08)
+            }
+            9 -> {
+                getString(R.string.digit09)
+            }
+            else -> {
+                monthh.toString()
+            }
         }
     }
 
     private fun changeDateAndFetchNewData() {
-        tempDay = day!!.toInt()
-        tempMonth = month!!.toInt() - 1
-        tempYear = year!!.toInt()
+        tempDay = viewModel.day!!.toInt()
+        tempMonth = viewModel.month!!.toInt() - 1
+        tempYear = viewModel.year!!.toInt()
         val datePickerDialog = DatePickerDialog(requireContext(),
-            { view: DatePicker?, yearr: Int, monthh: Int, dayOfMonth: Int ->
-                year = yearr.toString()
+            { _: DatePicker?, yearr: Int, monthh: Int, dayOfMonth: Int ->
+                viewModel.year = yearr.toString()
                 setMonth(monthh)
                 setDay(dayOfMonth)
-                date = "$day-$month-$year"
-                binding.tvDateDailyReport.text = date
-                //YearMonthDayTask().execute()
+                viewModel.date.value = "${viewModel.day}-${viewModel.month}-${viewModel.year}"
+                binding.tvDateDailyReport.text = viewModel.date.value
+                viewModel.loadDailyTransactions(viewModel.year!!,viewModel.month!!,viewModel.year!!)
             },
             tempYear,
             tempMonth,
@@ -285,64 +279,78 @@ class DailyFragment : Fragment() {
     }
 
     private fun setDay(dayOfMonth: Int) {
-        day = if (dayOfMonth == 1) {
-            getString(R.string.digit01)
-        } else if (dayOfMonth == 2) {
-            getString(R.string.digit02)
-        } else if (dayOfMonth == 3) {
-            getString(R.string.digit03)
-        } else if (dayOfMonth == 4) {
-            getString(R.string.digit04)
-        } else if (dayOfMonth == 5) {
-            getString(R.string.digit05)
-        } else if (dayOfMonth == 6) {
-            getString(R.string.digit06)
-        } else if (dayOfMonth == 7) {
-            getString(R.string.digit07)
-        } else if (dayOfMonth == 8) {
-            getString(R.string.digit08)
-        } else if (dayOfMonth == 9) {
-            getString(R.string.digit09)
-        } else {
-            dayOfMonth.toString()
+        viewModel.day = when (dayOfMonth) {
+            1 -> {
+                getString(R.string.digit01)
+            }
+            2 -> {
+                getString(R.string.digit02)
+            }
+            3 -> {
+                getString(R.string.digit03)
+            }
+            4 -> {
+                getString(R.string.digit04)
+            }
+            5 -> {
+                getString(R.string.digit05)
+            }
+            6 -> {
+                getString(R.string.digit06)
+            }
+            7 -> {
+                getString(R.string.digit07)
+            }
+            8 -> {
+                getString(R.string.digit08)
+            }
+            9 -> {
+                getString(R.string.digit09)
+            }
+            else -> {
+                dayOfMonth.toString()
+            }
         }
     }
 
     private fun setMonth(monthh: Int) {
-        month = if (monthh == 0) {
-            getString(R.string.digit01)
-        } else if (monthh == 1) {
-            getString(R.string.digit02)
-        } else if (monthh == 2) {
-            getString(R.string.digit03)
-        } else if (monthh == 3) {
-            getString(R.string.digit04)
-        } else if (monthh == 4) {
-            getString(R.string.digit05)
-        } else if (monthh == 5) {
-            getString(R.string.digit06)
-        } else if (monthh == 6) {
-            getString(R.string.digit07)
-        } else if (monthh == 7) {
-            getString(R.string.digit08)
-        } else if (monthh == 8) {
-            getString(R.string.digit09)
-        } else {
-            (monthh + 1).toString()
+        viewModel.month = when (monthh) {
+            0 -> {
+                getString(R.string.digit01)
+            }
+            1 -> {
+                getString(R.string.digit02)
+            }
+            2 -> {
+                getString(R.string.digit03)
+            }
+            3 -> {
+                getString(R.string.digit04)
+            }
+            4 -> {
+                getString(R.string.digit05)
+            }
+            5 -> {
+                getString(R.string.digit06)
+            }
+            6 -> {
+                getString(R.string.digit07)
+            }
+            7 -> {
+                getString(R.string.digit08)
+            }
+            8 -> {
+                getString(R.string.digit09)
+            }
+            else -> {
+                (monthh + 1).toString()
+            }
         }
     }
 
-    private fun setDate() {
-        val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
-        val simpleMonthFormat = SimpleDateFormat("MM", Locale.getDefault())
-        val simpleYearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-        day = simpleDayFormat.format(System.currentTimeMillis())
-        month = simpleMonthFormat.format(System.currentTimeMillis())
-        year = simpleYearFormat.format(System.currentTimeMillis())
-        date = "$day-$month-$year"
-        binding.tvDateDailyReport.text = date
-    }
 
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateUI(postList: List<MC_Posts>){
         if(postList.isEmpty()){
             binding.cvNoResultFound.visibility = View.VISIBLE
@@ -351,49 +359,20 @@ class DailyFragment : Fragment() {
             binding.cvNoResultFound.visibility = View.GONE
         }
         adapterDaily = Adapter_Daily(postList,requireContext(),this)
-        binding.tvTotalIncomeValueDaily.text = totalIncome.toString()
-        binding.tvTotalExpenseValueDaily.text = totalExpense.toString()
+        binding.tvTotalIncomeValueDaily.text = viewModel.totalIncome.toString()
+        binding.tvTotalExpenseValueDaily.text = viewModel.totalExpense.toString()
         binding.rvDailyReport.adapter = adapterDaily
         adapterDaily!!.notifyDataSetChanged()
     }
 
-    private fun calculateAll(postList:List<MC_Posts>) {
-        //adapterDaily = Adapter_Daily(postList, requireContext(),this@DailyFragment)
-        totalIncome = 0
-        totalExpense = 0
-        Log.d("tag", "list size : " + postList.size)
-        for (i in postList.indices) {
-            if (postList[i].postType == Constants.TYPE_INCOME) {
-                totalIncome = totalIncome + postList[i].postAmount.toInt()
-            } else if (postList[i].postType == Constants.TYPE_EXPENSE) {
-                totalExpense = totalExpense + postList[i].postAmount.toInt()
-            }
-        }
-        updateUI(postList)
-    }
 
-/*    fun deleteData(id: Int,callback : (isDeleted : Boolean,error:String?)->Unit) {
-        try {
-            CoroutineScope(Dispatchers.IO).launch {
-                AppDatabase.getInstance(requireContext()).dbDao().delete(id.toString())
-                Handler(Looper.getMainLooper()).post {
-                    callback(true, null)
-                }
 
-            }
-
-        }
-        catch (e:Exception){
-            callback(false,e.message)
-        }
-
-    }*/
 
     fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
         DbAdapter.confirmDelete(requireContext(),id,amount,typeOfTheFile){
             if(it !=null){
                 if(it){
-                    viewModel.loadDailyTransactions(year!!,month!!,day!!)
+                    viewModel.loadDailyTransactions(viewModel.year!!,viewModel.month!!,viewModel.day!!)
                 }
                 else{
                     Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_SHORT).show()
@@ -420,34 +399,5 @@ class DailyFragment : Fragment() {
             binding.adView.visibility = View.GONE
         }
     }
-
-
-
-/*    fun confirmDelete(id: Int) {
-        val dialog = Dialog(requireContext())
-        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_delete, null)
-        dialog.setContentView(view)
-        dialog.setCancelable(true)
-        dialog.show()
-        view.findViewById<View>(R.id.btn_yes_alertImage_dialog_delete).setOnClickListener {
-            dialog.dismiss()
-            CoroutineScope(Dispatchers.IO).launch {
-                deleteData(id){ isDeleted: Boolean, error: String? ->
-                    Handler(Looper.getMainLooper()).post {
-                        if(isDeleted){
-                            viewModel.loadDailyTransactions(year!!, month!!, day!!)
-                        }
-                        else{
-                            Toast.makeText(context,"Something Went Wrong -> $error",Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-
-        }
-        view.findViewById<View>(R.id.btn_no_alertImage_dialog_delete)
-            .setOnClickListener { dialog.dismiss() }
-    }*/
-
 
 }

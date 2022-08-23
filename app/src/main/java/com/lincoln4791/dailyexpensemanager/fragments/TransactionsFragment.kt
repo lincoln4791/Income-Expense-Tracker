@@ -4,10 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
@@ -17,11 +15,10 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
@@ -37,29 +34,29 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_Transactions
+import com.lincoln4791.dailyexpensemanager.viewModels.VMTransactions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TransactionsFragment() : Fragment() {
+class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentTransactionsBinding::inflate) {
+    @Inject lateinit var repository: Repository
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
+
     val args: TransactionsFragmentArgs by navArgs()
+
+    private val vm_transactions by viewModels<VMTransactions>()
     private val linearLayoutManager = LinearLayoutManager(context)
     private var toolbar: Toolbar? = null
     private var adapter_transactions: Adapter_Transactions? = null
     private lateinit var transactionType :String
-
-    private lateinit var binding : FragmentTransactionsBinding
-    private lateinit var prefManager : PrefManager
-    //private var vm_transactions: VM_Transactions? = null
-    private val vm_transactions by viewModels<VM_Transactions>()
     private lateinit var navCon : NavController
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
-    @Inject lateinit var repository: Repository
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,25 +76,15 @@ class TransactionsFragment() : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        Log.d("LifeCycle","Transactions Fragment Create View")
-        // Inflate the layout for this fragment
-        prefManager = PrefManager(requireContext())
-        binding = FragmentTransactionsBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         Log.d("LifeCycle","Transactions Fragment ViewCreated")
         Util.recordScreenEvent("transactions_fragment","MainActivity")
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME,"home_fragment")
         bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "Main Activity")
-        firebaseAnalytics = Firebase.analytics
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
 
         navCon = Navigation.findNavController(view)
@@ -110,36 +97,33 @@ class TransactionsFragment() : Fragment() {
         linearLayoutManager.reverseLayout = true
         linearLayoutManager.stackFromEnd = true
         binding.rvTransactions.layoutManager = linearLayoutManager
-        //vm_transactions = ViewModelProvider(this, ViewModelFactory(repository))[VM_Transactions::class.java]
 
         setUpTabLayout()
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.loadYearWise("2022")
+        }
 
-                CoroutineScope(Dispatchers.IO).launch {
-                 repository.loadYearWise("2022"){
-                     when (it) {
-                         is Resource.Loading -> Log.d("Transaction", "Loading...")
-                         //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                         is Resource.Success ->  Log.d("tag","Success -> list sizze -> ${it.value.size}")
-                         is Resource.Failure -> Toast.makeText(context, it.errorBody.toString(), Toast.LENGTH_LONG).show()
-                     }
-                 }
-             }
-
-        vm_transactions!!.postsList.observe(viewLifecycleOwner, Observer {
+        vm_transactions.postsList.observe(viewLifecycleOwner, Observer {
             Log.d("Transaction", "observed")
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
                 is Resource.Success<*> ->  update(it.value as List<MC_Posts>)
-                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Failure -> {
+                    if(it.isNetworkError){
+                        Toast.makeText(requireContext(),"something went wrong, please try later -> ${it.errorBody}",Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        Toast.makeText(requireContext(),"something went wrong, please try later -> ${it.errorBody}",Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         })
 
-        vm_transactions!!.totalIncome.observe(viewLifecycleOwner, Observer {
+        vm_transactions.totalIncome.observe(viewLifecycleOwner, Observer {
             binding.tvTotalIncomeValueTopBarTransactions.text = it.toString()
         })
 
-        vm_transactions!!.totalExpense.observe(viewLifecycleOwner, Observer {
+        vm_transactions.totalExpense.observe(viewLifecycleOwner, Observer {
             binding.tvTotalExpenseValueTopBarTransactions.text = it.toString()
         })
 
@@ -189,17 +173,17 @@ class TransactionsFragment() : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if(tab == binding.selectTab.getTabAt(0)){
                     transactionType=Constants.TYPE_ALL
-                    vm_transactions!!.loadAllTransactions()
+                    vm_transactions.loadAllTransactions()
                 }
 
                 else if(tab == binding.selectTab.getTabAt(1)){
                     transactionType=Constants.TYPE_INCOME
-                    vm_transactions!!.loadAllIncomes()
+                    vm_transactions.loadAllIncomes()
                 }
 
                 else if(tab == binding.selectTab.getTabAt(2)){
                     transactionType=Constants.TYPE_EXPENSE
-                    vm_transactions!!.loadAllExpenses()
+                    vm_transactions.loadAllExpenses()
                 }
             }
 
@@ -215,9 +199,9 @@ class TransactionsFragment() : Fragment() {
 
     private fun loadTransactions() {
         when(transactionType){
-            Constants.TYPE_ALL -> vm_transactions!!.loadAllTransactions()
-            Constants.TYPE_EXPENSE -> vm_transactions!!.loadAllExpenses()
-            Constants.TYPE_INCOME -> vm_transactions!!.loadAllIncomes()
+            Constants.TYPE_ALL -> vm_transactions.loadAllTransactions()
+            Constants.TYPE_EXPENSE -> vm_transactions.loadAllExpenses()
+            Constants.TYPE_INCOME -> vm_transactions.loadAllIncomes()
         }
     }
 
@@ -230,7 +214,7 @@ class TransactionsFragment() : Fragment() {
             binding.cvNoResultFound.visibility = View.GONE
         }
 
-        vm_transactions!!.fetchAllTransactions(posts)
+        vm_transactions.fetchAllTransactions(posts)
         adapter_transactions = Adapter_Transactions(posts, requireContext(),this)
         binding.tvTypeTitleTransactions.text = getString(R.string.Transactions)
         toolbar!!.title = getString(R.string.Transactions)

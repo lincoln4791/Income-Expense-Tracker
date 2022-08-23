@@ -34,16 +34,16 @@ class Adapter_AddIncome(private val list: List<MC_Cards>,
 
         holder.cv.setOnClickListener {
             fragment.selectMoreCard(list[position].cardName.toString())
-            fragment.vm_addIncome.category = list[position].cardName.toString()
+            fragment.vmAddIncome.category = list[position].cardName.toString()
         }
 
         holder.ivDelete.setOnClickListener {
             fragment.deleteCardByName(list[position].cardName!!){
                 if(it){
                     android.os.Handler(Looper.getMainLooper()).postDelayed({
-                        fragment.vm_addIncome.loadAllCards(){
+                        fragment.vmAddIncome.loadAllCards()
 
-                        }
+
                     },0)
                 }
             }

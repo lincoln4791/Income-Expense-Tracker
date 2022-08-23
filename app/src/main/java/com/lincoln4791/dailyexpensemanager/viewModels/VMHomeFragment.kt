@@ -21,10 +21,14 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class VM_MainActivity @Inject constructor (val dao: DatabaseDao) : ViewModel() {
+class VMHomeFragment @Inject constructor (val dao: DatabaseDao) : ViewModel() {
     var totalIncome: MutableLiveData<Int> = MutableLiveData()
     var totalExpense: MutableLiveData<Int> = MutableLiveData()
     var currentBalance: MutableLiveData<Int> = MutableLiveData()
+
+    var day: String? = null
+    var month: String? = null
+    var year: String? = null
 
 
     fun getIncomeExpenseData() {

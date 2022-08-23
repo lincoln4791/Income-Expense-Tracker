@@ -5,20 +5,18 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
@@ -36,8 +34,8 @@ import com.lincoln4791.dailyexpensemanager.databinding.FragmentAddIncomeBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddIncome
+import com.lincoln4791.dailyexpensemanager.viewModels.VMAddIncome
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,20 +44,23 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class AddIncomeFragment : Fragment(), View.OnClickListener {
+@AndroidEntryPoint
+class AddIncomeFragment : BaseFragment<FragmentAddIncomeBinding>(FragmentAddIncomeBinding::inflate), View.OnClickListener {
+
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var repository : Repository
+    val vmAddIncome by viewModels<VMAddIncome>()
+    private lateinit var navCon : NavController
+
     private var hour = 0
     private var minute = 0
     private var year = 0
     private var month = 0
     private var day = 0
-    var am_pm: String? = null
+    var amPm: String? = null
     var hourInString: String? = null
 
-    lateinit var vm_addIncome : VM_AddIncome
-    private lateinit var binding : FragmentAddIncomeBinding
-    private lateinit var navCon : NavController
-    private lateinit var prefManager : PrefManager
-    @Inject lateinit var repository : Repository
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,23 +76,13 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        prefManager = PrefManager(requireContext())
-        // Inflate the layout for this fragment
-        binding = FragmentAddIncomeBinding.inflate(layoutInflater,container,false)
-        return binding.root
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         showNativeAdd()
         Util.recordScreenEvent("add_income_fragment","MainActivity")
-
-        vm_addIncome = ViewModelProvider(this, ViewModelFactory(repository))[VM_AddIncome::class.java]
         navCon = Navigation.findNavController(view)
 
         val calendar = Calendar.getInstance()
@@ -103,24 +94,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
         minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
 
-        vm_addIncome.postsList.observe(viewLifecycleOwner){
-            Log.d("addExpense", "observed")
-            when (it) {
-                is Resource.Loading -> Log.d("Transaction", "Loading...")
-                //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success<*> ->  updateUI(it.value as List<MC_Cards>){
 
-                }
-                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-            }
-        }
-
-/*        binding.cvBackAddIncome.setOnClickListener(View.OnClickListener { v: View? ->
-           *//* startActivity(Intent(this@AddIncome,
-                MainActivity::class.java))*//*
-            val action = AddIncomeFragmentDirections.actionAddIncomeFragmentToHomeFragment()
-            navCon.navigate(action)
-        })*/
 
         binding.cvImg.setOnClickListener {
             goBack()
@@ -134,9 +108,9 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             Toast.makeText(requireContext(),"Coming Soon",Toast.LENGTH_SHORT).show()
         }
 
-        vm_addIncome.loadAllCards(){
+        vmAddIncome.loadAllCards()
 
-        }
+
 
         binding.cvAmount500AddIncome.setOnClickListener(this)
         binding.cvAmount1000AddIncome.setOnClickListener(this)
@@ -165,8 +139,8 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         binding.cvSaveAddIncome.setOnClickListener { addIncome() }
 
         observe()
-        setDateTime()
-        binding.tvCurrentBalanceValueToolBarAddIncome.setText(GlobalVariabls.currentBalance.toString())
+        vmAddIncome.setDateTime()
+        binding.tvCurrentBalanceValueToolBarAddIncome.text = GlobalVariabls.currentBalance.toString()
 
 
 
@@ -175,24 +149,12 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
 
 
 
-    private fun setDateTime() {
-        val simpleDateTimeFormat = SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault())
-        val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
-        val simpleMonthFormat = SimpleDateFormat("MM", Locale.getDefault())
-        val simpleYearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-        val simpleTimeFormat = SimpleDateFormat("hh-mm a", Locale.getDefault())
-        vm_addIncome!!.day = simpleDayFormat.format(System.currentTimeMillis())
-        vm_addIncome!!.month = simpleMonthFormat.format(System.currentTimeMillis())
-        vm_addIncome!!.year = simpleYearFormat.format(System.currentTimeMillis())
-        vm_addIncome!!.time = simpleTimeFormat.format(System.currentTimeMillis())
-        vm_addIncome!!.dateTime = simpleDateTimeFormat.format(System.currentTimeMillis())
-        binding.tvDateTimeAddIncome!!.text = vm_addIncome!!.dateTime
-    }
+
 
     private fun addIncome() {
         if (TextUtils.isEmpty(binding.etAmountAddIncome.text)) {
             binding.etAmountAddIncome.error = getString(R.string.AmontNeeded)
-        } else if (TextUtils.isEmpty(vm_addIncome!!.category)) {
+        } else if (TextUtils.isEmpty(vmAddIncome.category)) {
             Toast.makeText(context, getString(R.string.Pleaseselectacatagory), Toast.LENGTH_SHORT)
                 .show()
         } else {
@@ -202,38 +164,22 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
                 expenseDescription = binding.etIncomeDescriptionAddIncome.text.toString()
             }
             val posts = MC_Posts(expenseDescription,
-                vm_addIncome.category,
+                vmAddIncome.category,
                 Constants.TYPE_INCOME,
                 amount.toInt(),
-                vm_addIncome.year!!,
-                vm_addIncome.month!!,
-                vm_addIncome.day!!,
-                vm_addIncome.time!!,
+                vmAddIncome.year!!,
+                vmAddIncome.month!!,
+                vmAddIncome.day!!,
+                vmAddIncome.time!!,
                 System.currentTimeMillis().toString(),
-                vm_addIncome.dateTime)
-            /*val helper = SQLiteHelper(this@AddIncome)
-            helper.saveData(posts)*/
-            val db = AppDatabase.getInstance(requireContext().applicationContext)
-            val dao = db.dbDao()
-            CoroutineScope(Dispatchers.IO).launch {
-                dao.insertAll(posts)
-                CoroutineScope(Dispatchers.Main).launch {
-                    GlobalVariabls.currentBalance = GlobalVariabls.currentBalance + amount.toInt()
-                    Log.d("tag","Income added , Current Balance is ${GlobalVariabls.currentBalance}")
-
-                   /* startActivity(Intent(this@AddIncome, MainActivity::class.java))
-                    finish()*/
-                    Toast.makeText(context, "Success ", Toast.LENGTH_SHORT).show()
-                    goBack()
-                }
-            }
-
+                vmAddIncome.dateTime.value!!)
+                vmAddIncome.addIncome(posts)
 
         }
     }
 
     private fun observe() {
-        vm_addIncome!!.mutable_category.observe(viewLifecycleOwner, { s: String ->
+        vmAddIncome.mutableCategory.observe(viewLifecycleOwner) { s: String ->
             if (s == Constants.CATEGORY_SALARY) {
                 markSalary()
             } else if (s == Constants.CATEGORY_BUSINESS) {
@@ -243,8 +189,8 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             } else if (s == Constants.CATEGORY_OTHER) {
                 markOther()
             }
-        })
-        vm_addIncome.mutable_amount.observe(viewLifecycleOwner, { s ->
+        }
+        vmAddIncome.mutableAmount.observe(viewLifecycleOwner) { s ->
             if (s == Constants.AMOUNT_500) {
                 binding.etAmountAddIncome.setText(Constants.AMOUNT_500)
             } else if (s == Constants.AMOUNT_1000) {
@@ -282,79 +228,111 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
             } else if (s == Constants.AMOUNT_500000) {
                 binding.etAmountAddIncome.setText(Constants.AMOUNT_500000)
             }
-        })
+        }
+
+        vmAddIncome.postsList.observe(viewLifecycleOwner){
+            Log.d("addExpense", "observed")
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
+                is Resource.Success<*> ->  updateUI(it.value as List<MC_Cards>){
+
+                }
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                else -> {
+
+                }
+            }
+        }
+
+        vmAddIncome.flagInsertIncome.observe(viewLifecycleOwner){
+            if(it == true){
+                vmAddIncome.adjustCurrentBalance(binding.etAmountAddIncome.text.toString().toInt())
+                Toast.makeText(requireContext(),"Success",Toast.LENGTH_SHORT).show()
+                goBack()
+            }
+            else{
+                Toast.makeText(requireContext(),"Something is wrong",Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+        vmAddIncome.dateTime.observe(viewLifecycleOwner){
+            binding.tvDateTimeAddIncome.text = it
+        }
     }
 
     override fun onClick(v: View) {
         if (v.id == R.id.cv_amount500_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_500
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_500
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount1000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_1000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_1000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount1500_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_1500
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_1500
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount2000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_2000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_2000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount2500_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_2500
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_2500
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount3000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_3000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_3000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount3500_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_3500
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_3500
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount4000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_4000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_4000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount5000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_5000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_5000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount10000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_10000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_10000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount20000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_20000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_20000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount30000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_30000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_30000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount40000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_40000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_40000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount50000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_50000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_50000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount100000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_100000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_100000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount200000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_200000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_200000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount300000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_300000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_300000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount400000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_400000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_400000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_amount500000_AddIncome) {
-            vm_addIncome!!.amount = Constants.AMOUNT_500000
-            vm_addIncome!!.mutable_amount.setValue(vm_addIncome!!.amount)
+            vmAddIncome.amount = Constants.AMOUNT_500000
+            vmAddIncome.mutableAmount.setValue(vmAddIncome.amount)
         } else if (v.id == R.id.cv_salary_AddIncome) {
-            vm_addIncome!!.category = Constants.CATEGORY_SALARY
-            vm_addIncome!!.mutable_category.setValue(vm_addIncome!!.category)
+            vmAddIncome.category = Constants.CATEGORY_SALARY
+            with(vmAddIncome) { mutableCategory.setValue(this.category) }
         } else if (v.id == R.id.cv_business_AddIncome) {
-            vm_addIncome!!.category = Constants.CATEGORY_BUSINESS
-            vm_addIncome!!.mutable_category.setValue(vm_addIncome!!.category)
+            vmAddIncome.category = Constants.CATEGORY_BUSINESS
+            with(vmAddIncome) { mutableCategory.setValue(this.category) }
         } else if (v.id == R.id.cv_houseRent_AddIncome) {
-            vm_addIncome!!.category = Constants.CATEGORY_HOUSE_RENT
-            vm_addIncome!!.mutable_category.setValue(vm_addIncome!!.category)
+            vmAddIncome.category = Constants.CATEGORY_HOUSE_RENT
+            vmAddIncome.mutableCategory.setValue(vmAddIncome.category)
         } else if (v.id == R.id.cv_other_AddIncome) {
-            vm_addIncome!!.category = Constants.CATEGORY_OTHER
-            vm_addIncome!!.mutable_category.value = vm_addIncome!!.category
+            vmAddIncome.category = Constants.CATEGORY_OTHER
+            vmAddIncome.mutableCategory.value = vmAddIncome.category
         }
     }
 
@@ -392,76 +370,73 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
 
     private fun changeDate() {
         val timePickerDialog =
-            TimePickerDialog(requireContext(), { view: TimePicker?, hourOfDay: Int, minute: Int ->
-                vm_addIncome.time = "$hourOfDay : $minute"
+            TimePickerDialog(requireContext(), { _: TimePicker?, hourOfDay: Int, minute: Int ->
+                vmAddIncome.time = "$hourOfDay : $minute"
                 Log.d("tag", "hour$hourOfDay")
                 if (hourOfDay >= 12) {
-                    am_pm = "pm"
+                    amPm = "pm"
                     hourInString = (hourOfDay - 12).toString()
                 } else {
-                    am_pm = "am"
+                    amPm = "am"
                     hourInString = hourOfDay.toString()
                 }
-                vm_addIncome.dateTime =
-                    vm_addIncome.day + "-" + vm_addIncome!!.month + "-" + vm_addIncome!!.year + "  " + hourInString + ":" + minute.toString() + " " + am_pm
-                //Log.d("tag","year"+vm_addIncome.year+" month "+vm_addIncome.month+" day "+vm_addIncome.day+" hour "+hourOfDay+"min "+minute+" "+am_pm);
-                binding.tvDateTimeAddIncome.text = vm_addIncome.dateTime
+                vmAddIncome.dateTime.value =
+                    vmAddIncome.day + "-" + vmAddIncome.month + "-" + vmAddIncome.year + "  " + hourInString + ":" + minute.toString() + " " + amPm
+
             }, hour, minute, true)
-        val datePickerDialog = DatePickerDialog(requireContext(), { view, year, month, dayOfMonth ->
+        val datePickerDialog = DatePickerDialog(requireContext(), { _, _, month, dayOfMonth ->
             setDay(dayOfMonth)
             setMonth(month + 1)
-            /*vm_addIncome.year = String.valueOf(year);
-                      vm_addIncome.month = String.valueOf(month+1);
-                      vm_addIncome.day = String.valueOf(dayOfMonth);*/timePickerDialog.show()
+            timePickerDialog.show()
         }, year, month, day)
         datePickerDialog.show()
     }
 
     private fun setDay(day: Int) {
         if (day == 1) {
-            vm_addIncome!!.day = getString(R.string.digit01)
+            vmAddIncome.day = getString(R.string.digit01)
         } else if (day == 2) {
-            vm_addIncome!!.day = getString(R.string.digit02)
+            vmAddIncome.day = getString(R.string.digit02)
         } else if (day == 3) {
-            vm_addIncome!!.day = getString(R.string.digit03)
+            vmAddIncome.day = getString(R.string.digit03)
         } else if (day == 4) {
-            vm_addIncome!!.day = getString(R.string.digit04)
+            vmAddIncome.day = getString(R.string.digit04)
         } else if (day == 5) {
-            vm_addIncome!!.day = getString(R.string.digit05)
+            vmAddIncome.day = getString(R.string.digit05)
         } else if (day == 6) {
-            vm_addIncome!!.day = getString(R.string.digit06)
+            vmAddIncome.day = getString(R.string.digit06)
         } else if (day == 7) {
-            vm_addIncome!!.day = getString(R.string.digit07)
+            vmAddIncome.day = getString(R.string.digit07)
         } else if (day == 8) {
-            vm_addIncome!!.day = getString(R.string.digit08)
+            vmAddIncome.day = getString(R.string.digit08)
         } else if (day == 9) {
-            vm_addIncome!!.day = getString(R.string.digit09)
+            vmAddIncome.day = getString(R.string.digit09)
         } else {
-            vm_addIncome!!.day = day.toString()
+            vmAddIncome.day = day.toString()
         }
     }
 
     private fun setMonth(month: Int) {
         if (month == 1) {
-            vm_addIncome!!.month = getString(R.string.digit01)
+            vmAddIncome.month = getString(R.string.digit01)
         } else if (month == 2) {
-            vm_addIncome!!.month = getString(R.string.digit02)
+            vmAddIncome.month = getString(R.string.digit02)
         } else if (month == 3) {
-            vm_addIncome!!.month = getString(R.string.digit03)
+            vmAddIncome.month = getString(R.string.digit03)
         } else if (month == 4) {
-            vm_addIncome!!.month = getString(R.string.digit04)
+            vmAddIncome.month = getString(R.string.digit04)
         } else if (month == 5) {
-            vm_addIncome!!.month = getString(R.string.digit05)
+            vmAddIncome.month = getString(R.string.digit05)
         } else if (month == 6) {
-            vm_addIncome!!.month = getString(R.string.digit06)
+            vmAddIncome.month = getString(R.string.digit06)
         } else if (month == 7) {
-            vm_addIncome!!.month = getString(R.string.digit07)
+            vmAddIncome.month = getString(R.string.digit07)
         } else if (month == 8) {
-            vm_addIncome!!.month = getString(R.string.digit08)
+            vmAddIncome.month = getString(R.string.digit08)
         } else if (month == 9) {
-            vm_addIncome!!.month = getString(R.string.digit09)
+            vmAddIncome.month = getString(R.string.digit09)
         } else {
-            vm_addIncome!!.month = month.toString()
+            vmAddIncome.month = month.toString()
         }
     }
 
@@ -481,7 +456,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     fun selectMoreCard(cardName : String){
 
         deselectAllCard()
-        vm_addIncome.category=cardName
+        vmAddIncome.category=cardName
         binding.tvSelectedMoreCard.text = cardName
         binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvSelectedMoreCard.visibility = View.VISIBLE
@@ -520,7 +495,7 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
     private fun addMoreCard() {
         deSelectedMoreCard()
         deselectAllCard()
-        vm_addIncome.category=""
+        vmAddIncome.category=""
 
         Log.d("tag","Add Card Called")
 
@@ -568,9 +543,9 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
 
                         runBlocking {
                             job2.join()
-                            vm_addIncome.loadAllCards(){
-                               selectMoreCard(tvCard.text.toString())
-                            }
+                            vmAddIncome.loadAllCards()
+                            selectMoreCard(tvCard.text.toString())
+
                         }
                     }
                     else{
@@ -602,20 +577,6 @@ class AddIncomeFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    override fun onPause() {
-        Log.d("tag", " Add Income Fragment Paused")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d("tag","Add Income Fragment Stopped")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d("tag","Add Income Fragment Destroyed")
-        super.onDestroy()
-    }
 
 
 

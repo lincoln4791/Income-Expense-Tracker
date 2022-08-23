@@ -25,11 +25,11 @@ class VM_PieChart(application: Application) : AndroidViewModel(application) {
         try {
 
             CoroutineScope(Dispatchers.IO).launch {
-                repository.loadYearMonthWise(year,month) {
+      /*          repository.loadYearMonthWise(year,month) {
                     android.os.Handler(Looper.getMainLooper()).post{
                         postsList.value = it
                     }
-                }
+                }*/
             }
         }
         catch (e: Exception){

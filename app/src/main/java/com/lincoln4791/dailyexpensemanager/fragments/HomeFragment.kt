@@ -13,10 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +22,7 @@ import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.work.*
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
@@ -32,7 +31,6 @@ import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
-//import com.lincoln4791.dailyexpensemanager.BuildConfig
 import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
 import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
 import com.lincoln4791.dailyexpensemanager.common.BannerUtil
@@ -44,7 +42,7 @@ import com.lincoln4791.dailyexpensemanager.common.slider.SliderItems
 import com.lincoln4791.dailyexpensemanager.common.util.*
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.Banner
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MainActivity
+import com.lincoln4791.dailyexpensemanager.viewModels.VMHomeFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,27 +51,19 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import com.lincoln4791.dailyexpensemanager.R
-import com.lincoln4791.dailyexpensemanager.Repository
-import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.MainViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
-    @Inject protected lateinit var sdf : SimpleDateFormat
-    private lateinit var binding: FragmentHomeBinding
-    //private lateinit var viewModel: VM_MainActivity
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+    @Inject lateinit var sdf : SimpleDateFormat
+    @Inject lateinit var prefManager: PrefManager
+    private val viewModel by viewModels<VMHomeFragment>()
+
     private lateinit var navCon: NavController
-    private lateinit var prefManager: PrefManager
-    private var day: String? = null
-    private var month: String? = null
-    private var year: String? = null
     private val sliderHandler: Handler = Handler()
-    @Inject lateinit var dao : DatabaseDao
-    private val viewModel by viewModels<VM_MainActivity>()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,22 +82,12 @@ class HomeFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        Log.d("LifeCycle", "Home Fragment CreateView")
-        binding = FragmentHomeBinding.inflate(layoutInflater)
-        // Inflate the layout for this fragment
-        return binding.root
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        prefManager = PrefManager(requireContext())
         super.onViewCreated(view, savedInstanceState)
         Log.d("LifeCycle", "Home Fragment ViewCreated")
         val window = requireActivity().window
-        //window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(R.color.primary)
 
         setDate()
@@ -125,119 +105,74 @@ class HomeFragment : Fragment() {
 
 
         navCon = Navigation.findNavController(view)
-        //viewModel =ViewModelProvider(this@HomeFragment, MainViewModelFactory(dao))[VM_MainActivity::class.java]
 
 
-        viewModel.totalIncome.observe(viewLifecycleOwner, Observer {
-            binding.tvTotalIncomeValueTopBarMainActivity.text = it!!.toString()
-        })
-
-        viewModel.totalExpense.observe(viewLifecycleOwner, Observer {
-            binding.tvTotalExpenseValueTopBarMainActivity.text = it!!.toString()
-        })
-
-        viewModel.currentBalance.observe(viewLifecycleOwner, Observer {
-            binding.tvCurrentBalanceValueToolBarMainActivity.text = it!!.toString()
-            binding.tvBalanceValueTopBarMainActivity.text = it.toString()
-        })
-
-
-        //*************************************************** Click Listeners****************************************
-        binding.cvAddIncomeMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
+        binding.cvAddIncomeMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAddIncomeFragment()
             navCon.navigate(action)
             this.onDestroy()
             this.onDetach()
-        })
+        }
 
-        binding.cvAddExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
+        binding.cvAddExpensesMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAddExpenseFragment()
             navCon.navigate(action)
             this.onDestroy()
             this.onDetach()
 
-        })
+        }
 
-        binding.cvFullReportMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
+        binding.cvFullReportMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToFullReportFragment()
             navCon.navigate(action)
             this.onDestroy()
             this.onDetach()
-        })
+        }
 
         binding.cvTransactionsMainActivity.setOnClickListener {
-            /* val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
-             transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
-             startActivity(transactionsIntent)*/
-
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
             navCon.navigate(action)
 
         }
 
-        binding.cvIncomeMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-            /*val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
-            transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
-            startActivity(transactionsIntent)*/
+        binding.cvIncomeMainActivity.setOnClickListener {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_INCOME)
             navCon.navigate(action)
 
-        })
-        binding.cvExpensesMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-            /*  val transactionsIntent = Intent(requireContext(), TransactionsActivity::class.java)
-            transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
-            startActivity(transactionsIntent)*/
+        }
+        binding.cvExpensesMainActivity.setOnClickListener {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_EXPENSE)
             navCon.navigate(action)
-        })
-        binding.cvDailyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
+        }
+        binding.cvDailyMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToDailyFragment()
             navCon.navigate(action)
             this.onDestroy()
             this.onDetach()
-            //startActivity(Intent(requireContext(),DailyActivity::class.java))
-        })
-        binding.cvMonthlyMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-            /* startActivity(Intent(this@MainActivity,
-                MonthlyReport::class.java))*/
+        }
+        binding.cvMonthlyMainActivity.setOnClickListener {
 
-            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(year, month)
+
+            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(viewModel.year,
+                viewModel.month)
             navCon.navigate(action)
             this.onDestroy()
             this.onDetach()
+        }
 
-            /*val monthlyIntent = Intent(requireContext(),MonthlyActivity::class.java)
-            monthlyIntent.putExtra("year","2022")
-            monthlyIntent.putExtra("month","02")
-            startActivity(monthlyIntent)*/
 
-        })
-        binding.cvTotalIncomesTopBarMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-            /*  val incomeIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
-            incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
-            startActivity(incomeIntent)*/
-        })
-        binding.cvTotalExpensesTopBarMainActivity.setOnClickListener(View.OnClickListener { v: View? ->
-            /*  val expenseIntent: Intent = Intent(this@MainActivity, Transactions::class.java)
-            expenseIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
-            startActivity(expenseIntent)*/
-        })
         binding.cvAboutMainActivity.setOnClickListener {
             openAbout()
             //syncNow(requireContext())
             getBackStackCount()
         }
+
         binding.cvBackupDataMainActivity.setOnClickListener {
             Toast.makeText(requireContext().applicationContext, "Coming Soon", Toast.LENGTH_SHORT)
                 .show()
-
-          /*  val d = HashMap<String,String>()
-            d["name"] = Random().nextInt().toString()
-            d["phone"] = Random().nextInt().toString()
-            Firebase.database.reference.child(Constants.USER_DATA).child(prefManager.UID).child("test").setValue(d)*/
 
         }
         binding.cvRestoreDataMainActivity.setOnClickListener {
@@ -320,11 +255,25 @@ class HomeFragment : Fragment() {
         binding.navigationView.itemIconTintList = null
         binding.navigationView.getHeaderView(0).findViewById<TextView>(R.id.tvAppVersion).text = "Version : ${BuildConfig.VERSION_NAME}"
 
-
-        //**********************************************Starting Methods***************************************
         viewModel.getIncomeExpenseData()
         initDarkTheme()
+        observe()
 
+    }
+
+    private fun observe() {
+        viewModel.totalIncome.observe(viewLifecycleOwner, Observer {
+            binding.tvTotalIncomeValueTopBarMainActivity.text = it!!.toString()
+        })
+
+        viewModel.totalExpense.observe(viewLifecycleOwner, Observer {
+            binding.tvTotalExpenseValueTopBarMainActivity.text = it!!.toString()
+        })
+
+        viewModel.currentBalance.observe(viewLifecycleOwner, Observer {
+            binding.tvCurrentBalanceValueToolBarMainActivity.text = it!!.toString()
+            binding.tvBalanceValueTopBarMainActivity.text = it.toString()
+        })
     }
 
     private fun initPremiumBadge() {
@@ -495,26 +444,6 @@ class HomeFragment : Fragment() {
         })
     }
 
-    companion object {
-        val currentTime: String
-            @SuppressLint("SimpleDateFormat")
-            get() {
-                val c = Calendar.getInstance()
-                val df = SimpleDateFormat("yyyy-MM-dd")
-                return df.format(c.time)
-            }
-
-        fun saveFCMInFirebase(fcm: String) {
-
-        }
-
-        fun goToPlayStore(context: Context) {
-            val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
-            val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
-            goToPlayStoreAppLnk.data = appLink
-            context.startActivity(goToPlayStoreAppLnk)
-        }
-    }
 
     private fun initAdMob() {
 
@@ -541,11 +470,9 @@ class HomeFragment : Fragment() {
         val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
         val simpleMonthFormat = SimpleDateFormat("MM", Locale.getDefault())
         val simpleYearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-        day = simpleDayFormat.format(System.currentTimeMillis())
-        month = simpleMonthFormat.format(System.currentTimeMillis())
-        year = simpleYearFormat.format(System.currentTimeMillis())
-        /*date = "$day-$month-$year"
-        binding.tvDateDailyReport.text = date*/
+        viewModel.day = simpleDayFormat.format(System.currentTimeMillis())
+        viewModel.month = simpleMonthFormat.format(System.currentTimeMillis())
+        viewModel.year = simpleYearFormat.format(System.currentTimeMillis())
     }
 
     override fun onDestroy() {
@@ -644,12 +571,35 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-
     fun getBackStackCount(){
         val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val backStackEntryCount = navHostFragment?.childFragmentManager?.backStackEntryCount
         Log.d("backstack","count is -> $backStackEntryCount")
+    }
+
+
+
+
+
+    companion object {
+        val currentTime: String
+            @SuppressLint("SimpleDateFormat")
+            get() {
+                val c = Calendar.getInstance()
+                val df = SimpleDateFormat("yyyy-MM-dd")
+                return df.format(c.time)
+            }
+
+        fun saveFCMInFirebase(fcm: String) {
+
+        }
+
+        fun goToPlayStore(context: Context) {
+            val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
+            val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
+            goToPlayStoreAppLnk.data = appLink
+            context.startActivity(goToPlayStoreAppLnk)
+        }
     }
 
 

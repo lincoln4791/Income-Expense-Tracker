@@ -35,16 +35,14 @@ class Adapter_AddExpense(private val list: List<MC_Cards>,
 
         holder.cv.setOnClickListener {
             fragment.selectMoreCard(list[position].cardName.toString())
-            fragment.vm_addExpenses!!.category = list[position].cardName.toString()
+            fragment.vmAddExpenses!!.category = list[position].cardName.toString()
         }
 
         holder.ivDelete.setOnClickListener {
             fragment.deleteCardByName(list[position].cardName!!){
                 if(it){
                     android.os.Handler(Looper.getMainLooper()).postDelayed({
-                        fragment.viewModel.loadAllCards(){
-
-                        }
+                        fragment.vmAddExpenses.loadAllCards()
                     },0)
                 }
             }

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -31,7 +30,7 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.viewModelFactory.ViewModelFactory
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
+import com.lincoln4791.dailyexpensemanager.viewModels.VMMonthlyReport
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +54,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     @Inject lateinit var repository : Repository
 
 
-    private lateinit var viewModel: VM_MonthlyReport
+    private lateinit var viewModel: VMMonthlyReport
     private lateinit var binding : FragmentMonthlyBinding
     private lateinit var navCon : NavController
     private lateinit var linearLayoutManager : LinearLayoutManager
@@ -99,7 +98,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         binding.shimmerViewContainer.startShimmer()
 
         navCon = Navigation.findNavController(view)
-        viewModel = ViewModelProvider(this,ViewModelFactory(repository))[VM_MonthlyReport::class.java]
+        viewModel = ViewModelProvider(this,ViewModelFactory(repository))[VMMonthlyReport::class.java]
 
         linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.reverseLayout = true
@@ -203,7 +202,11 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success<*> -> updateTotalIncomeUI(it.value as Int)
+                is Resource.Success<*> -> {
+                    if(it.value!=null){
+                        updateTotalIncomeUI(it.value as Int)
+                    }
+                }
                 //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }

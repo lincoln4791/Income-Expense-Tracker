@@ -1,10 +1,8 @@
 package com.lincoln4791.dailyexpensemanager.viewModelFactory
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.lincoln4791.dailyexpensemanager.Repository
-import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
 import com.lincoln4791.dailyexpensemanager.viewModels.*
 import java.lang.IllegalStateException
@@ -16,13 +14,13 @@ open class ViewModelFactory(
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
        return when{
-           modelClass.isAssignableFrom(VM_AddExpenses::class.java) -> VM_AddExpenses(repository) as T
-           modelClass.isAssignableFrom(VM_AddIncome::class.java) -> VM_AddIncome(repository) as T
-           modelClass.isAssignableFrom(VM_Daily::class.java) -> VM_Daily(repository) as T
-           modelClass.isAssignableFrom(VM_FullReport::class.java) -> VM_FullReport(repository) as T
-           modelClass.isAssignableFrom(VM_MonthlyCategoryWise::class.java) -> VM_MonthlyCategoryWise(repository) as T
-           modelClass.isAssignableFrom(VM_MonthlyReport::class.java) -> VM_MonthlyReport(repository) as T
-           modelClass.isAssignableFrom(VM_Transactions::class.java) -> VM_Transactions(repository) as T
+           modelClass.isAssignableFrom(VMAddExpenses::class.java) -> VMAddExpenses(repository) as T
+           modelClass.isAssignableFrom(VMAddIncome::class.java) -> VMAddIncome(repository) as T
+           modelClass.isAssignableFrom(VMDaily::class.java) -> VMDaily(repository) as T
+           modelClass.isAssignableFrom(VMFullReport::class.java) -> VMFullReport(repository) as T
+           modelClass.isAssignableFrom(VMMonthlyCategoryWise::class.java) -> VMMonthlyCategoryWise(repository) as T
+           modelClass.isAssignableFrom(VMMonthlyReport::class.java) -> VMMonthlyReport(repository) as T
+           modelClass.isAssignableFrom(VMTransactions::class.java) -> VMTransactions(repository) as T
            else -> throw IllegalStateException("ViewModel Class Not Found")
         }
     }
@@ -31,6 +29,6 @@ open class ViewModelFactory(
 class MainViewModelFactory(private val dao: DatabaseDao) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return  VM_MainActivity(dao) as T
+        return  VMHomeFragment(dao) as T
     }
 }

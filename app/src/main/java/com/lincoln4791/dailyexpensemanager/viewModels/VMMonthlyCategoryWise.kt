@@ -1,0 +1,32 @@
+package com.lincoln4791.dailyexpensemanager.viewModels
+
+import android.os.Looper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.lincoln4791.dailyexpensemanager.Repository
+import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
+import javax.inject.Inject
+
+@HiltViewModel
+class VMMonthlyCategoryWise @Inject constructor (val repository:Repository) : ViewModel() {
+    private var _postsList: MutableLiveData<Resource<List<MC_Posts>>> = MutableLiveData<Resource<List<MC_Posts>>>()
+    val postsList: LiveData<Resource<List<MC_Posts>>>
+        get()=_postsList
+
+    fun loadYearMonthTypeCategoryWise(year:String,month:String,type:String,category:String){
+        _postsList.value = Resource.Loading
+            CoroutineScope(Dispatchers.IO).launch {
+                _postsList.value=repository.loadYearMonthTypeCategoryWise(year,month,type,category)
+            }
+
+    }
+
+
+}

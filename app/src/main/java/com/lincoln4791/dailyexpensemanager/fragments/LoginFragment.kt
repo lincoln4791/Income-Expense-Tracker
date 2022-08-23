@@ -12,8 +12,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -29,16 +31,21 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentLoginBinding
+import com.lincoln4791.dailyexpensemanager.viewModels.VMLogin
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
-class LoginFragment : Fragment() {
+@AndroidEntryPoint
+class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
     private val REQ_ONE_TAP = 1
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var auth: FirebaseAuth
+    private val vmLogin by viewModels<VMLogin>()
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var binding: FragmentLoginBinding
     private lateinit var navCon : NavController
-    private lateinit var prefManager : PrefManager
     private lateinit var dialogLoading : Dialog
 
     //One Tap
@@ -59,15 +66,7 @@ class LoginFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        prefManager = PrefManager(requireContext())
-        binding = FragmentLoginBinding.inflate(layoutInflater)
-        return binding.root
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,7 +81,6 @@ class LoginFragment : Fragment() {
         binding.signInButton.setSize(SignInButton.SIZE_WIDE)
 
         binding.login2.setOnClickListener {
-            //login(binding.email2.text.toString(),binding.password2.text.toString())
             validate()
         }
 
@@ -104,7 +102,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun init(view:View) {
-        auth = Firebase.auth
         navCon = Navigation.findNavController(view)
         dialogLoading = Dialog(requireContext())
         val loadingView = layoutInflater.inflate(R.layout.dialog_content_loading,null,false)
@@ -218,7 +215,7 @@ class LoginFragment : Fragment() {
                                         val user = auth.currentUser
 
                                         Firebase.database.reference.child(Constants.USER_DATA).child(
-                                            task.result.user!!.uid).addListenerForSingleValueEvent(object :
+                                            task.result!!.user!!.uid).addListenerForSingleValueEvent(object :
                                             ValueEventListener {
                                             override fun onDataChange(snapshot: DataSnapshot) {
                                                 if(snapshot.exists()){
@@ -233,7 +230,8 @@ class LoginFragment : Fragment() {
                                                             profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
                                                         }
                                                     }
-                                                    Firebase.database.reference.child(Constants.USER_DATA).child(task.result.user!!.uid).child(
+                                                    Firebase.database.reference.child(Constants.USER_DATA).child(
+                                                        task.result!!.user!!.uid).child(
                                                         Constants.PROFILE).updateChildren(profile).addOnCompleteListener {
                                                         updateUI(user)
                                                     }
@@ -250,7 +248,8 @@ class LoginFragment : Fragment() {
                                                             profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
                                                         }
                                                     }
-                                                    Firebase.database.reference.child(Constants.USER_DATA).child(task.result.user!!.uid).child(
+                                                    Firebase.database.reference.child(Constants.USER_DATA).child(
+                                                        task.result!!.user!!.uid).child(
                                                         Constants.PROFILE).setValue(profile).addOnCompleteListener {
                                                         updateUI(user)
                                                     }
