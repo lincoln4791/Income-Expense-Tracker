@@ -1,6 +1,4 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
-
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,10 +9,7 @@ import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -57,7 +52,7 @@ class VMDaily @Inject constructor (val repository: Repository) : ViewModel() {
         Log.d("tag", "list size : " + postList.size)
         for (i in postList.indices) {
             if (postList[i].postType == Constants.TYPE_INCOME) {
-                totalIncome += postList[i].postAmount.toInt()
+                totalIncome += postList[i].postAmount
             } else if (postList[i].postType == Constants.TYPE_EXPENSE) {
                 totalExpense += postList[i].postAmount
             }

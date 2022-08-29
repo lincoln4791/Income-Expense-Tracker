@@ -1,6 +1,8 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -9,13 +11,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.*
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -38,7 +41,6 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderAdapter
-import com.lincoln4791.dailyexpensemanager.common.slider.SliderItems
 import com.lincoln4791.dailyexpensemanager.common.util.*
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.Banner
@@ -51,6 +53,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.view.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -61,6 +64,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val viewModel by viewModels<VMHomeFragment>()
 
     private lateinit var navCon: NavController
+    @Suppress("DEPRECATION", "DEPRECATION")
     private val sliderHandler: Handler = Handler()
 
 
@@ -84,12 +88,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
 
+    @Suppress("DEPRECATION")
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("LifeCycle", "Home Fragment ViewCreated")
-        val window = requireActivity().window
-        window.statusBarColor = resources.getColor(R.color.primary)
-
+        unloadProgressBar()
         setDate()
         setLoginAndLogoutData()
         //getAndSaveFCM()
@@ -103,64 +107,35 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         initPremiumBadge()
         Util.initAdRemoveByRewardAd(requireContext())
 
-
         navCon = Navigation.findNavController(view)
-
 
         binding.cvAddIncomeMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAddIncomeFragment()
-            navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
+            navigateToFragment(action)
         }
 
         binding.cvAddExpensesMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAddExpenseFragment()
-            navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
-
+            navigateToFragment(action)
         }
 
         binding.cvFullReportMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToFullReportFragment()
-            navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
+            navigateToFragment(action)
         }
 
         binding.cvTransactionsMainActivity.setOnClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
-            navCon.navigate(action)
-
+            val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
+            navigateToFragment(action)
         }
 
-        binding.cvIncomeMainActivity.setOnClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_INCOME)
-            navCon.navigate(action)
-
-        }
-        binding.cvExpensesMainActivity.setOnClickListener {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_EXPENSE)
-            navCon.navigate(action)
-        }
         binding.cvDailyMainActivity.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToDailyFragment()
-            navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
+         navigateToFragment(action)
         }
         binding.cvMonthlyMainActivity.setOnClickListener {
-
-
-            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(viewModel.year,
-                viewModel.month)
-            navCon.navigate(action)
-            this.onDestroy()
-            this.onDetach()
+            val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(viewModel.year, viewModel.month)
+           navigateToFragment(action)
         }
 
 
@@ -189,64 +164,76 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             it.isChecked = true
             binding.drawerLayout.close()
 
-            if (it.itemId == R.id.menu_profile) {
-                val goToProfile = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
-                navCon.navigate(goToProfile)
-            } else if (it.itemId == R.id.menu_NoAds) {
-
-                val action = HomeFragmentDirections.actionHomeFragmentToSubscription()
-                //navCon.popBackStack()
-                navCon.navigate(action)
-                //navCon.popBackStack()
-
-              /*  Toast.makeText(requireContext().applicationContext,
-                    "Coming Soon",
-                    Toast.LENGTH_SHORT).show()*/
-                /*if(prefManager.isDarkThemeEnabled){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    prefManager.isDarkThemeEnabled = false
-                    it.title = "Day Theme"
+            when (it.itemId) {
+                R.id.menu_profile -> {
+                    val goToProfile = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
+                    navigateToFragment(goToProfile)
                 }
-                else{
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    prefManager.isDarkThemeEnabled = true
-                    it.title = "Dark Theme"
-                }*/
-            } else if (it.itemId == R.id.menu_facebookPage) {
+                R.id.menu_NoAds -> {
 
-                Util.goToFacebookPage(requireContext())
-            } else if (it.itemId == R.id.menu_checkUpdate) {
-                goToPlayStore(requireContext())
-            } else if (it.itemId == R.id.menu_rateUs) {
-                goToPlayStore(requireContext())
-            } else if (it.itemId == R.id.menu_aboutUs) {
-                openAbout()
-            } else if (it.itemId == R.id.menu_privacyPolicy) {
-                val intent =
-                    Intent(Intent.ACTION_VIEW,
-                        Uri.parse(Constants.PRIVACY_POLICY_LINK))
-                startActivity(intent)
-            }
+                    val action = HomeFragmentDirections.actionHomeFragmentToSubscription()
+                    //navCon.popBackStack()
+                    navigateToFragment(action)
+                    //navCon.popBackStack()
 
-/*            else if(it.itemId == R.id.menu_moreApps){
-                val intent =
-                    Intent(Intent.ACTION_VIEW,
-                        Uri.parse(" https://play.google.com/store/apps/developer?id=Mahmudul+Karim+Lincoln&hl=en&gl=US"))
-                startActivity(intent)
-            }*/
-            else if (it.itemId == R.id.menu_shareApp) {
-                val sharingIntent = Intent(Intent.ACTION_SEND)
-                sharingIntent.type = "text/plain"
-                val shareBodyText =
-                    "Income Expense Manager - Your Daily Financial Calculator.\n\n" + "Download Income Expense Manager from google play:\n\n ${Constants.PLAY_STORE_APP_LINK}"
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
-                    "Keep Track Of Your Daily Transactions.")
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
-                startActivity(Intent.createChooser(sharingIntent, "Share Income Expense Manager"))
-            }
-            else if (it.itemId == R.id.menu_loginLogout) {
-                    val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
-                    navCon.navigate(action)
+                    /*  Toast.makeText(requireContext().applicationContext,
+                            "Coming Soon",
+                            Toast.LENGTH_SHORT).show()*/
+                    /*if(prefManager.isDarkThemeEnabled){
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                            prefManager.isDarkThemeEnabled = false
+                            it.title = "Day Theme"
+                        }
+                        else{
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                            prefManager.isDarkThemeEnabled = true
+                            it.title = "Dark Theme"
+                        }*/
+                }
+                R.id.menu_facebookPage -> {
+                    Util.goToFacebookPage(requireContext())
+                }
+                R.id.menu_checkUpdate -> {
+                    goToPlayStore(requireContext())
+                }
+                R.id.menu_rateUs -> {
+                    goToPlayStore(requireContext())
+                }
+                R.id.menu_aboutUs -> {
+                    openAbout()
+                }
+                R.id.menu_privacyPolicy -> {
+                    val intent =
+                        Intent(Intent.ACTION_VIEW,
+                            Uri.parse(Constants.PRIVACY_POLICY_LINK))
+                    startActivity(intent)
+                }
+
+                /*            else if(it.itemId == R.id.menu_moreApps){
+                                val intent =
+                                    Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(" https://play.google.com/store/apps/developer?id=Mahmudul+Karim+Lincoln&hl=en&gl=US"))
+                                startActivity(intent)
+                            }*/
+                R.id.menu_shareApp -> {
+                    val sharingIntent = Intent(Intent.ACTION_SEND)
+                    sharingIntent.type = "text/plain"
+                    val shareBodyText =
+                        "Income Expense Manager - Your Daily Financial Calculator.\n\n" + "Download Income Expense Manager from google play:\n\n ${Constants.PLAY_STORE_APP_LINK}"
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT,
+                        "Keep Track Of Your Daily Transactions.")
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText)
+                    startActivity(Intent.createChooser(sharingIntent, "Share Income Expense Manager"))
+                }
+                R.id.menu_loginLogout -> {
+                    if(prefManager.isLoggedIn){
+                        showConfirmLogoutDialog()
+                    }
+                    else{
+                        navigateToAuthActivity()
+                    }
+
+                }
             }
 
             true
@@ -261,19 +248,43 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
+    private fun showConfirmLogoutDialog() {
+        val dialog = Dialog(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_exit,null,false)
+        dialogView.findViewById<TextView>(R.id.tv_alertImage_dialog_logout).text="Are you sure want to logout?"
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        dialog.findViewById<Button>(R.id.btn_no_alertImage_dialog_delete).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<Button>(R.id.btn_yes_alertImage_dialog_delete).setOnClickListener {
+            dialog.dismiss()
+            performLogout()
+        }
+    }
+
+    private fun performLogout() {
+        prefManager.name = ""
+        prefManager.phone = ""
+        prefManager.email = ""
+        prefManager.UID = ""
+        prefManager.isLoggedIn=false
+        val action = HomeFragmentDirections.actionHomeFragmentSelf()
+        navigateToFragment(action)
+    }
+
     private fun observe() {
-        viewModel.totalIncome.observe(viewLifecycleOwner, Observer {
+        viewModel.totalIncome.observe(viewLifecycleOwner) {
             binding.tvTotalIncomeValueTopBarMainActivity.text = it!!.toString()
-        })
+        }
 
-        viewModel.totalExpense.observe(viewLifecycleOwner, Observer {
+        viewModel.totalExpense.observe(viewLifecycleOwner) {
             binding.tvTotalExpenseValueTopBarMainActivity.text = it!!.toString()
-        })
+        }
 
-        viewModel.currentBalance.observe(viewLifecycleOwner, Observer {
+        viewModel.currentBalance.observe(viewLifecycleOwner) {
             binding.tvCurrentBalanceValueToolBarMainActivity.text = it!!.toString()
             binding.tvBalanceValueTopBarMainActivity.text = it.toString()
-        })
+        }
     }
 
     private fun initPremiumBadge() {
@@ -296,23 +307,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         val menu = navigationView.menu
 
 
-        if (!prefManager.isLoggedIn) {
-            menu.findItem(R.id.menu_loginLogout).title = "Login"
-            menu.findItem(R.id.menu_loginLogout).isVisible = true
-            menu.findItem(R.id.menu_profile).isVisible = false
+        if (prefManager.isLoggedIn) {
+            menu.findItem(R.id.menu_loginLogout).title = "Logout"
+            menu.findItem(R.id.menu_profile).isVisible = true
         }
         else{
-            menu.findItem(R.id.menu_loginLogout).isVisible = false
-            menu.findItem(R.id.menu_profile).isVisible = true
+            menu.findItem(R.id.menu_loginLogout).title = "Login"
+            menu.findItem(R.id.menu_profile).isVisible = false
         }
     }
 
     private fun imageSlider() {
-
-        val sliderItems: MutableList<SliderItems> = ArrayList()
-        /*    sliderItems.add(SliderItems(R.drawable.cover_1))
-            sliderItems.add(SliderItems(R.drawable.cover_2))*/
-
         CoroutineScope(Dispatchers.IO).launch {
             BannerUtil.getAllActiveBanners(requireContext()) { bannerList: MutableList<Banner>? ->
                 if (!bannerList.isNullOrEmpty()) {
@@ -349,7 +354,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             page.scaleY = 0.85f + r * 0.15f
         }
 
-        binding.viewPagerImageSlider.setPageTransformer(compositePageTransformer);
+        binding.viewPagerImageSlider.setPageTransformer(compositePageTransformer)
         binding.viewPagerImageSlider.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -375,6 +380,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun openAbout() {
         val dialog = Dialog(requireContext())
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_about, null)
@@ -399,6 +405,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
+    @SuppressLint("InflateParams")
     private fun confirmQuit() {
         val dialog = Dialog(requireContext())
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_exit, null)
@@ -423,6 +430,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
+    @Suppress("unused")
     private fun getAndSaveFCM() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -445,8 +453,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
 
+    @Suppress("unused")
     private fun initAdMob() {
-
         val lastAdShowDate = prefManager.lastBannerAdShownHomeF
         if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
             Log.d(tag,"Banner Ad Home will load")
@@ -493,7 +501,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun onPause() {
         Log.d("LifeCycle", "Home Fragment Paused")
         super.onPause()
-        sliderHandler.removeCallbacks(sliderRunnable);
+        sliderHandler.removeCallbacks(sliderRunnable)
     }
 
     override fun onAttach(context: Context) {
@@ -514,7 +522,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun onResume() {
         Log.d("LifeCycle", "Home Fragment resumed")
         super.onResume()
-        sliderHandler.postDelayed(sliderRunnable, 4000);
+        sliderHandler.postDelayed(sliderRunnable, 4000)
     }
 
     private val sliderRunnable =
@@ -523,6 +531,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
 
+    @Suppress("unused")
     fun syncNow(context: Context) {
         //Log.d(SyncWorker.TAG, "One Time Work request for sync is scheduled")
 
@@ -559,6 +568,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
             Log.d(PeriodicSyncWorker.TAG, "Periodic Work request for sync is scheduled")
 
+            @Suppress("DEPRECATION")
             WorkManager.getInstance()
                 .enqueueUniquePeriodicWork(
                     PeriodicSyncWorker.TAG,
@@ -578,7 +588,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
 
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
 
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
+    }
 
 
     companion object {
@@ -595,18 +613,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         fun goToPlayStore(context: Context) {
-            val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
+            val goToPlayStoreAppLnk = Intent(Intent.ACTION_VIEW)
             val appLink: Uri = Uri.parse(Constants.PLAY_STORE_APP_LINK)
             goToPlayStoreAppLnk.data = appLink
             context.startActivity(goToPlayStoreAppLnk)
         }
     }
 
+    private fun navigateToFragment(action : NavDirections) {
+        loadProgressBar()
+        navCon.navigate(action)
+    }
 
+    private fun navigateToActivity(activity : Activity){
 
+    }
 
-
-
-
+    private fun navigateToAuthActivity(){
+        startActivity(Intent(requireContext(),AuthActivity::class.java))
+    }
 
 }

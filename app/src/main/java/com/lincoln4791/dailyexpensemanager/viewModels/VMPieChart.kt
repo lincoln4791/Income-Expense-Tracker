@@ -1,3 +1,4 @@
+/*
 package com.lincoln4791.dailyexpensemanager.viewModels
 
 import android.app.Application
@@ -13,23 +14,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class VM_PieChart(application: Application) : AndroidViewModel(application) {
+class VMPieChart(application: Application) : AndroidViewModel(application) {
 
     val repository : Repository = Repository(AppDatabase.getInstance(application.applicationContext).dbDao())
     var postsList: MutableLiveData<Resource<List<MC_Posts>>> = MutableLiveData<Resource<List<MC_Posts>>>()
 
     fun loadYearMonth(year:String,month:String){
-        /*   CoroutineScope(Dispatchers.IO).launch {*/
+        */
+/*   CoroutineScope(Dispatchers.IO).launch {*//*
+
         //postsList.value = repository.loadAllTransactions()
         postsList.value = Resource.Loading
         try {
 
             CoroutineScope(Dispatchers.IO).launch {
-      /*          repository.loadYearMonthWise(year,month) {
+      */
+/*          repository.loadYearMonthWise(year,month) {
                     android.os.Handler(Looper.getMainLooper()).post{
                         postsList.value = it
                     }
-                }*/
+                }*//*
+
             }
         }
         catch (e: Exception){
@@ -39,4 +44,4 @@ class VM_PieChart(application: Application) : AndroidViewModel(application) {
     }
 
 
-}
+}*/

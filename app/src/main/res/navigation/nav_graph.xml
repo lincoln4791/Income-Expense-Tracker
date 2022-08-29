@@ -37,13 +37,6 @@
             android:id="@+id/action_homeFragment_to_transactionsFragment"
             app:destination="@id/transactionsFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpToInclusive="false" />
-        <action
             android:id="@+id/action_homeFragment_self"
             app:destination="@id/homeFragment" />
         <action
@@ -174,57 +167,6 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/registrationFragment"
-        android:name="com.lincoln4791.dailyexpensemanager.view.RegistrationFragment"
-        android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration" >
-        <action
-            android:id="@+id/action_registrationFragment_to_otpValidationFragment23"
-            app:destination="@id/otpValidationFragment2"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/action_registrationFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.lincoln4791.dailyexpensemanager.fragments.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_loginFragment_to_otpValidationFragment2"
-            app:destination="@id/otpValidationFragment2"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/otpValidationFragment2"
-        android:name="com.lincoln4791.dailyexpensemanager.fragments.OtpValidationFragment"
-        android:label="fragment_otp"
-        tools:layout="@layout/fragment_otp" >
-        <argument
-            android:name="name"
-            app:argType="string" />
-        <argument
-            android:name="phone"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_otpValidationFragment2_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
         android:id="@+id/subscription"
         android:name="com.lincoln4791.dailyexpensemanager.fragments.Subscription"
         android:label="fragment_subscription"
@@ -235,5 +177,20 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/toolsFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.fragments.ToolsFragment"
+        android:label="fragment_tools"
+        tools:layout="@layout/fragment_tools" />
+    <fragment
+        android:id="@+id/helpdeskFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.fragments.HelpdeskFragment"
+        android:label="fragment_helpdesk"
+        tools:layout="@layout/fragment_helpdesk" />
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.fragments.Feed"
+        android:label="fragment_feed"
+        tools:layout="@layout/fragment_feed" />
 
 </navigation>

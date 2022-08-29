@@ -10,7 +10,7 @@
         android:id="@+id/cl_toolbar_PieChart"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/primary"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -65,7 +65,7 @@
 
             <TextView
                 android:id="@+id/tv_currentBalanceValue_toolBar_MonthlyReport"
-                style="@style/tv_toolBar"
+                style="@style/tv_toolBar_value"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

@@ -40,7 +40,6 @@ class BannerUtil() {
                     android.os.Handler(Looper.getMainLooper()).post {
                         callback(list)
                     }
-
                 }
             }
             catch (e:Exception){
@@ -48,7 +47,6 @@ class BannerUtil() {
                     callback(null)
                 }
             }
-
 
         }
     }

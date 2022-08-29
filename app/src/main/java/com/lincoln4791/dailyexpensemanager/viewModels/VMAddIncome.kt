@@ -11,8 +11,6 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -46,7 +44,7 @@ class VMAddIncome @Inject constructor (val repository: Repository) : ViewModel()
 
     fun loadAllCards(){
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             _postsList.postValue(repository.getAllIncomeCards())
         }
     }
@@ -81,7 +79,7 @@ class VMAddIncome @Inject constructor (val repository: Repository) : ViewModel()
     }
 
     fun adjustCurrentBalance(amount:Int){
-        GlobalVariabls.currentBalance = GlobalVariabls.currentBalance + amount.toInt()
+        GlobalVariabls.currentBalance = GlobalVariabls.currentBalance + amount
     }
 
 }

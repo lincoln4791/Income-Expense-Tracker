@@ -44,15 +44,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     buildFeatures{
         viewBinding true
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 
 }
@@ -194,6 +192,12 @@ dependencies {
     implementation 'com.google.dagger:hilt-android:2.42'
     kapt 'com.google.dagger:hilt-compiler:2.42'
     kapt "androidx.hilt:hilt-compiler:1.0.0"
+
+    //chip navigation bar
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+
+    //lotte
+    implementation 'com.airbnb.android:lottie:5.2.0'
 
 
 }

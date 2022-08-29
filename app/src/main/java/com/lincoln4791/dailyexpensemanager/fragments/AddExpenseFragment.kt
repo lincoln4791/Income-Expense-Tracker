@@ -54,13 +54,13 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
     val vmAddExpenses by viewModels<VMAddExpenses>()
     private lateinit var navCon : NavController
 
-    private var hour = 0
-    private var minute = 0
-    private var year = 0
-    private var month = 0
-    private var day = 0
-    var amPm: String? = null
-    var hourInString: String? = null
+    private var tempHour = 0
+    private var tempMinute = 0
+    private var tempYear = 0
+    private var tempMonth = 0
+    private var tempDay = 0
+    private var amPm: String? = null
+    private var hourInString: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,24 +83,15 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("LifeCycle", "AddExpense Fragment ViewCreated")
+        unloadProgressBar()
         showNativeAdd()
         Util.recordScreenEvent("add_expense_fragment","MainActivity")
-
         navCon = Navigation.findNavController(view)
+        initialization()
 
-        val calendar = Calendar.getInstance()
-        year = calendar[Calendar.YEAR]
-        month = calendar[Calendar.MONTH]
-        day = calendar[Calendar.DAY_OF_MONTH]
-        val simpleHourFormat = SimpleDateFormat("hh")
-        val simpleMinuteFormat = SimpleDateFormat("mm")
-        hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
-        minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
-
-
-        binding.cvBackAddExpense.setOnClickListener(View.OnClickListener { v: View? ->
-         goBack()
-        })
+        binding.cvBackAddExpense.setOnClickListener {
+            goBack()
+        }
 
         binding.cvImg.setOnClickListener {
             goBack()
@@ -154,6 +145,17 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
 
     }
 
+    private fun initialization() {
+        val calendar = Calendar.getInstance()
+        tempYear = calendar[Calendar.YEAR]
+        tempMonth = calendar[Calendar.MONTH]
+        tempDay = calendar[Calendar.DAY_OF_MONTH]
+        val simpleHourFormat = SimpleDateFormat("hh")
+        val simpleMinuteFormat = SimpleDateFormat("mm")
+        tempHour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
+        tempMinute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun updateUI(data: List<MC_Cards>, callback: (isUIUpdated : Boolean) -> Unit) {
         val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
@@ -192,6 +194,7 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun observe() {
         vmAddExpenses.mutable_category.observe(viewLifecycleOwner) { s: String ->
             when (s) {
@@ -662,12 +665,12 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
                 }
                 vmAddExpenses.dateTime.value =
                     vmAddExpenses.day + "-" + vmAddExpenses.month + "-" + vmAddExpenses.year + "  " + hourInString + ":" + minute.toString() + " " + amPm
-            }, hour, minute, true)
+            }, tempHour, tempMinute, true)
         val datePickerDialog = DatePickerDialog(requireContext(), { _, _, month, dayOfMonth ->
             setDay(dayOfMonth)
             setMonth(month + 1)
             timePickerDialog.show()
-        }, year, month, day)
+        }, tempYear, tempMonth, tempDay)
         datePickerDialog.show()
     }
 
@@ -831,6 +834,16 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
     override fun onResume() {
         Log.d("LifeCycle", "AddExpense Fragment resumed")
         super.onResume()
+    }
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
     }
 
 }

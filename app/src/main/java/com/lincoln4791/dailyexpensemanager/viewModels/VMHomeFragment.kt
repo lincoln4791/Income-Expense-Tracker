@@ -1,18 +1,11 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
-
-import android.app.Application
-import android.content.Context
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +38,7 @@ class VMHomeFragment @Inject constructor (val dao: DatabaseDao) : ViewModel() {
             if(transactions!=null){
                 for(transaction in transactions!!) {
                     val postType = transaction.postType
-                    val amount = transaction.postAmount.toInt()
+                    val amount = transaction.postAmount
                     if ((postType == Constants.TYPE_INCOME)) income += amount
                     else if ((postType == Constants.TYPE_EXPENSE)) expense += amount
                 }

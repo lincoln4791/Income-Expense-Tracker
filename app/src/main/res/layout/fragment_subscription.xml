@@ -9,13 +9,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/primary"
+        style="@style/cl_toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_img"
@@ -35,13 +32,13 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_MonthlyReport"
+            style="@style/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
             app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="Subscriptions"
-            app:titleTextColor="@color/white" />
+            app:title="Subscriptions" />
 
         <LinearLayout
             android:id="@+id/ll_currentBalance_MonthlyReport"
@@ -80,6 +77,23 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/mainLoadingBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include
+            layout="@layout/layout_content_loading"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cl_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

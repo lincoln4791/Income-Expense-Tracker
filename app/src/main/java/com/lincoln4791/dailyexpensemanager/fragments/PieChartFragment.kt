@@ -1,3 +1,4 @@
+/*
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.os.Bundle
@@ -67,7 +68,9 @@ class PieChartFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true /* enabled by default */) {
+            object : OnBackPressedCallback(true */
+/* enabled by default *//*
+) {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
                     Log.d("tag","OnBackPressCalled -> Monthly")
@@ -260,4 +263,4 @@ class PieChartFragment : Fragment() {
         binding.pieChartExpense.startAnimation()
     }
 
-}
+}*/

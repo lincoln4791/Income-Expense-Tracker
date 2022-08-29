@@ -1,14 +1,14 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import com.lincoln4791.dailyexpensemanager.R
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.tasks.OnCompleteListener
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
@@ -30,18 +30,20 @@ import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentOtpBinding
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class OtpValidationFragment : Fragment() {
+@AndroidEntryPoint
+class OtpValidationFragment : BaseFragment<FragmentOtpBinding>(FragmentOtpBinding::inflate) {
+    @Inject lateinit var mAuth : FirebaseAuth
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var database: DatabaseReference
+    val args: OtpValidationFragmentArgs by navArgs()
 
     val TAG = "Otp"
-
-    val args: OtpValidationFragmentArgs by navArgs()
     private lateinit var navCon : NavController
-    private lateinit var binding: FragmentOtpBinding
-    private lateinit var database: DatabaseReference
-    private var mAuth = FirebaseAuth.getInstance()
-    private lateinit var prefManager : PrefManager
     private lateinit var dialogLoading : Dialog
 
     private var name = ""
@@ -68,43 +70,28 @@ class OtpValidationFragment : Fragment() {
     }
 
     private fun goBack() {
-        val action = OtpValidationFragmentDirections.actionOtpValidationFragment2ToHomeFragment()
+        val action = OtpValidationFragmentDirections.actionOtpValidationFragmentToLoginFragment()
         navCon.navigate(action)
-        this.onDestroy()
-        this.onDetach()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentOtpBinding.inflate(layoutInflater)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         prefManager = PrefManager(requireContext())
         navCon = Navigation.findNavController(view)
-        database = Firebase.database.reference
-
-
-        name = args.name
-        phone = args.phone
-
+        name = args.name!!
+        phone = args.phone!!
+        initContentLoadingDialog()
 
         binding.ivToolbarBack.setOnClickListener {
            confirmGoingBack()
         }
-
 
         binding.btnVerifyOtpCode.setOnClickListener {
             providedCode = binding.pinView.text.toString()
             if(verificationCode != null){
                 if(!providedCode.isNullOrEmpty()){
                     binding.btnVerifyOtpCode.visibility = View.INVISIBLE
-                    val credential = PhoneAuthProvider.getCredential(verificationCode!!,
+                    val credential = PhoneAuthProvider.getCredential(verificationCode,
                         providedCode)
                     dialogLoading.show()
                     signInWithCredential(credential)
@@ -136,10 +123,12 @@ class OtpValidationFragment : Fragment() {
             .setActivity(requireActivity())                 // Activity (for callback binding)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
+                @SuppressLint("SetTextI18n")
                 override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
                     super.onCodeSent(p0, p1)
                     verificationCode = p0
                     binding.btnVerifyOtpCode.isClickable=true
+                    binding.btnVerifyOtpCode.isEnabled=true
                     isCodeSent = true
                     binding.tvOptStatusOtpActivity.text = "Please Check Your Mobile"
                     binding.tvOptStatusOtpActivity.setTextColor(ContextCompat.getColor(requireContext(),R.color.green))
@@ -162,9 +151,10 @@ class OtpValidationFragment : Fragment() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
+    @SuppressLint("InflateParams")
     private fun setOtpTimeOut() {
-        val handler = Handler()
-        handler.postDelayed(Runnable {
+        @Suppress("DEPRECATION") val handler = Handler()
+        handler.postDelayed({
             if(!isCodeSent){
                 val errorDialogue = Dialog(requireContext())
                 val view : View = LayoutInflater.from(requireContext()).inflate(R.layout.dialogue_something_went_wrong,null,false)
@@ -181,7 +171,7 @@ class OtpValidationFragment : Fragment() {
                 view.findViewById<Button>(R.id.btn_ok_dialogue_somethingWentWrong).setOnClickListener {
                     errorDialogue.dismiss()
                     //errorDialogue.cancel()
-                    val action = OtpValidationFragmentDirections.actionOtpValidationFragment2ToHomeFragment()
+                    val action = OtpValidationFragmentDirections.actionOtpValidationFragmentToLoginFragment()
                     navCon.navigate(action)
                     onDestroy()
                     onDetach()
@@ -191,44 +181,54 @@ class OtpValidationFragment : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun signInWithCredential(credential: PhoneAuthCredential) {
         // inside this method we are checking if
         // the code entered is correct or not.
         mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(OnCompleteListener<AuthResult?> { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    prefManager.UID = task.result.user?.uid.toString()
+                    prefManager.UID = task.result?.user?.uid.toString()
                     val user = FirebaseAuth.getInstance().currentUser
-                    Log.d(TAG,"UID is -> ${task.result.user!!.uid} :: name -> $name :: phone: $phone")
+                    Log.d(TAG,
+                        "UID is -> ${task.result?.user!!.uid} :: name -> $name :: phone: $phone")
 
-                    if(name.isNotEmpty()){
+                    if (name.isNotEmpty()) {
 
                         //User Comes From Registration Page
-                        Log.d(TAG,"Comes From Registration Page")
+                        Log.d(TAG, "Comes From Registration Page")
 
-                            Firebase.database.reference.child(Constants.USER_DATA).child(
-                                task.result.user!!.uid).addListenerForSingleValueEvent(object : ValueEventListener{
+                        Firebase.database.reference.child(Constants.USER_DATA).child(
+                            task.result!!.user!!.uid)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
-                                    if(snapshot.exists()){
+                                    if (snapshot.exists()) {
                                         //User Registered Before
-                                        Log.d(TAG,"Comes From Old User")
+                                        Log.d(TAG, "Comes From Old User")
                                         prefManager.name = name
-                                        val request = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                                        val request =
+                                            UserProfileChangeRequest.Builder().setDisplayName(name)
+                                                .build()
 
-                                        user?.updateProfile(request)?.addOnCompleteListener(OnCompleteListener {
-                                            val profile = HashMap<String,Any>()
-                                            profile[Constants.NAME] = name
-                                            database.child(Constants.USER_DATA).child(task.result.user!!.uid).child(Constants.PROFILE).updateChildren(profile).addOnCompleteListener {
-                                                navigateToHomePage()
+                                        user?.updateProfile(request)
+                                            ?.addOnCompleteListener {
+                                                val profile = HashMap<String, Any>()
+                                                profile[Constants.NAME] = name
+                                                database.child(Constants.USER_DATA)
+                                                    .child(task.result!!.user!!.uid)
+                                                    .child(Constants.PROFILE)
+                                                    .updateChildren(profile).addOnCompleteListener {
+                                                        navigateToHomePage()
+                                                    }
                                             }
-                                        })
 
-                                    }
-                                    else{
+                                    } else {
                                         //New User, Never Registered Before
-                                        Log.d(TAG,"New Registration")
+                                        Log.d(TAG, "New Registration")
                                         prefManager.name = name
-                                        val request = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                                        val request =
+                                            UserProfileChangeRequest.Builder().setDisplayName(name)
+                                                .build()
 
                                         user?.updateProfile(request)?.addOnCompleteListener {
                                             val profile = HashMap<String, String>()
@@ -238,7 +238,7 @@ class OtpValidationFragment : Fragment() {
                                             profile[Constants.PROFILE_PIC_URI] = ""
 
                                             database.child(Constants.USER_DATA)
-                                                .child(task.result.user!!.uid)
+                                                .child(task.result!!.user!!.uid)
                                                 .child(Constants.PROFILE).setValue(profile)
                                                 .addOnCompleteListener {
                                                     if (it.isSuccessful) {
@@ -257,58 +257,68 @@ class OtpValidationFragment : Fragment() {
 
                                 override fun onCancelled(error: DatabaseError) {
                                     navigateToHomePage()
-                                    Log.e(TAG,"Database Error in checki gexisting user -> ${error.message}:: code ->${error.code}")
-                                    Toast.makeText(requireContext(),"Something went wrong, please try again later",Toast.LENGTH_LONG).show()
+                                    Log.e(TAG,
+                                        "Database Error in checki gexisting user -> ${error.message}:: code ->${error.code}")
+                                    Toast.makeText(requireContext(),
+                                        "Something went wrong, please try again later",
+                                        Toast.LENGTH_LONG).show()
                                 }
                             })
 
-                    }
-                    else{
+                    } else {
                         //User Comes From Login Page
                         Firebase.database.reference.child(Constants.USER_DATA).child(
-                            task.result.user!!.uid).addListenerForSingleValueEvent(object : ValueEventListener{
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if(snapshot.exists()){
-                                    //User Registered Before
-                                    Log.d(TAG,"Old User Login")
-                                    prefManager.name = snapshot.child(Constants.PROFILE).child(Constants.NAME).getValue(String::class.java)!!
-                                    prefManager.email = snapshot.child(Constants.PROFILE).child(Constants.EMAIL).getValue(String::class.java)!!
-                                    navigateToHomePage()
-                                }
-                                else{
-                                    //New User, Never Registered Before
-                                    Log.d(TAG,"New Login, means new registration")
+                            task.result!!.user!!.uid)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if (snapshot.exists()) {
+                                        //User Registered Before
+                                        Log.d(TAG, "Old User Login")
+                                        prefManager.name =
+                                            snapshot.child(Constants.PROFILE).child(Constants.NAME)
+                                                .getValue(String::class.java)!!
+                                        prefManager.email =
+                                            snapshot.child(Constants.PROFILE).child(Constants.EMAIL)
+                                                .getValue(String::class.java)!!
+                                        navigateToHomePage()
+                                    } else {
+                                        //New User, Never Registered Before
+                                        Log.d(TAG, "New Login, means new registration")
 
-                                    val profile = HashMap<String,String>()
-                                    profile[Constants.NAME] = ""
-                                    profile[Constants.PHONE] = phone
-                                    profile[Constants.EMAIL] = ""
-                                    profile[Constants.PROFILE_PIC_URI] = ""
+                                        val profile = HashMap<String, String>()
+                                        profile[Constants.NAME] = ""
+                                        profile[Constants.PHONE] = phone
+                                        profile[Constants.EMAIL] = ""
+                                        profile[Constants.PROFILE_PIC_URI] = ""
 
-                                    database.child(Constants.USER_DATA).child(task.result.user!!.uid).child(Constants.PROFILE).setValue(profile).addOnCompleteListener {
-                                        if(it.isSuccessful){
-                                            Log.d(TAG,"User data saved ")
-                                            navigateToHomePage()
-                                        }
-                                        else{
-                                            Log.d(TAG,"User data not saved ")
-                                            navigateToHomePage()
+                                        database.child(Constants.USER_DATA)
+                                            .child(task.result!!.user!!.uid).child(Constants.PROFILE)
+                                            .setValue(profile).addOnCompleteListener {
+                                            if (it.isSuccessful) {
+                                                Log.d(TAG, "User data saved ")
+                                                navigateToHomePage()
+                                            } else {
+                                                Log.d(TAG, "User data not saved ")
+                                                navigateToHomePage()
+                                            }
+
                                         }
 
                                     }
-
                                 }
-                            }
 
-                            override fun onCancelled(error: DatabaseError) {
-                                navigateToHomePage()
-                                Log.e(TAG,"Database Error in checki gexisting user -> ${error.message}:: code ->${error.code}")
-                                Toast.makeText(requireContext(),"Something went wrong, please try again later",Toast.LENGTH_LONG).show()
-                            }
-                        })
+                                override fun onCancelled(error: DatabaseError) {
+                                    navigateToHomePage()
+                                    Log.e(TAG,
+                                        "Database Error in checki gexisting user -> ${error.message}:: code ->${error.code}")
+                                    Toast.makeText(requireContext(),
+                                        "Something went wrong, please try again later",
+                                        Toast.LENGTH_LONG).show()
+                                }
+                            })
 
-                       /* prefManager.name= user?.displayName.toString()
-                        Log.d(TAG,"Name is -> ${user?.displayName.toString()} ")*/
+                        /* prefManager.name= user?.displayName.toString()
+                         Log.d(TAG,"Name is -> ${user?.displayName.toString()} ")*/
                         //navigateToHomePage()
                     }
 
@@ -316,27 +326,27 @@ class OtpValidationFragment : Fragment() {
                 } else {
                     dialogLoading.dismiss()
                     binding.tvOptStatusOtpActivity.text = "Please Enter The Correct OTP"
-                    binding.tvOptStatusOtpActivity.setTextColor(ContextCompat.getColor(requireContext(),R.color.red))
+                    binding.tvOptStatusOtpActivity.setTextColor(ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red))
                     binding.btnVerifyOtpCode.visibility = View.VISIBLE
                     binding.btnVerifyOtpCode.isClickable = true
                 }
-            })
+            }
     }
 
     private fun navigateToHomePage() {
         prefManager.isLoggedIn = true
         prefManager.phone = phone
+        prefManager.name=name
         Toast.makeText(requireContext(),"Login Success",Toast.LENGTH_LONG).show()
         Log.d(TAG,"Login Successful")
-        val action = OtpValidationFragmentDirections.actionOtpValidationFragment2ToHomeFragment()
         dialogLoading.dismiss()
-        navCon.navigate(action)
-
-        onDestroy()
-        onDetach()
+        navigateToMainActivity()
     }
 
 
+    @SuppressLint("InflateParams", "SetTextI18n")
     private fun confirmGoingBack() {
         val dialog = Dialog(requireContext())
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_exit, null)
@@ -350,6 +360,16 @@ class OtpValidationFragment : Fragment() {
         }
         view.findViewById<View>(R.id.btn_no_alertImage_dialog_delete)
             .setOnClickListener { dialog.dismiss() }
+    }
+
+    private fun navigateToMainActivity(){
+        startActivity(Intent(requireActivity(),MainActivity::class.java))
+    }
+
+    fun initContentLoadingDialog(){
+        dialogLoading = Dialog(requireContext())
+        dialogLoading.setContentView(R.layout.dialog_content_loading)
+        dialogLoading.setCancelable(false)
     }
 
 

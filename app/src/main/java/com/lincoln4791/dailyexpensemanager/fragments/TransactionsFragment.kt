@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -46,13 +47,12 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     @Inject lateinit var repository: Repository
     @Inject lateinit var prefManager : PrefManager
     @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
+    @Inject lateinit var linearLayoutManager : LinearLayoutManager
+    private val args: TransactionsFragmentArgs by navArgs()
+    private val vmTransactions by viewModels<VMTransactions>()
 
-    val args: TransactionsFragmentArgs by navArgs()
-
-    private val vm_transactions by viewModels<VMTransactions>()
-    private val linearLayoutManager = LinearLayoutManager(context)
     private var toolbar: Toolbar? = null
-    private var adapter_transactions: Adapter_Transactions? = null
+    private var adapterTransactions: Adapter_Transactions? = null
     private lateinit var transactionType :String
     private lateinit var navCon : NavController
 
@@ -93,97 +93,89 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
 
         toolbar = view.findViewById(R.id.toolbar_Transactions)
         transactionType = args.type
-
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-        binding.rvTransactions.layoutManager = linearLayoutManager
+        binding.rvTransactions.layoutManager=linearLayoutManager
 
         setUpTabLayout()
         CoroutineScope(Dispatchers.IO).launch {
             repository.loadYearWise("2022")
         }
 
-        vm_transactions.postsList.observe(viewLifecycleOwner, Observer {
+        vmTransactions.postsList.observe(viewLifecycleOwner) {
             Log.d("Transaction", "observed")
+            @Suppress("UNCHECKED_CAST")
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success<*> ->  update(it.value as List<MC_Posts>)
-                is Resource.Failure -> {
-                    if(it.isNetworkError){
-                        Toast.makeText(requireContext(),"something went wrong, please try later -> ${it.errorBody}",Toast.LENGTH_SHORT).show()
+                is Resource.Success<*> -> {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        update(it.value as List<MC_Posts>)
                     }
-                    else{
-                        Toast.makeText(requireContext(),"something went wrong, please try later -> ${it.errorBody}",Toast.LENGTH_SHORT).show()
+
+                }
+                is Resource.Failure -> {
+                    if (it.isNetworkError) {
+                        Toast.makeText(requireContext(),
+                            "something went wrong, please try later -> ${it.errorBody}",
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(),
+                            "something went wrong, please try later -> ${it.errorBody}",
+                            Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-        })
+        }
 
-        vm_transactions.totalIncome.observe(viewLifecycleOwner, Observer {
+        @Suppress("RedundantSamConstructor")
+        vmTransactions.totalIncome.observe(viewLifecycleOwner, Observer {
             binding.tvTotalIncomeValueTopBarTransactions.text = it.toString()
         })
 
-        vm_transactions.totalExpense.observe(viewLifecycleOwner, Observer {
+        vmTransactions.totalExpense.observe(viewLifecycleOwner) {
             binding.tvTotalExpenseValueTopBarTransactions.text = it.toString()
-        })
+        }
 
 
 
-        binding.cvMonthlyTransactions.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  startActivity(Intent(this@Transactions,
-                MonthlyReport::class.java))*/
-        })
-        binding.cvDailyTransactions.setOnClickListener(View.OnClickListener { v: View? ->
-           /* startActivity(Intent(this@Transactions,
-                Daily::class.java))*/
-        })
-        binding.cvFullReportTransactions.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  startActivity(Intent(this@Transactions,
-                FullReport::class.java))*/
-        })
-        binding.ivDeleteAllTransactions.setOnClickListener(View.OnClickListener { v: View? -> confirmDeleteAll() })
-        binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
+        binding.cvMonthlyTransactions.setOnClickListener {
+            /*  startActivity(Intent(this@Transactions,
+                  MonthlyReport::class.java))*/
+        }
+        binding.cvDailyTransactions.setOnClickListener {
+            /* startActivity(Intent(this@Transactions,
+                 Daily::class.java))*/
+        }
+        binding.cvFullReportTransactions.setOnClickListener {
+            /*  startActivity(Intent(this@Transactions,
+                  FullReport::class.java))*/
+        }
+        binding.ivDeleteAllTransactions.setOnClickListener { confirmDeleteAll() }
+        binding.cvImg.setOnClickListener {
             goBack()
-        })
-/*        binding.cvTotalIncomesTopBarTransactions.setOnClickListener {
-            transactionType=Constants.TYPE_INCOME
-            vm_transactions!!.loadAllIncomes()
         }
-        binding.ivReloadTransactionsTransactions.setOnClickListener {
-            transactionType=Constants.TYPE_ALL
-            vm_transactions!!.loadAllTransactions()
-        }
-        binding.cvTotalExpensesTopBarTransactions.setOnClickListener {
-            transactionType=Constants.TYPE_EXPENSE
-            vm_transactions!!.loadAllExpenses()
-        }*/
 
         binding.tvCurrentBalanceValueToolBarTransactions.text = GlobalVariabls.currentBalance.toString()
         Log.d("tag","Current Balance is ${GlobalVariabls.currentBalance}")
 
         loadTransactions()
-
-
-
     }
 
     private fun setUpTabLayout() {
         binding.selectTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if(tab == binding.selectTab.getTabAt(0)){
-                    transactionType=Constants.TYPE_ALL
-                    vm_transactions.loadAllTransactions()
-                }
-
-                else if(tab == binding.selectTab.getTabAt(1)){
-                    transactionType=Constants.TYPE_INCOME
-                    vm_transactions.loadAllIncomes()
-                }
-
-                else if(tab == binding.selectTab.getTabAt(2)){
-                    transactionType=Constants.TYPE_EXPENSE
-                    vm_transactions.loadAllExpenses()
+                when (tab) {
+                    binding.selectTab.getTabAt(0) -> {
+                        transactionType=Constants.TYPE_ALL
+                        vmTransactions.loadAllTransactions()
+                    }
+                    binding.selectTab.getTabAt(1) -> {
+                        transactionType=Constants.TYPE_INCOME
+                        vmTransactions.loadAllIncomes()
+                    }
+                    binding.selectTab.getTabAt(2) -> {
+                        transactionType=Constants.TYPE_EXPENSE
+                        vmTransactions.loadAllExpenses()
+                    }
                 }
             }
 
@@ -199,14 +191,15 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
 
     private fun loadTransactions() {
         when(transactionType){
-            Constants.TYPE_ALL -> vm_transactions.loadAllTransactions()
-            Constants.TYPE_EXPENSE -> vm_transactions.loadAllExpenses()
-            Constants.TYPE_INCOME -> vm_transactions.loadAllIncomes()
+            Constants.TYPE_ALL -> vmTransactions.loadAllTransactions()
+            Constants.TYPE_EXPENSE -> vmTransactions.loadAllExpenses()
+            Constants.TYPE_INCOME -> vmTransactions.loadAllIncomes()
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun update(posts: List<MC_Posts> ){
-
+        Log.d("Transaction","list size -> ${posts.size}")
         if(posts.isEmpty()){
             binding.cvNoResultFound.visibility = View.VISIBLE
         }
@@ -214,12 +207,12 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
             binding.cvNoResultFound.visibility = View.GONE
         }
 
-        vm_transactions.fetchAllTransactions(posts)
-        adapter_transactions = Adapter_Transactions(posts, requireContext(),this)
+        vmTransactions.fetchAllTransactions(posts)
+        adapterTransactions = Adapter_Transactions(posts, requireContext(),this)
         binding.tvTypeTitleTransactions.text = getString(R.string.Transactions)
         toolbar!!.title = getString(R.string.Transactions)
-        binding.rvTransactions.adapter = adapter_transactions
-        adapter_transactions!!.notifyDataSetChanged()
+        binding.rvTransactions.adapter = adapterTransactions
+        adapterTransactions!!.notifyDataSetChanged()
 
         when (transactionType) {
             Constants.TYPE_ALL -> {
@@ -236,6 +229,18 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
             }
         }
 
+        unloadProgressBar()
+
+    }
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
     }
 
 
@@ -260,17 +265,17 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
         }
     }
 
+    @SuppressLint("InflateParams")
     fun confirmDeleteAll() {
         val dialog = Dialog(requireContext())
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_delete_all, null)
         dialog.setContentView(view)
         dialog.setCancelable(true)
         dialog.show()
-        view.findViewById<View>(R.id.btn_yes_alertImage_dialog_deleteAll).setOnClickListener(
-            View.OnClickListener {
-                dialog.dismiss()
-                deleteDataAll()
-            })
+        view.findViewById<View>(R.id.btn_yes_alertImage_dialog_deleteAll).setOnClickListener {
+            dialog.dismiss()
+            deleteDataAll()
+        }
         view.findViewById<View>(R.id.btn_no_alertImage_dialog_deleteAll)
             .setOnClickListener { dialog.dismiss() }
     }

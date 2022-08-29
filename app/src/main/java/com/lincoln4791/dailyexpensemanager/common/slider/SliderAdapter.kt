@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.common.slider
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -112,6 +113,7 @@ class SliderAdapter internal constructor(
 
     }
 
+     @SuppressLint("NotifyDataSetChanged")
      private val runnable = Runnable {
          sliderItems.addAll(sliderItems)
          notifyDataSetChanged()

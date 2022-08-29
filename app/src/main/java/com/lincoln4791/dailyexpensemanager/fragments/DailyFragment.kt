@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,7 +28,6 @@ import com.lincoln4791.dailyexpensemanager.databinding.FragmentDailyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VMDaily
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -37,43 +35,31 @@ import javax.inject.Inject
 class DailyFragment : BaseFragment<FragmentDailyBinding>(FragmentDailyBinding::inflate) {
     @Inject lateinit var prefManager : PrefManager
     @Inject lateinit var repository : Repository
+    @Inject lateinit var linearLayoutManager: LinearLayoutManager
 
     private val viewModel by viewModels<VMDaily>()
     private lateinit var navCon : NavController
 
     private var adapterDaily: Adapter_Daily? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
     private var tempMonth = 0
     private var tempYear = 0
     private var tempDay = 0
 
+    @Suppress("UNCHECKED_CAST")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        unloadProgressBar()
         initAdMob()
         Util.recordScreenEvent("daily_fragment","MainActivity")
-
         navCon = Navigation.findNavController(view)
-
-
-        linearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager!!.reverseLayout = true
-        linearLayoutManager!!.stackFromEnd = true
-        binding.rvDailyReport.layoutManager = linearLayoutManager
-        binding.rvDailyReport.adapter = adapterDaily
-        val calendar = Calendar.getInstance()
-        tempMonth = calendar[Calendar.MONTH]
-        tempYear = calendar[Calendar.YEAR]
-        tempDay = calendar[Calendar.DAY_OF_MONTH]
-
-
+        initialization()
 
         binding.cvDateDailyReport.setOnClickListener { changeDateAndFetchNewData() }
         binding.ibNextDateDailyReport.setOnClickListener { loadNextDateData() }
         binding.ibPreviousDateDailyReport.setOnClickListener { loadPreviousDateData() }
-        binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
-        navCon.navigateUp()
-        })
+        binding.cvImg.setOnClickListener {
+            navCon.navigateUp()
+        }
 
 
         viewModel.setDate()
@@ -82,8 +68,19 @@ class DailyFragment : BaseFragment<FragmentDailyBinding>(FragmentDailyBinding::i
 
         observe()
 
+
     }
 
+    private fun initialization() {
+        binding.rvDailyReport.layoutManager = linearLayoutManager
+        binding.rvDailyReport.adapter = adapterDaily
+        val calendar = Calendar.getInstance()
+        tempMonth = calendar[Calendar.MONTH]
+        tempYear = calendar[Calendar.YEAR]
+        tempDay = calendar[Calendar.DAY_OF_MONTH]
+    }
+
+    @Suppress("UNCHECKED_CAST")
     private fun observe() {
         viewModel.postsList.observe(viewLifecycleOwner) {
             when (it) {
@@ -380,6 +377,17 @@ class DailyFragment : BaseFragment<FragmentDailyBinding>(FragmentDailyBinding::i
             }
 
         }
+    }
+
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
     }
 
 

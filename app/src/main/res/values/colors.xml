@@ -60,4 +60,5 @@
     <color name="primary_varient">#519259</color>
     <color name="secondary">#F0BB62</color>
     <color name="secondary_varient">#F4EEA9</color>
+    <color name="nav_bar_color">#EB0A56</color>
 </resources>

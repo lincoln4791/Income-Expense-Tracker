@@ -1,5 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -80,22 +81,11 @@ class AddIncomeFragment : BaseFragment<FragmentAddIncomeBinding>(FragmentAddInco
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        unloadProgressBar()
         showNativeAdd()
         Util.recordScreenEvent("add_income_fragment","MainActivity")
         navCon = Navigation.findNavController(view)
-
-        val calendar = Calendar.getInstance()
-        year = calendar[Calendar.YEAR]
-        month = calendar[Calendar.MONTH]
-        day = calendar[Calendar.DAY_OF_MONTH]
-        val simpleHourFormat = SimpleDateFormat("hh")
-        val simpleMinuteFormat = SimpleDateFormat("mm")
-        hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
-        minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
-
-
-
+        initialization()
         binding.cvImg.setOnClickListener {
             goBack()
         }
@@ -143,12 +133,19 @@ class AddIncomeFragment : BaseFragment<FragmentAddIncomeBinding>(FragmentAddInco
         binding.tvCurrentBalanceValueToolBarAddIncome.text = GlobalVariabls.currentBalance.toString()
 
 
-
     }
 
-
-
-
+    @SuppressLint("SimpleDateFormat")
+    private fun initialization() {
+        val calendar = Calendar.getInstance()
+        year = calendar[Calendar.YEAR]
+        month = calendar[Calendar.MONTH]
+        day = calendar[Calendar.DAY_OF_MONTH]
+        val simpleHourFormat = SimpleDateFormat("hh")
+        val simpleMinuteFormat = SimpleDateFormat("mm")
+        hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
+        minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
+    }
 
 
     private fun addIncome() {
@@ -481,6 +478,7 @@ class AddIncomeFragment : BaseFragment<FragmentAddIncomeBinding>(FragmentAddInco
         binding.cvOtherAddIncome.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateUI(data: List<MC_Cards>, callback: (isUIUpdated : Boolean) -> Unit) {
         val layoutManager = LinearLayoutManager(requireContext(),
             LinearLayoutManager.HORIZONTAL, false)
@@ -575,6 +573,17 @@ class AddIncomeFragment : BaseFragment<FragmentAddIncomeBinding>(FragmentAddInco
         else{
             binding.nativeAd.visibility = View.GONE
         }
+    }
+
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
     }
 
 

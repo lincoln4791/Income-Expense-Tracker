@@ -1,17 +1,15 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import com.lincoln4791.dailyexpensemanager.R
 import android.app.Dialog
 import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -23,7 +21,6 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -31,8 +28,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
-import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentLoginBinding
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VMLogin
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -43,7 +40,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private val REQ_ONE_TAP = 1
     @Inject lateinit var prefManager : PrefManager
     @Inject lateinit var auth: FirebaseAuth
-    private val vmLogin by viewModels<VMLogin>()
+    @Suppress("unused")
+    val vmLogin by viewModels<VMLogin>()
 
     private lateinit var navCon : NavController
     private lateinit var dialogLoading : Dialog
@@ -91,8 +89,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.tvRegistration.setOnClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToRegistrationFragment()
             navCon.navigate(action)
-            onDestroy()
-            onDetach()
 
         }
 
@@ -101,10 +97,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun init(view:View) {
         navCon = Navigation.findNavController(view)
         dialogLoading = Dialog(requireContext())
-        val loadingView = layoutInflater.inflate(R.layout.dialog_content_loading,null,false)
+        @Suppress("unused") val loadingView = layoutInflater.inflate(R.layout.dialog_content_loading,null,false)
         dialogLoading.setCancelable(false)
         dialogLoading.setContentView(loadingView)
     }
@@ -137,16 +134,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun navigateToOtpActivity() {
-            val action = LoginFragmentDirections.actionLoginFragmentToOtpValidationFragment2(
+            val action = LoginFragmentDirections.actionLoginFragmentToOtpValidationFragment(
                 "",
-                binding.phone.text.toString()
-            )
+                binding.phone.text.toString())
             navCon.navigate(action)
 
     }
 
 
-    private fun login(email : String , password : String){
+    @Suppress("unused", "DEPRECATION")
+    private fun login(email : String, password : String){
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {task : Task<AuthResult> ->
                 if (task.isSuccessful) {
@@ -157,7 +154,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
                     //Log.d("Login", "signIn :success -> ${task.result.credential.}")
-                    Log.d("Login", "signIn :success -> ${user}")
+                    Log.d("Login", "signIn :success -> $user")
                     //updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -175,10 +172,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private fun signInWithGoogle() {
         oneTapClient.beginSignIn(signUpRequest)
             .addOnSuccessListener {result ->
+                @Suppress("DEPRECATION")
                 try {
-                   /* mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso!!);
-                    val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
-                    startActivityForResult(signInIntent, 1)*/
                     startIntentSenderForResult(
                         result.pendingIntent.intentSender, REQ_ONE_TAP,
                         null, 0, 0, 0,null)
@@ -188,11 +183,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
             .addOnFailureListener {e->
                 // No Google Accounts found. Just continue presenting the signed-out UI.
-                Log.d("Login", e.localizedMessage)
+                e.localizedMessage?.let { Log.d("Login", it) }
             }
     }
 
 
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -259,7 +256,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
                                             override fun onCancelled(error: DatabaseError) {
                                                 updateUI(user)
-                                                Log.e("Login","Database Error in checki gexisting user -> ${error.message}:: code ->${error.code}")
+                                                Log.e("Login","Database Error in check existing user -> ${error.message}:: code ->${error.code}")
                                                 Toast.makeText(requireContext(),"Something went wrong, please try again later",Toast.LENGTH_LONG).show()
                                             }
                                         })
@@ -298,22 +295,19 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         else{
             Toast.makeText(requireContext(),"Something is wrong",Toast.LENGTH_SHORT).show()
         }
-        navigateToHome()
-    }
-
-    private fun navigateToHome() {
         dialogLoading.dismiss()
         Toast.makeText(requireContext(),"Login Success",Toast.LENGTH_LONG).show()
-        val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
-        navCon.navigate(action)
-        onDestroy()
-        onDetach()
+        navigateToMainActivity()
     }
+
 
 
     private fun goBack(){
-        val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
-        navCon.navigate(action)
+        startActivity(Intent(requireActivity(),MainActivity::class.java))
+    }
+
+    private  fun navigateToMainActivity(){
+        startActivity(Intent(requireActivity(),MainActivity::class.java))
     }
 
 

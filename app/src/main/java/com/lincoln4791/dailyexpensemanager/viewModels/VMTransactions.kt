@@ -1,6 +1,4 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
-
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +8,7 @@ import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,7 +55,7 @@ class VMTransactions @Inject constructor (
         _totalExpense.value =0
 
         for (i in posts.indices) {
-            val ID = posts[i].id
+            val id = posts[i].id
             val postDescription = posts[i].postDescription
             val postCategory = posts[i].postCategory
             val postType = posts[i].postType
@@ -71,7 +66,7 @@ class VMTransactions @Inject constructor (
             val postYear = posts[i].postYear
             val postDateTime = posts[i].postDateTime
             val timeStamp = posts[i].timeStamp
-            val post = MC_Posts(ID,
+            val post = MC_Posts(id,
                 postDescription,
                 postCategory,
                 postType,
@@ -84,9 +79,9 @@ class VMTransactions @Inject constructor (
                 postDateTime)
             //vm_transactions!!.postsList.add(post)
             if ((postType == Constants.TYPE_INCOME)) {
-                _totalIncome.value = _totalIncome.value!! + postAmount.toInt()
+                _totalIncome.value = _totalIncome.value!! + postAmount
             } else if ((postType == Constants.TYPE_EXPENSE)) {
-                _totalExpense.value = _totalExpense.value!! + postAmount.toInt()
+                _totalExpense.value = _totalExpense.value!! + postAmount
             }
         }
     }

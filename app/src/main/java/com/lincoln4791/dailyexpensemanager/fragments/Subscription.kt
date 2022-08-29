@@ -1,20 +1,19 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.android.billingclient.api.*
+import com.example.mybaseproject2.base.BaseFragment
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -33,24 +32,23 @@ import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentSubscriptionBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.SubscriptionInfoFromGoogle
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import javax.inject.Inject
 
-class Subscription : Fragment(), OnUserEarnedRewardListener {
-
-    private lateinit var binding: FragmentSubscriptionBinding
+@AndroidEntryPoint
+class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscriptionBinding::inflate), OnUserEarnedRewardListener {
+    @Inject lateinit var prefManager: PrefManager
     private lateinit var navCon: NavController
     private lateinit var billingClient: BillingClient
-    private lateinit var prefManager: PrefManager
     private lateinit var rewardedAd: RewardedAd
-
     private lateinit var adLoadingBar: Dialog
-
     private var isAlreadySubscribed = false
-
 
     private val purchasesUpdatedListener =
         PurchasesUpdatedListener { billingResult, purchases ->
@@ -59,7 +57,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                 Log.d("Subscription", "Current Offers length -> ${purchases.size} ")
                 for (purchase in purchases) {
                     val g = Gson()
-                    val purchaseInfo = g.fromJson(purchase.originalJson,
+                    g.fromJson(purchase.originalJson,
                         SubscriptionInfoFromGoogle::class.java)
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                         prefManager.isPremiumUser = true
@@ -73,7 +71,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                             val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
                                 .setPurchaseToken(purchase.purchaseToken)
                             CoroutineScope(Dispatchers.IO).launch {
-                                val ackPurchaseResult = withContext(Dispatchers.IO) {
+                                withContext(Dispatchers.IO) {
                                     billingClient.acknowledgePurchase(acknowledgePurchaseParams.build())
                                 }
                             }
@@ -107,23 +105,12 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
     private fun goBack() {
         val action = SubscriptionDirections.actionSubscriptionToHomeFragment()
         navCon.navigate(action)
-        this.onDestroy()
-        this.onDetach()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        // Inflate the layout for this fragment
-        prefManager = PrefManager(requireContext())
-        binding = FragmentSubscriptionBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        unloadProgressBar()
         navCon = Navigation.findNavController(view)
 
         init()
@@ -160,6 +147,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
 
     }
 
+    @SuppressLint("InflateParams", "SetTextI18n")
     private fun init() {
         adLoadingBar = Dialog(requireContext())
         val adLoadingBarView = layoutInflater.inflate(R.layout.content_ad_loading_bar, null, false)
@@ -168,13 +156,6 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
 
 
         binding.tvAdDetails.text = "Watch one video ad\nto remove ad for ${prefManager.adRemoveDurationDayByAd} day"
-
-  /*      if(prefManager.isAdRemoved){
-            binding.cvWatchAd.visibility = View.INVISIBLE
-        }
-        else{
-            binding.cvWatchAd.visibility = View.VISIBLE
-        }*/
 
     }
 
@@ -219,23 +200,23 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
 
     private fun showNoInternetConnection(view: View) {
         val rootLayout = view.findViewById<ConstraintLayout>(R.id.mainLayout)
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(rootLayout, "No Internet", Snackbar.LENGTH_INDEFINITE)
-            .setAction("ok", View.OnClickListener {
+            .setAction("ok") {
 
-            })
-        snackbar.show()
+            }
+        snackBar.show()
 
     }
 
     private fun showSubscriptionActiveDialog(view: View) {
         val rootLayout = view.findViewById<ConstraintLayout>(R.id.mainLayout)
-        val snackbar = Snackbar
+        val snackBar = Snackbar
             .make(rootLayout, "Another Subscription already active", Snackbar.LENGTH_INDEFINITE)
-            .setAction("ok", View.OnClickListener {
+            .setAction("ok") {
 
-            })
-        snackbar.show()
+            }
+        snackBar.show()
 
     }
 
@@ -256,7 +237,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                                         AcknowledgePurchaseParams.newBuilder()
                                             .setPurchaseToken(purchase.purchaseToken)
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        val ackPurchaseResult = withContext(Dispatchers.IO) {
+                                        withContext(Dispatchers.IO) {
                                             billingClient.acknowledgePurchase(
                                                 acknowledgePurchaseParams.build())
                                         }
@@ -292,7 +273,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                 Log.d("Subscription", "End of QueryPurchaseAsync Callback")
 
             }
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
             callback(false, null)
             e.printStackTrace()
         }
@@ -303,10 +284,10 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
 
         startBillingConnection(view) { isSuccess ->
             if (isSuccess) {
-                querySubscriptions { isSuccesss: Boolean, subscriptionInfoFromGoogle: SubscriptionInfoFromGoogle? ->
+                querySubscriptions { isSuccessTwo: Boolean, subscriptionInfoFromGoogle: SubscriptionInfoFromGoogle? ->
                     Log.d("Subscription",
-                        "success -> $isSuccesss ::: info -> $subscriptionInfoFromGoogle")
-                    if (isSuccesss) {
+                        "success -> $isSuccessTwo ::: info -> $subscriptionInfoFromGoogle")
+                    if (isSuccessTwo) {
                         Log.d("Subscription", "Query Purchase returned")
                         if (subscriptionInfoFromGoogle == null) {
                             Log.d("Subscription", "Query Purchase returned true")
@@ -331,7 +312,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
     }
 
     private fun doSubscription(pID: String) {
-        val skuList: ArrayList<String> = arrayListOf<String>()
+        val skuList: ArrayList<String> = arrayListOf()
         skuList.add(pID)
         val params = SkuDetailsParams.newBuilder()
         params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
@@ -339,7 +320,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
         // leverage querySkuDetails Kotlin extension function
         billingClient.querySkuDetailsAsync(params.build()) { billingResult, mutableList ->
             Log.d("Subscription",
-                "billing resuult -? ${billingResult.responseCode} :::${billingResult.debugMessage} ")
+                "billing result -? ${billingResult.responseCode} :::${billingResult.debugMessage} ")
             if (mutableList != null) {
                 for (skuDetails in mutableList) {
                     if (skuDetails.sku == pID) {
@@ -356,7 +337,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
 
 
     private fun launchPurchaseFlow(skuDetails: SkuDetails, pID: String) {
-        Log.d("Subscription", "SKU Details -> ${skuDetails.toString()}")
+        Log.d("Subscription", "SKU Details -> $skuDetails")
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setSkuDetails(skuDetails)
             .build()
@@ -383,9 +364,9 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                 binding.cvSubscriptionMonthly.isClickable = true
                 binding.cvSubscriptionYearly.isClickable = false
                 Log.d("Subscription", "Yearly Active")
-            } else {
-
             }
+
+
         } else {
             binding.tvSubscriptionMonthly.visibility = View.VISIBLE
             binding.ivSubscriptionMonthly.visibility = View.INVISIBLE
@@ -398,7 +379,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
     }
 
 
-    fun loadRewardedAd() {
+    private fun loadRewardedAd() {
         Log.d("RewardAd", "load Reward Ad Called")
         // Use the test ad unit ID to load an ad.
         RewardedAd.load(requireContext(), AdUnitIds.REWARDED_AD_REMOVE,
@@ -410,7 +391,7 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                     rewardedAd.fullScreenContentCallback = object :
                         FullScreenContentCallback() {
                         /** Called when the ad failed to show full screen content.  */
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             Log.d("RewardAd", "onAdFailedToShowFullScreenContent")
                         }
 
@@ -434,10 +415,10 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
                     }
                 }
 
-                override fun onAdFailedToLoad(loadAdError: LoadAdError?) {
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     try {
                         Log.e("RewardAd",
-                            "onAdFailedToLoad -> ${loadAdError?.message} :: code-> ${loadAdError?.code}:: cause ${loadAdError?.cause} :: response ${loadAdError?.responseInfo}")
+                            "onAdFailedToLoad -> ${loadAdError.message} :: code-> ${loadAdError.code}:: cause ${loadAdError.cause} :: response ${loadAdError.responseInfo}")
                         adLoadingBar.dismiss()
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -463,6 +444,16 @@ class Subscription : Fragment(), OnUserEarnedRewardListener {
         prefManager.isAdRemoved = true
 
 
+    }
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
     }
 
     override fun onDestroy() {

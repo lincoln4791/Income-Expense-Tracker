@@ -18,7 +18,8 @@
         <item
             android:id="@+id/menu_NoAds"
             android:icon="@drawable/premium_yellow32"
-            android:title="Premium" />
+            android:title="Premium"
+            android:visible="true"/>
         <item
             android:id="@+id/menu_facebookPage"
             android:icon="@drawable/ic_facebook_icon"

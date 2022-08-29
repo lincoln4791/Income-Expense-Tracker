@@ -17,22 +17,22 @@ import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 import com.lincoln4791.dailyexpensemanager.modelClass.BannerResponse
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
+import javax.inject.Inject
+
 
 class SyncWorker(var context: Context, workerParameter: WorkerParameters) :
     CoroutineWorker(context, workerParameter) {
 
-
+    @Inject lateinit var prefManager: PrefManager
+    @Inject lateinit var dao: DatabaseDao
     private val sdf = SimpleDateFormat("yyyy-MM-dd")
     private val currentDate = sdf.parse(CurrentDate.currentDate)
-
-    private lateinit var prefManager: PrefManager
-    private lateinit var dao: DatabaseDao
-
 
     override suspend fun doWork(): Result {
 
@@ -50,8 +50,6 @@ class SyncWorker(var context: Context, workerParameter: WorkerParameters) :
 
 
     private fun init() {
-        prefManager = PrefManager(context)
-        dao = AppDatabase.getInstance(applicationContext).dbDao()
         CoroutineScope(Dispatchers.Default).launch {
             startSync()
         }

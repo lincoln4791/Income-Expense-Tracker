@@ -1,19 +1,16 @@
 package com.lincoln4791.dailyexpensemanager.viewModels
 
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,30 +51,24 @@ class VMFullReport @Inject constructor (val repository: Repository) : ViewModel(
 
     fun loadYearMonthDayTypeCategoryWise(year:String,month:String,day:String,type:String,category:String){
         _postsList.value = Resource.Loading
-        try {
-            CoroutineScope(Dispatchers.IO).launch {
-                _postsList.value = repository.loadYearMonthDayTypeCategoryWise(year,month,day,type,category)
-            }
-
-        }
-        catch (e: Exception){
-            //postsList.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthDayTypeCategoryWise(year,month,day,type,category))
         }
     }
 
 
     fun loadYearMonthTypeCategoryWise(year:String,month:String,type:String,category:String){
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthTypeCategoryWise(year, month, type, category)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthTypeCategoryWise(year, month, type, category))
         }
     }
 
 
     fun loadYearMonthDayTypeWise(year: String, month: String, day: String, type: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthDayTypeWise(year, month, day, type)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthDayTypeWise(year, month, day, type))
         }
 
     }
@@ -85,137 +76,124 @@ class VMFullReport @Inject constructor (val repository: Repository) : ViewModel(
 
     fun loadYearMonthDayCategoryWise(year: String, month: String, day: String, category: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthDayCategoryWise(year, month, day, category)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthDayCategoryWise(year, month, day, category))
         }
 
     }
 
     fun loadYearMonthDayWise(year: String, month: String, day: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthDayWise(year, month, day)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthDayWise(year, month, day))
         }
     }
 
 
     fun loadYearMonthTypeWise(year: String, month: String, type: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthTypeWise(year, month, type)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthTypeWise(year, month, type))
         }
     }
 
 
     fun loadYearMonthCategoryWise(year: String, month: String, category: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthCategoryWise(year, month, category)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthCategoryWise(year, month, category))
         }
     }
 
-
-    fun loadYearMonthCategoryWise(year:String,month:String){
-        _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthWise(year, month)
-        }
-    }
 
     fun loadYearTypeWise(year: String, type: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearTypeWise(year, type)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearTypeWise(year, type))
         }
     }
 
     fun loadYearTypeCategoryWise(year: String, type: String, category: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearTypeCategoryWise(year, type, category)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearTypeCategoryWise(year, type, category))
         }
     }
 
 
     fun loadYearMonthWise(year: String, month: String) {
         _postsList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _postsList.value = repository.loadYearMonthWise(year, month)
+        viewModelScope.launch {
+            _postsList.postValue(repository.loadYearMonthWise(year, month))
         }
     }
 
     fun loadYearWise(year:String){
         _postsList.value = Resource.Loading
-            CoroutineScope(Dispatchers.IO).launch {
-                _postsList.value=repository.loadYearWise(year)
+            viewModelScope.launch {
+                _postsList.postValue(repository.loadYearWise(year))
             }
     }
 
 
     fun getAllCardsByTypeArrayString(type: String) {
         _categoryCards.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _categoryCards.value = repository.getAllCardsByTypeArrayString(type)
+        viewModelScope.launch {
+            _categoryCards.postValue(repository.getAllCardsByTypeArrayString(type))
         }
     }
 
 
     //Group Wise
-    fun loadYearMonthExpeneWiseByGroup(year: String, month: String, type: String) {
+    fun loadYearMonthExpenseWiseByGroup(year: String, month: String, type: String) {
         _expenseList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _expenseList.value = repository.loadYearMonthTypeWiseByGroup(year, month, type)
+        viewModelScope.launch {
+            _expenseList.postValue(repository.loadYearMonthTypeWiseByGroup(year, month, type))
         }
     }
 
     fun loadYearMonthIncomeWiseByGroup(year:String, month:String, type : String){
         _incomeList.value = Resource.Loading
-            CoroutineScope(Dispatchers.IO).launch {
-                _incomeList.value= repository.loadYearMonthTypeWiseByGroup(year,month,type)
+            viewModelScope.launch {
+                _incomeList.postValue(repository.loadYearMonthTypeWiseByGroup(year,month,type))
             }
 
     }
 
-    fun loadYearExpeneWiseByGroup(year: String, type: String) {
+    fun loadYearExpenseWiseByGroup(year: String, type: String) {
         _expenseList.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _expenseList.value = repository.loadYearTypeWiseByGroup(year, type)
+        viewModelScope.launch {
+            _expenseList.postValue(repository.loadYearTypeWiseByGroup(year, type))
         }
     }
 
     fun loadYearIncomeWiseByGroup(year:String,type : String){
         _incomeList.value = Resource.Loading
-            CoroutineScope(Dispatchers.IO).launch {
-                _incomeList.value=repository.loadYearTypeWiseByGroup(year,type)
+            viewModelScope.launch {
+                _incomeList.postValue(repository.loadYearTypeWiseByGroup(year,type))
             }
     }
 
 
     fun loadYearMonthIncomeTotal(year: String, month: String, type: String) {
         _totalIncome.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _totalIncome.value = repository.loadYearMonthTypeTotal(year, month, type)
+        viewModelScope.launch {
+            _totalIncome.postValue(repository.loadYearMonthTypeTotal(year, month, type))
         }
     }
 
 
     fun loadYearMonthExpenseTotal(year: String, month: String, type: String) {
         _totalExpense.value = Resource.Loading
-        CoroutineScope(Dispatchers.IO).launch {
-            _totalExpense.value = repository.loadYearMonthTypeTotal(year, month, type)
+        viewModelScope.launch {
+            _totalExpense.postValue(repository.loadYearMonthTypeTotal(year, month, type))
         }
     }
 
-    fun loadYearMonthBalance(year:String,month: String){
+    fun loadYearMonthBalance(year: String, month: String) {
         balance.value = Resource.Loading
-        try {
-            CoroutineScope(Dispatchers.IO).launch {
-                balance.value= repository.loadYearMonthBalance(year,month)
-            }
-
-        }
-        catch (e: Exception){
-            //balance.value = Resource.Error("Failed to retrive data -> ${e.message}")
+        viewModelScope.launch {
+            balance.postValue(repository.loadYearMonthBalance(year, month))
         }
     }
 

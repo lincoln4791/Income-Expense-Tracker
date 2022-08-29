@@ -5,18 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.RegistrationFragment"
+    tools:context=".fragments.RegistrationFragment"
     android:background="@color/primary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/primary"
+        style="@style/cl_toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_img"
@@ -36,13 +33,14 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_MonthlyReport"
+            style="@style/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
             app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
             app:title="Registration"
-            app:titleTextColor="@color/white" />
+            />
 
         <LinearLayout
             android:id="@+id/ll_currentBalance_MonthlyReport"
