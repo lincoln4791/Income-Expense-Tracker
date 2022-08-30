@@ -17,6 +17,7 @@ import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 import com.lincoln4791.dailyexpensemanager.modelClass.BannerResponse
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

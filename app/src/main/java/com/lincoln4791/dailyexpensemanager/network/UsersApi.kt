@@ -2,14 +2,15 @@ package com.lincoln4791.dailyexpensemanager.network
 
 import retrofit2.http.*
 
-interface AuthApi {
+interface UsersApi {
 
     @Headers("P-Auth-Token:test")
-    @POST("api/v1/login")
+    //@GET("api/v1/login")
+    @GET("api/v1/login")
     suspend fun login(
         /*@Field("phone") username : String,
         @Field("password") password : String*/
-        @Body loginBodyModel: Any
-    ) : Any
+        @Query("result") result: String
+    )
 
 }

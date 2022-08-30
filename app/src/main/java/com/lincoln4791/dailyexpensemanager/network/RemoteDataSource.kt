@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteDataSource {
     companion object{
-        const val BASE_URL = "http://patientaid.itmapi.com/"
+        const val BASE_URL = "https://randomuser.me/api/"
 
 
         fun<Api> buildApi(
@@ -16,7 +16,7 @@ class RemoteDataSource {
         ):Api{
 
             val logging = HttpLoggingInterceptor()
-            logging.setLevel(HttpLoggingInterceptor.Level.BASIC)
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val client: OkHttpClient = OkHttpClient.Builder()
                 .addInterceptor(logging)
                 .build()
