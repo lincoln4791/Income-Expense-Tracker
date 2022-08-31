@@ -2,6 +2,7 @@ package com.lincoln4791.dailyexpensemanager.background.worker
 
 import android.content.Context
 import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.firebase.ktx.Firebase
@@ -17,6 +18,8 @@ import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 import com.lincoln4791.dailyexpensemanager.modelClass.BannerResponse
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.roomDB.DatabaseDao
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,11 +30,14 @@ import javax.inject.Inject
 
 
 
-class SyncWorker(var context: Context, workerParameter: WorkerParameters) :
+@HiltWorker
+class SyncWorker @AssistedInject constructor (
+    @Assisted context: Context,
+    @Assisted workerParameter: WorkerParameters, ) :
     CoroutineWorker(context, workerParameter) {
 
-    @Inject lateinit var prefManager: PrefManager
-    @Inject lateinit var dao: DatabaseDao
+    var prefManager: PrefManager = PrefManager(context)
+    val dao: DatabaseDao = AppDatabase.getInstance(context.applicationContext).dbDao()
     private val sdf = SimpleDateFormat("yyyy-MM-dd")
     private val currentDate = sdf.parse(CurrentDate.currentDate)
 

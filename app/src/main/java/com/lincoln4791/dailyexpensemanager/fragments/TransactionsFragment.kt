@@ -80,6 +80,8 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        unloadProgressBar()
+
         Log.d("LifeCycle","Transactions Fragment ViewCreated")
         Util.recordScreenEvent("transactions_fragment","MainActivity")
         val bundle = Bundle()
@@ -229,7 +231,7 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
             }
         }
 
-        unloadProgressBar()
+        //unloadProgressBar()
 
     }
 

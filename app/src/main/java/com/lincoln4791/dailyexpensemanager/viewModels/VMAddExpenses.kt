@@ -44,7 +44,7 @@ class VMAddExpenses @Inject constructor (val repository: Repository) :ViewModel(
     fun loadAllCards() {
         _postsList.value = Resource.Loading
         CoroutineScope(Dispatchers.IO).launch {
-            repository.getAllExpenseCards()
+            _postsList.postValue(repository.getAllExpenseCards())
         }
     }
 

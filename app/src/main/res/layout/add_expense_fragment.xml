@@ -383,6 +383,7 @@
                             android:id="@+id/tv_selectedMoreCard"
                             style="@style/tv_horizontalScroll_MainActivity"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:paddingStart="50dp"
                             android:paddingTop="5dp"
                             android:paddingEnd="50dp"
