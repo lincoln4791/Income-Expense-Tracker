@@ -12,6 +12,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -26,7 +27,11 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import androidx.work.*
 import com.example.mybaseproject2.base.BaseFragment
-import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.messaging.FirebaseMessaging
@@ -53,19 +58,27 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.InterstistialAdHelper
 import com.lincoln4791.dailyexpensemanager.view.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
+    OnUserEarnedRewardListener {
     @Inject lateinit var sdf : SimpleDateFormat
     @Inject lateinit var prefManager: PrefManager
     private val viewModel by viewModels<VMHomeFragment>()
 
     private lateinit var navCon: NavController
+    private lateinit var rewardedAd: RewardedAd
+    private lateinit var adLoadingBar: Dialog
     @Suppress("DEPRECATION", "DEPRECATION")
     private val sliderHandler: Handler = Handler()
+    private lateinit var interAd: InterstistialAdHelper
+    private var mInterstitialAd: InterstitialAd? = null
 
 
 
@@ -97,15 +110,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         setDate()
         setLoginAndLogoutData()
         //getAndSaveFCM()
-        Util.recordScreenEvent("home_fragment", "MainActivity")
+        //Util.recordScreenEvent("home_fragment", "MainActivity")
+        initAdMob()
         FirebaseUtil.fetchCommonDataFromRemoteConfig(requireContext())
         initCheckSubscription()
         InitCheckAppVersion()
         scheduleSyncTask()
-        //initAdMob()
         imageSlider()
         initPremiumBadge()
         Util.initAdRemoveByRewardAd(requireContext())
+        initAdLoadingBar()
+        initRewardAdView()
 
         navCon = Navigation.findNavController(view)
 
@@ -158,6 +173,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         binding.ivNavMenu.setOnClickListener {
             binding.drawerLayout.open()
+        }
+
+        binding.lotteWatchAd.setOnClickListener {
+            confirmWatchAd()
         }
 
         binding.navigationView.setNavigationItemSelectedListener {
@@ -247,6 +266,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         observe()
 
     }
+
+    private fun initAdLoadingBar() {
+        adLoadingBar = Dialog(requireContext())
+        val adLoadingBarView = layoutInflater.inflate(R.layout.content_ad_loading_bar, null, false)
+        adLoadingBar.setContentView(adLoadingBarView)
+        adLoadingBar.setCancelable(false)
+    }
+
 
     private fun showConfirmLogoutDialog() {
         val dialog = Dialog(requireContext())
@@ -457,7 +484,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun initAdMob() {
         val lastAdShowDate = prefManager.lastBannerAdShownHomeF
         if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
-            Log.d(tag,"Banner Ad Home will load")
+            Log.d("tag","Banner Ad Home will load")
 
             binding.adView.visibility = View.VISIBLE
             MobileAds.initialize(requireContext()) {
@@ -470,7 +497,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         } else {
             binding.adView.visibility = View.GONE
-            Log.d(tag,"Banner Ad Home Not Shown")
+            Log.d("tag","Banner Ad Home Not Shown")
         }
     }
 
@@ -620,6 +647,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
+    private fun confirmWatchAd(){
+        val dialog = Dialog(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_confirm_watch_ad,null,false)
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        dialog.findViewById<ImageView>(R.id.ivClose).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<Button>(R.id.btnWatchAd).setOnClickListener {
+            dialog.dismiss()
+            adLoadingBar.show()
+            //loadRewardedAd()
+           initInterstitialAd()
+        }
+    }
+
+
+
     private fun navigateToFragment(action : NavDirections) {
         loadProgressBar()
         navCon.navigate(action)
@@ -632,5 +676,100 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun navigateToAuthActivity(){
         startActivity(Intent(requireContext(),AuthActivity::class.java))
     }
+
+
+    private fun loadRewardedAd() {
+        Log.d("RewardAd", "load Reward Ad Called")
+        // Use the test ad unit ID to load an ad.
+        RewardedAd.load(requireContext(), AdUnitIds.REWARDED_AD_REMOVE,
+            AdRequest.Builder().setHttpTimeoutMillis(Constants.REWARD_AD_TIMEOUT).build(), object : RewardedAdLoadCallback() {
+                override fun onAdLoaded(ad: RewardedAd) {
+                    rewardedAd = ad
+                    Log.d("RewardAd", "onAdLoaded -> ${ad.responseInfo}")
+
+                    rewardedAd.fullScreenContentCallback = object :
+                        FullScreenContentCallback() {
+                        /** Called when the ad failed to show full screen content.  */
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            Log.d("RewardAd", "onAdFailedToShowFullScreenContent")
+                        }
+
+                        /** Called when ad showed the full screen content.  */
+                        override fun onAdShowedFullScreenContent() {
+                            Log.d("RewardAd", "onAdShowedFullScreenContent")
+                            prefManager.lastRewardedAdASubscriptionShownTime=System.currentTimeMillis()
+                            binding.lotteWatchAd.visibility=View.GONE
+                        }
+
+                        /** Called when full screen content is dismissed.  */
+                        override fun onAdDismissedFullScreenContent() {
+                            Log.d("RewardAd", "onAdDismissedFullScreenContent")
+
+                        }
+                    }
+                    try {
+                        adLoadingBar.dismiss()
+                        showRewardedAD()
+                        Log.d("RewardAd", "onAdDismissedFullScreenContent")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    try {
+                        Log.e("RewardAd",
+                            "onAdFailedToLoad -> ${loadAdError.message} :: code-> ${loadAdError.code}:: cause ${loadAdError.cause} :: response ${loadAdError.responseInfo}")
+                        adLoadingBar.dismiss()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            })
+    }
+
+    fun showRewardedAD() {
+        rewardedAd.show(requireActivity(), this@HomeFragment)
+    }
+
+    override fun onUserEarnedReward(p0: RewardItem) {
+        Toast.makeText(requireContext(),"Thank you so much for your support",Toast.LENGTH_SHORT).show()
+    }
+
+    private fun initRewardAdView(){
+       //Log.d("tag","add time diff is -> ${System.currentTimeMillis()-prefManager.lastRewardedAdHomeShownTime} ::: ${prefManager.adInterval.toLong()}")
+        if(AdMobUtil.canAdShow(requireContext(),prefManager.lastInterstitialAdShownHome)){
+            binding.lotteWatchAd.visibility=View.VISIBLE
+        }
+        else{
+            binding.lotteWatchAd.visibility=View.GONE
+        }
+    }
+
+
+    private fun initInterstitialAd() {
+        interAd = InterstistialAdHelper(requireContext(), requireActivity(),mInterstitialAd)
+            interAd.loadinterAd(AdUnitIds.INTERSTITIAL_FULL_REPORT) {
+                Log.d("InterAd", "Inter ad loaded -> $it")
+                adLoadingBar.dismiss()
+               showInterAd()
+            }
+
+    }
+
+
+    private fun showInterAd() {
+            interAd.showInterAd { isShown: Boolean, error: String? ->
+                if (isShown) {
+                    Log.d("InterAD", "InterAd has been shown")
+                    prefManager.lastInterstitialAdShownHome = CurrentDate.currentTime24H
+                    binding.lotteWatchAd.visibility=View.GONE
+                }
+            }
+
+    }
+
+
 
 }

@@ -49,8 +49,6 @@
     </style>
 
 
-
-
     <style name="tv_horizontalScroll_MainActivity">
         <item name="android:textSize">13sp</item>
         <item name="android:gravity">center</item>

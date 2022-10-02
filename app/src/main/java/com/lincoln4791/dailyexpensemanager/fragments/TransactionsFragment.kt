@@ -80,7 +80,6 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        unloadProgressBar()
 
         Log.d("LifeCycle","Transactions Fragment ViewCreated")
         Util.recordScreenEvent("transactions_fragment","MainActivity")
@@ -95,6 +94,7 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
 
         toolbar = view.findViewById(R.id.toolbar_Transactions)
         transactionType = args.type
+        markTab()
         binding.rvTransactions.layoutManager=linearLayoutManager
 
         setUpTabLayout()
@@ -155,10 +155,14 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
             goBack()
         }
 
-        binding.tvCurrentBalanceValueToolBarTransactions.text = GlobalVariabls.currentBalance.toString()
+        setCurrentBalance()
         Log.d("tag","Current Balance is ${GlobalVariabls.currentBalance}")
 
         loadTransactions()
+    }
+
+    private fun setCurrentBalance() {
+        binding.tvCurrentBalanceValueToolBarTransactions.text = GlobalVariabls.currentBalance.toString()
     }
 
     private fun setUpTabLayout() {
@@ -219,15 +223,15 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
         when (transactionType) {
             Constants.TYPE_ALL -> {
                 binding.tvTypeTitleTransactions.text = getString(R.string.Transactions)
-                binding.selectTab.selectTab(binding.selectTab.getTabAt(0))
+                //binding.selectTab.selectTab(binding.selectTab.getTabAt(0))
             }
             Constants.TYPE_INCOME -> {
                 binding.tvTypeTitleTransactions.text = "Incomes"
-                binding.selectTab.selectTab(binding.selectTab.getTabAt(1))
+                //binding.selectTab.selectTab(binding.selectTab.getTabAt(1))
             }
             Constants.TYPE_EXPENSE -> {
                 binding.tvTypeTitleTransactions.text = "Expenses"
-                binding.selectTab.selectTab(binding.selectTab.getTabAt(2))
+                //binding.selectTab.selectTab(binding.selectTab.getTabAt(2))
             }
         }
 
@@ -249,8 +253,10 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     private fun deleteDataAll() {
         CoroutineScope(Dispatchers.IO).launch {
             AppDatabase.getInstance(requireContext().applicationContext).dbDao().deleteAll()
+            loadTransactions()
+            setCurrentBalance()
         }
-        loadTransactions()
+
     }
 
     fun confirmDelete(id: Int, amount: Int, typeOfTheFile: String){
@@ -363,6 +369,22 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     override fun onResume() {
         Log.d("LifeCycle", "Transactions Fragment resumed")
         super.onResume()
+    }
+
+    fun markTab(){
+        when (transactionType) {
+            Constants.TYPE_ALL -> {
+                binding.selectTab.selectTab(binding.selectTab.getTabAt(0))
+            }
+            Constants.TYPE_INCOME -> {
+                binding.selectTab.selectTab(binding.selectTab.getTabAt(1))
+            }
+            Constants.TYPE_EXPENSE -> {
+                binding.selectTab.selectTab(binding.selectTab.getTabAt(2))
+            }
+        }
+        unloadProgressBar()
+
     }
 
 

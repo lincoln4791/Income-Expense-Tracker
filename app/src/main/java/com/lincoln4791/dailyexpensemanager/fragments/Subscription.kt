@@ -116,6 +116,7 @@ class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscript
         init()
         initBillingClient(view)
         changeSubscriptionWiseUI()
+        initRewardAdView()
 
 
         binding.cvSubscriptionMonthly.setOnClickListener {
@@ -398,6 +399,8 @@ class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscript
                         /** Called when ad showed the full screen content.  */
                         override fun onAdShowedFullScreenContent() {
                             Log.d("RewardAd", "onAdShowedFullScreenContent")
+                            prefManager.lastRewardedAdASubscriptionShownTime=System.currentTimeMillis()
+                            binding.cvWatchAd.visibility=View.GONE
                         }
 
                         /** Called when full screen content is dismissed.  */
@@ -442,8 +445,6 @@ class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscript
         prefManager.adRemoveExpireTime = newExpireTime
         Log.d("rewardAd","Reward Granted, new expire time is -> $newExpireTime")
         prefManager.isAdRemoved = true
-
-
     }
 
     private fun loadProgressBar() {
@@ -454,6 +455,16 @@ class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscript
     private fun unloadProgressBar(){
         binding.mainLoadingBar.visibility = View.GONE
         binding.clContainer.visibility=View.VISIBLE
+    }
+
+    private fun initRewardAdView(){
+        if(System.currentTimeMillis()-prefManager.lastRewardedAdASubscriptionShownTime>prefManager.adInterval.toLong()){
+            binding.cvWatchAd.visibility=View.VISIBLE
+            //binding.cvWatchAd.visibility=View.GONE
+        }
+        else{
+            binding.cvWatchAd.visibility=View.GONE
+        }
     }
 
     override fun onDestroy() {

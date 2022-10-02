@@ -419,12 +419,12 @@ class FullReportFragment : BaseFragment<FragmentFullReportBinding>(FragmentFullR
             ) {
 
                 vmFullReport.category = if(position==0){
-                    Log.d("FullReport","position -> $position:: item -> ${expenseCards[position]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
+                    //Log.d("FullReport","position -> $position:: item -> ${expenseCards[position]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
                     Constants.CATEGORY_All
 
                 }
                 else{
-                    Log.d("FullReport","position -> $position:: item -> ${expenseCards[position-1]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
+                    //Log.d("FullReport","position -> $position:: item -> ${expenseCards[position-1]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
                     expenseCards[(position-1)]
                 }
             }

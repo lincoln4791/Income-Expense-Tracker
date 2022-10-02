@@ -778,7 +778,7 @@ class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFra
             val nativeAd = NativeAdUtil(requireContext().applicationContext)
             nativeAd.loadNativeAd(requireActivity(),
                 binding.nativeAd,
-                AdUnitIds.NATIVE_ADD_EXPENSE) {
+                AdUnitIds.NATIVE_ADD_TRANSACTION) {
                 if (it) {
                     binding.nativeAd.visibility = View.VISIBLE
                     Log.d("Native", "Native Ad Shown")

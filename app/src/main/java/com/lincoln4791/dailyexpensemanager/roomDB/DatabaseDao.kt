@@ -69,13 +69,13 @@ interface DatabaseDao{
     @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type and postCategory =:category GROUP BY postCategory")
     suspend fun loadYearMonthTypeCategoryWiseByGroup(year: String, month:String, type : String,category:String): List<MC_MonthlyReport>
 
-    @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type GROUP BY postCategory")
+    @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type AND postYear=:year AND postMonth=:month))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type GROUP BY postCategory")
     suspend fun loadYearMonthTypeWiseByGroup(year: String, month:String, type : String): List<MC_MonthlyReport>
 
     @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postType = :type GROUP BY postCategory")
     suspend fun loadYearTypeWiseByGroup(year: String, type : String): List<MC_MonthlyReport>
 
-    @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and  postType=:type ")
+    @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and  postType=:type")
     suspend fun loadYearMonthTypeTotal(year: String, month:String, type : String): Int
 
     @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and  postType=:type ")

@@ -56,13 +56,13 @@ class AdMobUtil {
                 }
                 else{
                     if (lastAdShownDate!=""){
-                        //if (diffTime(lastAdShownDate).toInt() >= prefManager.adInterval.toInt()) {
-                        if (diffTime(lastAdShownDate).toInt() >= 0) {
+                        if (diffTime(lastAdShownDate).toInt() >= prefManager.adInterval.toInt()) {
+                        //if (diffTime(lastAdShownDate).toInt() >= 0) {
                             //if (diffTime(lastAdShownDate).toInt() >=0) {
-                            info(tag," Ad shown because difference is greater than ${prefManager.adInterval}")
+                            info(tag," Ad shown because difference(${diffTime(lastAdShownDate).toInt()}) is greater than ${prefManager.adInterval}")
                             canAdShow = true
                         } else {
-                            info(tag," AD not loaded because difference is less than ${prefManager.adInterval}")
+                            info(tag," AD not loaded because difference(${diffTime(lastAdShownDate).toInt()}) is less than ${prefManager.adInterval}")
                             error = "AD not loaded because difference is less than 1"
                             canAdShow  = false
                         }

@@ -562,7 +562,7 @@ class AddIncomeFragment : BaseFragment<FragmentAddIncomeBinding>(FragmentAddInco
             val nativeAd = NativeAdUtil(requireContext().applicationContext)
             nativeAd.loadNativeAd(requireActivity(),
                 binding.nativeAd,
-                AdUnitIds.NATIVE_ADD_INCOME) {
+                AdUnitIds.NATIVE_ADD_TRANSACTION) {
                 if (it) {
                     binding.nativeAd.visibility = View.VISIBLE
                     Log.d("Native", "Native Ad Shown")

@@ -41,8 +41,8 @@ class InterstistialAdHelper(private val context: Context,private val activity:Ac
                 callback(true,null)
             }
 
-            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                Log.d("InterAD", "InterAd failed to show -> ${adError!!.message}")
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                Log.d("InterAD", "InterAd failed to show -> ${adError.message}")
                 callback(false,adError.message)
             }
 

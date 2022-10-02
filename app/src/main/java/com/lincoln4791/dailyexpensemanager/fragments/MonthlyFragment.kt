@@ -44,6 +44,8 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     @Inject lateinit var prefManager : PrefManager
     @Inject lateinit var linearLayoutManager : LinearLayoutManager
     @Inject lateinit var linearLayoutManager2 : LinearLayoutManager
+    private var isFirstTimeMonthSelectedCompleted = false
+    private var isFirstTimeYearSelectedCompleted = false
     private val viewModel by viewModels<VMMonthlyReport>()
     private val args: MonthlyFragmentArgs by navArgs()
     private lateinit var month: String
@@ -110,9 +112,25 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     }
 
     private fun loadData() {
+        Log.d("date","$year/$month")
         CoroutineScope(Dispatchers.IO).launch {
             delay(350)
-            viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+            launch {
+                viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+            }
+
+            launch {
+                viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+            }
+
+            launch {
+                viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
+            }
+
+            launch {
+                viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+            }
+
         }
 
     }
@@ -149,11 +167,7 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         viewModel.totalIncome.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success<*> -> {
-                    if(it.value!=null){
-                        updateTotalIncomeUI(it.value as Int)
-                    }
-                }
+                is Resource.Success<*> -> { updateTotalIncomeUI(it.value as Int?) }
                 else -> {}
             }
         }
@@ -219,55 +233,50 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 position: Int,
                 id: Long,
             ) {
+                Log.d("tag","monthly spinner onItemSelectedCalled")
                 when (position) {
                     0 -> {
                         month = getString(R.string.digit01)
-                        loadData()
                     }
                     1 -> {
                         month = getString(R.string.digit02)
-                        loadData()
                     }
                     2 -> {
                         month = getString(R.string.digit03)
-                        loadData()
                     }
                     3 -> {
                         month = getString(R.string.digit04)
-                        loadData()
                     }
                     4 -> {
                         month = getString(R.string.digit05)
-                        loadData()
                     }
                     5 -> {
                         month = getString(R.string.digit06)
-                        loadData()
                     }
                     6 -> {
                         month = getString(R.string.digit07)
-                        loadData()
                     }
                     7 -> {
                         month = getString(R.string.digit08)
-                        loadData()
                     }
                     8 -> {
                         month = getString(R.string.digit09)
-                        loadData()
                     }
                     9 -> {
                         month = getString(R.string.digit10)
-                        loadData()
                     }
                     10 -> {
                         month = getString(R.string.digit11)
-                        loadData()
                     }
                     11 -> {
                         month = getString(R.string.digit12)
-                        loadData()
                     }
+                }
+                if(isFirstTimeMonthSelectedCompleted){
+                    loadData()
+                }
+                else{
+                    isFirstTimeMonthSelectedCompleted=true
                 }
             }
 
@@ -311,31 +320,34 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
                 id: Long,
             ) {
                 year = viewModel.currentYear.toString()
+                Log.d("tag","year spinner onItemSelectedCalled")
                 when (position) {
                     0 -> {
                         year = "2021"
-                        loadData()
                     }
                     1 -> {
                         //year = currentYear.toString()
                         year = "2022"
-                        loadData()
                     }
                     2 -> {
                         //year = (currentYear.toLong()+position).toString()
                         year = "2023"
-                        loadData()
                     }
                     3 -> {
                         //year = (currentYear.toLong()+position).toString()
                         year = "2024"
-                        loadData()
                     }
                     4 -> {
                         //year = (currentYear.toLong()+position).toString()
                         year = "2025"
-                        loadData()
                     }
+
+                }
+                if (isFirstTimeYearSelectedCompleted){
+                    loadData()
+                }
+                else{
+                    isFirstTimeYearSelectedCompleted=true
                 }
             }
 
@@ -358,9 +370,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         binding.rvExpense.adapter = expenseAdapterExpense
         expenseAdapterExpense.notifyDataSetChanged()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
-        }
 
     }
 
@@ -377,9 +386,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         incomeAdapterIncome = Adapter_MonthlyReportIncome(list,requireContext(),this)
         binding.rvIncome.adapter = incomeAdapterIncome
         incomeAdapterIncome.notifyDataSetChanged()
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -396,9 +402,6 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
         viewModel.tExpense = totalExpense?.toDouble() ?: 0.0
         binding.tvTotalExpenseBotMonthlyReport.text= "${totalExpense?.toString() ?: "0.0"} tk"
         updateMonthlyBalanceUI()
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
-        }
     }
 
     @SuppressLint("SetTextI18n")

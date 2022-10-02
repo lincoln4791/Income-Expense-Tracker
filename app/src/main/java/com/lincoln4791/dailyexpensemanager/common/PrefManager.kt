@@ -84,6 +84,18 @@ class PrefManager(val context : Context) {
         get() = pref.getString("lastInterstitialAdShownFRF","")!!
         set(value) {editor.putString("lastInterstitialAdShownFRF",value).commit()}
 
+    var lastInterstitialAdShownHome:String
+        get() = pref.getString("lastInterstitialAdShownHome","")!!
+        set(value) {editor.putString("lastInterstitialAdShownHome",value).commit()}
+
+    var lastRewardedAdHomeShownTime:Long
+        get() = pref.getLong("lastRewardedAdHomeShownTime", 1640973600000)// 1st January 2022
+        set(value) {editor.putLong("lastRewardedAdHomeShownTime",value).commit()}
+
+    var lastRewardedAdASubscriptionShownTime:Long
+        get() = pref.getLong("lastRewardedAdSubscriptionShownTime", 1640973600000)// 1st January 2022
+        set(value) {editor.putLong("lastRewardedAdSubscriptionShownTime",value).commit()}
+
 
 
     //Sync
@@ -159,5 +171,7 @@ class PrefManager(val context : Context) {
     var lastAppVersionRemoteConfigDataFetchTime:Long
         get() = pref.getLong("lastAppVersionRemoteConfigDataFetchTime", 1640973600000)// 1st January 2022
         set(value) {editor.putLong("lastAppVersionRemoteConfigDataFetchTime",value).commit()}
+
+
 
 }
