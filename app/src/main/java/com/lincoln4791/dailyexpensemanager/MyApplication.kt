@@ -16,13 +16,17 @@ class MyApplication : Application(), Configuration.Provider {
         /*MobileAds.initialize(
             this
         ) { }*/
-
-     //   appOpenManager =  AppOpenManager(this
+       instance=this
     }
 
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
+    }
+
+    companion object {
+        lateinit var instance: MyApplication
+            private set
     }
 }

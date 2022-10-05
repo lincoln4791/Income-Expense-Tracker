@@ -1,27 +1,31 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
+import android.app.Activity.RESULT_OK
 import android.app.Dialog
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.DocumentsContract
 import android.util.Log
-import android.view.*
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -33,43 +37,49 @@ import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.BuildConfig
-import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
+import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.InterstistialAdHelper
 import com.lincoln4791.dailyexpensemanager.background.worker.PeriodicSyncWorker
 import com.lincoln4791.dailyexpensemanager.background.worker.SyncWorker
 import com.lincoln4791.dailyexpensemanager.common.BannerUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.Constants.DATABASE_NAME
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.*
+import com.lincoln4791.dailyexpensemanager.common.util.BackupUtil.backupDatabaseForRestore
+import com.lincoln4791.dailyexpensemanager.common.util.BackupUtil.deleteRestoreBackupFile
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.Banner
+import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.view.AuthActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VMHomeFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.abs
-import com.lincoln4791.dailyexpensemanager.R
-import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
-import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.InterstistialAdHelper
-import com.lincoln4791.dailyexpensemanager.view.AuthActivity
-import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Exception
 import javax.inject.Inject
+import kotlin.math.abs
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     OnUserEarnedRewardListener {
     @Inject lateinit var sdf : SimpleDateFormat
     @Inject lateinit var prefManager: PrefManager
+    @Inject lateinit var appDatabase: AppDatabase
     private val viewModel by viewModels<VMHomeFragment>()
 
     private lateinit var navCon: NavController
@@ -79,6 +89,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val sliderHandler: Handler = Handler()
     private lateinit var interAd: InterstistialAdHelper
     private var mInterstitialAd: InterstitialAd? = null
+
 
 
 
@@ -161,14 +172,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         binding.cvBackupDataMainActivity.setOnClickListener {
-            Toast.makeText(requireContext().applicationContext, "Coming Soon", Toast.LENGTH_SHORT)
-                .show()
-
+            //BackupUtil.backupDatabase(requireContext())
+            openDocumentTree()
         }
         binding.cvRestoreDataMainActivity.setOnClickListener {
-            Toast.makeText(context,
-                "Coming Soon",
-                Toast.LENGTH_SHORT).show()
+            restoreDBIntent()
         }
 
         binding.ivNavMenu.setOnClickListener {
@@ -178,6 +186,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.lotteWatchAd.setOnClickListener {
             confirmWatchAd()
         }
+
+
 
         binding.navigationView.setNavigationItemSelectedListener {
             it.isChecked = true
@@ -264,6 +274,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         viewModel.getIncomeExpenseData()
         initDarkTheme()
         observe()
+
+
 
     }
 
@@ -770,6 +782,290 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
+
+    private fun restoreDBIntent() {
+        val i = Intent(Intent.ACTION_GET_CONTENT)
+        i.type = "*/*"
+        startActivityForResult(Intent.createChooser(i, "Select DB File"), 2)
+    }
+
+
+/*     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 12 && resultCode == RESULT_OK && data != null) {
+            val fileUri = data.data
+            try {
+                assert(fileUri != null)
+                val inputStream: InputStream = this.requireContext().contentResolver.openInputStream(
+                    fileUri!!)!!
+                if (validFile(fileUri)) {
+                    restoreDatabase(inputStream)
+                } else {
+                   *//* Utils.showSnackbar(findViewById(android.R.id.content),
+                        getString(R.string.restore_failed),
+                        1)*//*
+                    Toast.makeText(requireContext(),"Rstore Failed",Toast.LENGTH_SHORT).show()
+                }
+                if (inputStream != null) {
+                    inputStream.close()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }*/
+
+
+    private fun validFile(fileUri: Uri): Boolean {
+        val cr: ContentResolver = this.requireActivity().contentResolver
+        val mime = cr.getType(fileUri)
+        return "application/octet-stream" == mime
+    }
+
+
+    private fun restoreDatabase(inputStreamNewDB: InputStream?) {
+        appDatabase.close()
+        //Delete the existing restoreFile and create a new one.
+        prefManager.isDatabaseRestored=true
+        deleteRestoreBackupFile(requireContext())
+        backupDatabaseForRestore(requireContext())
+        val oldDB: File = requireContext().getDatabasePath(DATABASE_NAME)
+        if (inputStreamNewDB != null) {
+            try {
+                BackupUtil.copyFile((inputStreamNewDB as FileInputStream?)!!, FileOutputStream(oldDB))
+                Toast.makeText(requireContext(),"Restore Success",Toast.LENGTH_SHORT).show()
+                /*BackupUtil.showSnackbar(findViewById(android.R.id.content),
+                    getString(R.string.restore_success),
+                    1)*/
+                //Take the user to home screen and there we will validate if the database file was actually restored correctly.
+            } catch (e: IOException) {
+                Toast.makeText(requireContext(),"Restore Failed",Toast.LENGTH_SHORT).show()
+                Log.d("backup", "ex for is of restore: $e")
+                e.printStackTrace()
+            }
+        } else {
+            Log.d("backup", "Restore - file does not exists")
+        }
+    }
+
+
+    private fun openDocumentTree() {
+        val uriString = BackupUtil.getString(BackupUtil.FOLDER_URI, "")
+        when {
+            uriString == "" -> {
+                Log.w("backup", "uri not stored")
+                askPermissionPreDialog()
+                //askPermission()
+            }
+            arePermissionsGranted(uriString) -> {
+                makeDoc(Uri.parse(uriString))
+            }
+            else -> {
+                Log.w("backup", "uri permission not stored")
+
+                askPermissionPreDialog()
+
+            }
+        }
+    }
+
+    private fun askPermissionPreDialog() {
+            val dialog = Dialog(requireContext())
+            val dialogView = layoutInflater.inflate(R.layout.dialog_confirm_storage_permission_required,null,false)
+            dialog.setContentView(dialogView)
+            dialog.show()
+
+            dialog.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
+                dialog.dismiss()
+                Toast.makeText(requireContext(),"Storage permission required to save backup file.",Toast.LENGTH_SHORT).show()
+            }
+            dialog.findViewById<Button>(R.id.btnUnderstand).setOnClickListener {
+                dialog.dismiss()
+                askPermission()
+            }
+    }
+
+    // this will present the user with folder browser to select a folder for our data
+    private fun askPermission() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        startActivityForResult(intent, 1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                if (data != null) {
+                    //this is the uri user has provided us
+                    val treeUri: Uri? = data.data
+                    if (treeUri != null) {
+                        Log.i("backup", "got uri: ${treeUri.toString()}")
+                        // here we should do some checks on the uri, we do not want root uri
+                        // because it will not work on Android 11, or perhaps we have some specific
+                        // folder name that we want, etc
+                        if (Uri.decode(treeUri.toString()).endsWith(":")) {
+                            Toast.makeText(requireContext(),
+                                "Cannot use root folder!",
+                                Toast.LENGTH_SHORT).show()
+                            // consider asking user to select another folder
+                            return
+                        }
+                        // here we ask the content resolver to persist the permission for us
+                        val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        requireContext().contentResolver.takePersistableUriPermission(treeUri,
+                            takeFlags)
+
+                        // we should store the string fo further use
+                        BackupUtil.storeString(BackupUtil.FOLDER_URI, treeUri.toString())
+
+                        //Finally, we can do our file operations
+                        //Please note, that all file IO MUST be done on a background thread. It is not so in this
+                        //sample - for the sake of brevity.
+                        makeDoc(treeUri)
+                    }
+                }
+            }
+            else if (requestCode == 2) {
+                data?.data?.also { uri ->
+                    // Perform operations on the document using its URI.
+                    //val fileUri = data.data
+                    val fileUri = uri
+                    try {
+                        assert(fileUri != null)
+                        val inputStream: InputStream = this.requireContext().contentResolver.openInputStream(
+                            fileUri)!!
+                        if (validFile(fileUri)) {
+                            restoreDatabase(inputStream)
+                        } else {
+                            /*Utils.showSnackbar(findViewById(android.R.id.content),
+                                getString(R.string.restore_failed),
+                                1)*/
+                            Toast.makeText(requireContext(),"Rstore Failed",Toast.LENGTH_SHORT).show()
+                        }
+                        if (inputStream != null) {
+                            inputStream.close()
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+        }
+    }
+
+    private fun makeDoc(dirUri: Uri) {
+        val dir = DocumentFile.fromTreeUri(requireContext(), dirUri)
+        if (dir == null || !dir.exists()) {
+            Log.e("backup", "no Dir")
+            releasePermissions(dirUri)
+            Toast.makeText(requireContext(),"Folder deleted, please choose another!",Toast.LENGTH_SHORT).show()
+            openDocumentTree()
+        } else {
+            getBackupFileName {
+                if(it.isNotEmpty() || it.isNotBlank()){
+                    val file = dir.createFile("application/vnd.sqlite3", "$it.db")
+                    if (file != null && file.canWrite()) {
+                        Log.d("backup", "file.uri = ${file.uri.toString()}")
+                        alterDocument(file.uri)
+                    } else {
+                        Log.d("backup", "no file or cannot write")
+                        Toast.makeText(requireContext(),"Write error!",Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    private fun releasePermissions(uri: Uri) {
+        val flags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        requireContext().contentResolver.releasePersistableUriPermission(uri,flags)
+        //we should remove this uri from our shared prefs, so we can start over again next time
+        BackupUtil.storeString(BackupUtil.FOLDER_URI, "")
+    }
+
+
+    private fun alterDocument(uri: Uri) {
+        try {
+            requireContext().contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
+                FileOutputStream(parcelFileDescriptor.fileDescriptor).use {
+                    writeFile(it)
+                }
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun writeFile(fileOutputStream: FileOutputStream) {
+        try {
+            appDatabase.close()
+            val dbfile: File = requireContext().getDatabasePath(DATABASE_NAME)
+                val buffersize = 8 * 1024
+                //val buffersize = 1444
+                val buffer = ByteArray(buffersize)
+                var bytes_read = buffersize
+                val indb: InputStream = FileInputStream(dbfile)
+                while (indb.read(buffer, 0, buffersize).also { bytes_read = it } > 0) {
+                    fileOutputStream.write(buffer, 0, bytes_read)
+                }
+            fileOutputStream.flush()
+                indb.close()
+            fileOutputStream.close()
+            Toast.makeText(requireContext(),"File Write OK!",Toast.LENGTH_SHORT).show()
+
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            Log.d("backup", "ex for restore file: $e")
+        }
+
+
+    }
+
+
+    private fun arePermissionsGranted(uriString: String): Boolean {
+        // list of all persisted permissions for our app
+        val list = requireContext().contentResolver.persistedUriPermissions
+        for (i in list.indices) {
+            val persistedUriString = list[i].uri.toString()
+            if (persistedUriString == uriString && list[i].isWritePermission && list[i].isReadPermission) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun getBackupFileName(callback:(fileName : String)->Unit){
+        var name = ""
+        val dialog = BottomSheetDialog(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.layout_input_name,null,true)
+
+        dialog.setContentView(dialogView)
+
+        val etName = dialogView.findViewById<EditText>(R.id.etName)
+        val ivOK = dialogView.findViewById<ImageView>(R.id.ivOk)
+
+        dialog.show()
+
+        ivOK.setOnClickListener {
+            if(etName.text.isNullOrEmpty()){
+                etName.error="Backup file name required"
+            }
+            else{
+                name=etName.text.toString()
+                dialog.dismiss()
+                callback(name)
+            }
+        }
+
+    }
 
 
 }

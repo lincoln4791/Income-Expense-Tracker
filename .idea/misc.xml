@@ -84,6 +84,8 @@
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/add_expense_fragment.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/content_ad_loading_bar.xml" value="0.171875" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_add_more_card.xml" value="0.16041666666666668" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_confirm_storagePermission_required.xml" value="0.16893115942028986" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_confirm_storage_permission_required.xml" value="0.13903985507246377" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_confirm_watch_ad.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_content_loading.xml" value="0.12447916666666667" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_delete.xml" value="0.16893115942028986" />
@@ -112,6 +114,7 @@
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.22826086956521738" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/header_navigation_drawer.xml" value="0.2" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_content_loading.xml" value="0.16893115942028986" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_input_name.xml" value="0.16893115942028986" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_no_result_found.xml" value="0.25" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_cardview.xml" value="0.25" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/sample_full_report.xml" value="0.25" />

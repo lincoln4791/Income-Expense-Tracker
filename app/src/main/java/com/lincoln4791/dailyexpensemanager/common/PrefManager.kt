@@ -173,5 +173,8 @@ class PrefManager(val context : Context) {
         set(value) {editor.putLong("lastAppVersionRemoteConfigDataFetchTime",value).commit()}
 
 
+    var isDatabaseRestored:Boolean
+        get() = pref.getBoolean("is_database_restored",false)
+        set(value) {editor.putBoolean("is_database_restored", value).commit()}
 
 }

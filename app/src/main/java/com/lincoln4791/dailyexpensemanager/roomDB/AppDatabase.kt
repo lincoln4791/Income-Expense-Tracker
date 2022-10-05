@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
@@ -21,7 +22,7 @@ abstract class AppDatabase() : RoomDatabase() {
                 INSTANCEE = Room.databaseBuilder(
                     context,
                     AppDatabase::class.java,
-                    "MyDatabaseRoom"
+                    Constants.DATABASE_NAME
                 ).addMigrations(MIGRATION_1_2)
                     .build()
             }

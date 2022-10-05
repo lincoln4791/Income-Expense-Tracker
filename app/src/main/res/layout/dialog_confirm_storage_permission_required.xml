@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/lotte_watch_add2" />
+            app:lottie_rawRes="@raw/unlock" />
 
         <TextView
             android:id="@+id/textView4"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/antic_regular"
-            android:text="Watch Ad!"
+            android:text="Storage Permission Required!"
             android:textColor="@color/primary"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -58,7 +58,7 @@
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
             android:gravity="center"
-            android:text="This App is Completely free\n,you can support developer by watching an small app. "
+            android:text="You may need to create a folder and give permission to save backup file in that folder."
             android:textAlignment="gravity"
             android:textColor="@color/black"
             android:textSize="14sp"
@@ -67,11 +67,11 @@
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <Button
-            android:id="@+id/btnWatchAd"
+            android:id="@+id/btnUnderstand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Watch Ad"
+            android:text="I Understand"
             android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

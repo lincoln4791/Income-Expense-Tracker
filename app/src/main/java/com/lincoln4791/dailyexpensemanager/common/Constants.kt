@@ -1,6 +1,11 @@
 package com.lincoln4791.dailyexpensemanager.common
 
 object Constants {
+        const val DATABASE_NAME = "MyDatabaseRoom"
+        const val FILE_NAME = "IEMDB backup"
+        const val BACKUP_RESTORE_ROLLBACK_FILE_NAME = "IEMDB backup R"
+        const val SHAREDPREF = "sp"
+        const val MAXIMUM_DATABASE_FILE = 1
         const val MONTH_All = "All"
         const val CATEGORY_All = "All"
         const val DAY_ALL = "All"
