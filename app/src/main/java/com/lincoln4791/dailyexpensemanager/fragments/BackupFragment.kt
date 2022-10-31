@@ -465,11 +465,33 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
                 Log.d("tag","${gfile.id}")
                 prefManager.driveFileID=gfile.id
 
-                uploadDriveBackupFileIdInFirebase(gfile.id){
+                uploadDriveBackupFileIdInFirebase(gfile.id){ it: Boolean, previousBackupId: String? ->
                     if(it){
                         Handler(Looper.getMainLooper()).post {
                             dismissUploadingFileDialog()
                             BackupUtil.showBackUpSuccessDialog(context)
+
+                            if(previousBackupId != null || previousBackupId != "null" || previousBackupId != ""){
+
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    try {
+                                        driveService.files().delete(previousBackupId).execute()
+                                        Log.d("backup","previous backup deleted")
+                                    }
+                                    catch (e:Exception){
+                                        Log.d("backup","failed previous backup deleted")
+                                        e.printStackTrace()
+                                    }
+
+                                }
+
+
+
+                            }
+                            else{
+                                Log.d("backup","previous backup null")
+                            }
+
                         }
                     }
                     else{
@@ -511,6 +533,7 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
             /*      if (id != null) {
                       driveService.files().
                   }*/
+
 
             outputStream.flush()
             outputStream.close()
@@ -795,26 +818,26 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
     }
 
 
-    suspend fun uploadDriveBackupFileIdInFirebase(id:String,callback:(isSuccess : Boolean)->Unit){
+    suspend fun uploadDriveBackupFileIdInFirebase(id:String,callback:(isSuccess : Boolean,previousBackUpId:String?)->Unit){
         try {
             getBackupFileIdsFromFirebase{
                 if(it!=null){
+                    Log.d("backup","p backup -> ${it[1]} c backup -> ${id}")
                     val hashMap = HashMap<String,String>()
                     hashMap[Constants.PREVIOUS_BACKUP] = it[1]
                     hashMap[Constants.CURRENT_BACKUP] = id
-                    Firebase.database.reference.child(Constants.USER_DATA).child(prefManager.UID).child(Constants.BACKUPS).setValue(hashMap)
-                    callback(true)
+                    Firebase.database.reference.child(Constants.USER_DATA).child(prefManager.UID).child(Constants.BACKUPS).updateChildren(
+                        hashMap as Map<String, String>)
+                    callback(true,it[1])
                 }
                 else{
-                    callback(false)
+                    callback(false,null)
                 }
-
-
             }
         }
         catch (e:Exception){
             e.printStackTrace()
-            callback(false)
+            callback(false,null)
         }
     }
 
