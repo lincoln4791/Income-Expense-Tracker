@@ -373,7 +373,14 @@
     </style>
 
 
-
+    <style name="tv_backup">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:drawablePadding">10dp</item>
+    </style>
 
 
 

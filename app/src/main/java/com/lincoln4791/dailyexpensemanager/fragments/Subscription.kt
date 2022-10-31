@@ -13,7 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.android.billingclient.api.*
-import com.example.mybaseproject2.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -32,7 +32,6 @@ import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentSubscriptionBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.SubscriptionInfoFromGoogle
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

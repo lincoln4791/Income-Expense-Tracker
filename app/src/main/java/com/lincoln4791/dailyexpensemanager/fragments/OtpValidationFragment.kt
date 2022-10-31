@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import com.example.mybaseproject2.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth

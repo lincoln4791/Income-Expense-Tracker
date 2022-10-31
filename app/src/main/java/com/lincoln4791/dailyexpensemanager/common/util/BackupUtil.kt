@@ -1,19 +1,27 @@
 package com.lincoln4791.dailyexpensemanager.common.util
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.common.internal.service.Common
+import com.google.firebase.crashlytics.internal.common.CommonUtils
 import com.lincoln4791.dailyexpensemanager.MyApplication
+import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants.BACKUP_RESTORE_ROLLBACK_FILE_NAME
 import com.lincoln4791.dailyexpensemanager.common.Constants.DATABASE_NAME
 import com.lincoln4791.dailyexpensemanager.common.Constants.FILE_NAME
 import com.lincoln4791.dailyexpensemanager.common.Constants.MAXIMUM_DATABASE_FILE
 import com.lincoln4791.dailyexpensemanager.common.Constants.SHAREDPREF
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import java.io.*
 import java.nio.channels.FileChannel
@@ -169,12 +177,6 @@ object BackupUtil {
 
 
 
-
-
-
-
-
-
     const val PREFS_FILENAME = "com.device.myapplication.prefs"
     //const val FOLDER_URI = "folder_uri"
     const val FOLDER_URI = "Income Expense Manager"
@@ -190,6 +192,113 @@ object BackupUtil {
     fun getString(key: String, def:String): String {
         val text = MyApplication.instance.getSharedPreferences(PREFS_FILENAME, 0).getString(key, def)?:""
         return text
+    }
+
+
+     fun showBackUpFailedDialog(context: Context){
+        try {
+            val dialog  = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialogue_something_went_wrong,null,false)
+            dialog.setContentView(dialogView)
+            dialogView.findViewById<TextView>(R.id.tv_title_dialogue_somethingWentWrong).text="Backup Failed"
+            dialogView.findViewById<TextView>(R.id.tv_msg).text="Something is wrong in creating backup file, please try again later!"
+            dialog.show()
+
+            dialogView.findViewById<Button>(R.id.btn_ok_dialogue_somethingWentWrong).setOnClickListener { dialog.dismiss() }
+
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+
+
+
+     fun showBackUpSuccessDialog(context: Context){
+        try {
+            val prefManager = PrefManager(context)
+            prefManager.lastBackupTime=System.currentTimeMillis()
+            val dialog  = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_successfull,null,false)
+            dialog.setContentView(dialogView)
+            dialogView.findViewById<TextView>(R.id.tv_title).text="Success"
+            dialogView.findViewById<TextView>(R.id.tv_msg).text="Backup Created Successfully!"
+            dialog.show()
+            dialogView.findViewById<Button>(R.id.btn_ok).setOnClickListener { dialog.dismiss() }
+
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+
+    fun showRestoreSuccessDialog(context: Context){
+        try {
+            val prefManager = PrefManager(context)
+            prefManager.lastBackupTime=System.currentTimeMillis()
+            val dialog  = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_successfull,null,false)
+            dialog.setContentView(dialogView)
+            dialogView.findViewById<TextView>(R.id.tv_title).text="Success"
+            dialogView.findViewById<TextView>(R.id.tv_msg).text="Database Restored Successfully!"
+            dialog.show()
+            dialogView.findViewById<Button>(R.id.btn_ok).setOnClickListener { dialog.dismiss() }
+
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    fun showRestoreFailedDialog(context: Context){
+        try {
+            val dialog  = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialogue_something_went_wrong,null,false)
+            dialog.setContentView(dialogView)
+            dialogView.findViewById<TextView>(R.id.tv_title_dialogue_somethingWentWrong).text="Restore Failed"
+            dialogView.findViewById<TextView>(R.id.tv_msg).text="Something is wrong in restoring backup file, please try again later!"
+            dialog.show()
+
+            dialogView.findViewById<Button>(R.id.btn_ok_dialogue_somethingWentWrong).setOnClickListener { dialog.dismiss() }
+
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    fun showNoBackupFileFoundInFirebaseDialog(context: Context){
+        try {
+            val dialog  = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialogue_something_went_wrong,null,false)
+            dialog.setContentView(dialogView)
+            dialogView.findViewById<TextView>(R.id.tv_title_dialogue_somethingWentWrong).text="Restore Failed"
+            dialogView.findViewById<TextView>(R.id.tv_msg).text="backup file not found in google drive.\nmake sure you have the backup file in your google drive or you are logged in in with the correct google drive!"
+            dialog.show()
+
+            dialogView.findViewById<Button>(R.id.btn_ok_dialogue_somethingWentWrong).setOnClickListener { dialog.dismiss() }
+
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    suspend fun getLastBackupTime(context: Context) : String{
+        val prefManager = PrefManager(context)
+        var date = "__-__-__"
+        try {
+            if(prefManager.lastBackupTime!=0.toLong()){
+                date =CurrentDate.getDateFromMill(prefManager.lastBackupTime)
+            }
+        }
+        catch (e:Exception){
+            e.printStackTrace()
+        }
+
+        return date
     }
 
 }

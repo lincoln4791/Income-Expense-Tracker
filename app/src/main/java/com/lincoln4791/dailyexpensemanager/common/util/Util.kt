@@ -1,13 +1,22 @@
 package com.lincoln4791.dailyexpensemanager.common.util
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.LayoutDirection
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.ktx.Firebase
+import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import kotlinx.coroutines.CoroutineScope
@@ -152,6 +161,89 @@ class Util(){
 
         }
 
+        fun showLoginRequiredDialog(context: Context,callback:(action:Boolean)->Unit){
+            val dialog = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_login_required,null,false)
+            dialog.setCancelable(false)
+            dialog.setContentView(dialogView)
+            try {
+                dialog.show()
+            }
+            catch (e:Exception){e.printStackTrace()}
+
+
+            dialogView.findViewById<Button>(R.id.btn_login).setOnClickListener {
+                try {
+                    dialog.dismiss()
+                    callback(true)
+                }
+                catch (e:Exception){e.printStackTrace()}
+
+            }
+
+            dialogView.findViewById<ImageView>(R.id.iv_close).setOnClickListener {
+                try {
+                    dialog.dismiss()
+                    callback(false)
+                }
+                catch (e:Exception){e.printStackTrace()}
+
+            }
+
+        }
+
+
+        fun showNoInternetDialog(context: Context,callback:(action:Boolean)->Unit){
+            val dialog = Dialog(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_login_required,null,false)
+            dialogView.findViewById<TextView>(R.id.tv_title).text = "Internet Connection Required"
+            dialogView.findViewById<TextView>(R.id.tv_body).text = "Please connect to the internet!!"
+            dialogView.findViewById<Button>(R.id.btn_login).text = "ok!"
+            dialogView.findViewById<LottieAnimationView>(R.id.lotte).setAnimation(R.raw.no_internet)
+            dialog.setCancelable(false)
+            dialog.setContentView(dialogView)
+            try {
+                dialog.show()
+            }
+            catch (e:Exception){e.printStackTrace()}
+
+
+            dialogView.findViewById<Button>(R.id.btn_login).setOnClickListener {
+                try {
+                    dialog.dismiss()
+                    callback(true)
+                }
+                catch (e:Exception){e.printStackTrace()}
+
+            }
+
+            dialogView.findViewById<ImageView>(R.id.iv_close).setOnClickListener {
+                try {
+                    dialog.dismiss()
+                    callback(false)
+                }
+                catch (e:Exception){e.printStackTrace()}
+            }
+
+        }
+
+        fun removeCommonUserData(context: Context){
+            val prefManager = PrefManager(context)
+            prefManager.name = ""
+            prefManager.phone = ""
+            prefManager.email = ""
+            prefManager.UID = ""
+            prefManager.isLoggedIn=false
+        }
+
+        fun addCommonUserData(context: Context,user : FirebaseUser){
+            val prefManager = PrefManager(context)
+            prefManager.name = user.displayName?:""
+            prefManager.phone = user.phoneNumber?:""
+            prefManager.email = user.email?:""
+            prefManager.UID = user.uid
+            prefManager.isLoggedIn=true
+        }
 
     }
 }

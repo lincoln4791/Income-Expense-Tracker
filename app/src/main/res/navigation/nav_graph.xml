@@ -42,6 +42,12 @@
         <action
             android:id="@+id/action_homeFragment_to_subscription"
             app:destination="@id/subscription" />
+        <action
+            android:id="@+id/action_homeFragment_to_fullReportFragment2"
+            app:destination="@id/fullReportFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_backupFragment"
+            app:destination="@id/backupFragment" />
     </fragment>
     <fragment
         android:id="@+id/addExpenseFragment"
@@ -192,5 +198,10 @@
         android:name="com.lincoln4791.dailyexpensemanager.fragments.Feed"
         android:label="fragment_feed"
         tools:layout="@layout/fragment_feed" />
+    <fragment
+        android:id="@+id/backupFragment"
+        android:name="com.lincoln4791.dailyexpensemanager.fragments.BackupFragment"
+        android:label="fragment_backup"
+        tools:layout="@layout/fragment_backup" />
 
 </navigation>

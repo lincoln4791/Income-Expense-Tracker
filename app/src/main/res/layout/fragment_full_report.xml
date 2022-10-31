@@ -306,7 +306,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:weightSum="3"
+        android:weightSum="2"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout_FullReport"
         app:layout_constraintStart_toStartOf="@+id/linearLayout_FullReport"
         app:layout_constraintTop_toBottomOf="@+id/guideline1">
@@ -403,8 +403,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="-5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/purple">
+            android:layout_weight="0"
+            android:backgroundTint="@color/purple"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

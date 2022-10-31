@@ -2,18 +2,13 @@ package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.mybaseproject2.base.BaseFragment
-import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentToolsBinding
-import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VMTools
 import dagger.hilt.android.AndroidEntryPoint

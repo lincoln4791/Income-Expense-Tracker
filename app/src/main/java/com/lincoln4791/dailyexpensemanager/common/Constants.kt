@@ -77,10 +77,13 @@ object Constants {
         const val APP_VERSION_CONTROL = "AppVersionControl"
 
 
+
         const val SUBSCRIPTION_MONTHLY = "no_ads_monthly"
         const val SUBSCRIPTION_YEARLY = "no_ads_yearly"
 
         const val NAME = "name"
+        const val PREVIOUS_BACKUP = "previous_backup"
+        const val CURRENT_BACKUP = "current_backup"
         const val PHONE = "phone"
         const val EMAIL = "email"
         const val PROFILE_PIC_URI = "profile_pic_uri"
@@ -90,9 +93,11 @@ object Constants {
         const val Common = "Common"
         const val BANNER = "Banner"
         const val BANNERS = "banners"
+        const val BACKUPS = "Backups"
 
 
         const val REWARD_AD_TIMEOUT = 30000 // 30 sec\
+
 
 
 

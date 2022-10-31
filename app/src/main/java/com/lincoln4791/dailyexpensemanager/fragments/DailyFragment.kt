@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mybaseproject2.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.google.android.gms.ads.MobileAds
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper

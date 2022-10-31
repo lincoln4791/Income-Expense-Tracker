@@ -172,9 +172,27 @@ class PrefManager(val context : Context) {
         get() = pref.getLong("lastAppVersionRemoteConfigDataFetchTime", 1640973600000)// 1st January 2022
         set(value) {editor.putLong("lastAppVersionRemoteConfigDataFetchTime",value).commit()}
 
+    var lastBackupTime:Long
+        get() = pref.getLong("last_backup_time", 0)// 1st January 2022
+        set(value) {editor.putLong("last_backup_time",value).commit()}
+
 
     var isDatabaseRestored:Boolean
         get() = pref.getBoolean("is_database_restored",false)
         set(value) {editor.putBoolean("is_database_restored", value).commit()}
+
+    var isAutoLocalBackUpEnabled:Boolean
+        get() = pref.getBoolean("is_auto_local_backup_enabled",false)
+        set(value) {editor.putBoolean("is_auto_local_backup_enabled", value).commit()}
+
+    var isAutoGDriveBackUpEnabled:Boolean
+        get() = pref.getBoolean("is_auto_gdrive_backup_enabled",false)
+        set(value) {editor.putBoolean("is_auto_gdrive_backup_enabled", value).commit()}
+
+    var driveFileID:String
+        get() = pref.getString("drive_file_id","")!!
+        set(value) {editor.putString("drive_file_id",value).commit()}
+
+
 
 }

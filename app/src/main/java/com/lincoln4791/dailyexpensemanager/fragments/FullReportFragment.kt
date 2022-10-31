@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mybaseproject2.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
@@ -135,7 +135,7 @@ class FullReportFragment : BaseFragment<FragmentFullReportBinding>(FragmentFullR
         vmFullReport.totalIncome.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success<*> -> updateTotalIncome(it.value as Int)
+                is Resource.Success<*> -> updateTotalIncome(it.value as Int?)
                 //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
                 else -> {}
             }
@@ -144,7 +144,7 @@ class FullReportFragment : BaseFragment<FragmentFullReportBinding>(FragmentFullR
         vmFullReport.totalExpense.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success<*> -> updateTotalExpense(it.value as Int)
+                is Resource.Success<*> -> updateTotalExpense(it.value as Int?)
                 //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
                 else -> {}
             }

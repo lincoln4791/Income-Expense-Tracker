@@ -13,7 +13,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.mybaseproject2.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -28,10 +28,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
+import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentLoginBinding
 import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VMLogin
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.reflect.Executable
 import javax.inject.Inject
 
 
@@ -79,11 +82,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.signInButton.setSize(SignInButton.SIZE_WIDE)
 
         binding.login2.setOnClickListener {
-            validate()
+            if(NetworkCheck.isConnect(requireContext())){
+                validate()
+            }
+            else{
+                Util.showNoInternetDialog(requireContext()){}
+            }
+
         }
 
         binding.signInButton.setOnClickListener {
-            signInWithGoogle()
+            if(NetworkCheck.isConnect(requireContext())){
+                signInWithGoogle()
+            }
+            else{
+                Util.showNoInternetDialog(requireContext()){
+
+                }
+            }
+
         }
 
         binding.tvRegistration.setOnClickListener {
@@ -170,21 +187,31 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     //Google Sign in
 
     private fun signInWithGoogle() {
-        oneTapClient.beginSignIn(signUpRequest)
-            .addOnSuccessListener {result ->
-                @Suppress("DEPRECATION")
-                try {
-                    startIntentSenderForResult(
-                        result.pendingIntent.intentSender, REQ_ONE_TAP,
-                        null, 0, 0, 0,null)
-                } catch (e: IntentSender.SendIntentException) {
-                    Log.e("Login", "Couldn't start One Tap UI: ${e.localizedMessage}")
+
+        if(NetworkCheck.isConnect(requireContext())){
+            oneTapClient.beginSignIn(signUpRequest)
+                .addOnSuccessListener {result ->
+                    @Suppress("DEPRECATION")
+                    try {
+                        startIntentSenderForResult(
+                            result.pendingIntent.intentSender, REQ_ONE_TAP,
+                            null, 0, 0, 0,null)
+                    } catch (e: IntentSender.SendIntentException) {
+                        Log.e("Login", "Couldn't start One Tap UI: ${e.localizedMessage}")
+                    }
                 }
+                .addOnFailureListener {e->
+                    // No Google Accounts found. Just continue presenting the signed-out UI.
+                    e.localizedMessage?.let { Log.d("Login", it) }
+                }
+        }
+        else{
+            Util.showNoInternetDialog(requireContext()){
+
             }
-            .addOnFailureListener {e->
-                // No Google Accounts found. Just continue presenting the signed-out UI.
-                e.localizedMessage?.let { Log.d("Login", it) }
-            }
+        }
+
+
     }
 
 
@@ -195,87 +222,106 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         when (requestCode) {
             REQ_ONE_TAP -> {
-                try {
-                    val credential = oneTapClient.getSignInCredentialFromIntent(data)
-                    val idToken = credential.googleIdToken
-                    when {
-                        idToken != null -> {
-                            // Got an ID token from Google. Use it to authenticate
-                            // with Firebase.
-                            dialogLoading.show()
-                            val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-                            auth.signInWithCredential(firebaseCredential)
-                                .addOnCompleteListener {task->
-                                    if (task.isSuccessful) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d("Login", "signInWithCredential:success")
-                                        val user = auth.currentUser
 
-                                        Firebase.database.reference.child(Constants.USER_DATA).child(
-                                            task.result!!.user!!.uid).addListenerForSingleValueEvent(object :
-                                            ValueEventListener {
-                                            override fun onDataChange(snapshot: DataSnapshot) {
-                                                if(snapshot.exists()){
-                                                    //User Already Exists
-                                                    val profile = HashMap<String,Any>()
-                                                    profile[Constants.NAME] = if(user!!.displayName.isNullOrEmpty()){""} else user.displayName!!
-                                                    profile[Constants.PHONE] = if(user.phoneNumber.isNullOrEmpty()){""} else user.phoneNumber!!
-                                                    profile[Constants.EMAIL] = if(user.email.isNullOrEmpty()){""} else user.email!!
-                                                    profile[Constants.PROFILE_PIC_URI] = ""
-                                                    if(user.photoUrl!=null){
-                                                        if(user.photoUrl.toString().isEmpty()){
-                                                            profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
+                if(NetworkCheck.isConnect(requireContext())){
+                    try {
+                        val credential = oneTapClient.getSignInCredentialFromIntent(data)
+                        val idToken = credential.googleIdToken
+                        when {
+                            idToken != null -> {
+                                // Got an ID token from Google. Use it to authenticate
+                                // with Firebase.
+                                dialogLoading.show()
+                                val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+                                auth.signInWithCredential(firebaseCredential)
+                                    .addOnCompleteListener {task->
+                                        if (task.isSuccessful) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d("Login", "signInWithCredential:success")
+                                            val user = auth.currentUser
+
+                                            Firebase.database.reference.child(Constants.USER_DATA).child(
+                                                task.result!!.user!!.uid).addListenerForSingleValueEvent(object :
+                                                ValueEventListener {
+                                                override fun onDataChange(snapshot: DataSnapshot) {
+                                                    if(snapshot.exists()){
+                                                        Log.d("Login","User Already exists")
+                                                        //User Already Exists
+                                                        val profile = HashMap<String,Any>()
+                                                        profile[Constants.NAME] = if(user!!.displayName.isNullOrEmpty()){""} else user.displayName!!
+                                                        profile[Constants.PHONE] = if(user.phoneNumber.isNullOrEmpty()){""} else user.phoneNumber!!
+                                                        profile[Constants.EMAIL] = if(user.email.isNullOrEmpty()){""} else user.email!!
+                                                        profile[Constants.PROFILE_PIC_URI] = ""
+                                                        if(user.photoUrl!=null){
+                                                            if(user.photoUrl.toString().isEmpty()){
+                                                                profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
+                                                            }
+                                                        }
+                                                        Firebase.database.reference.child(Constants.USER_DATA).child(
+                                                            task.result!!.user!!.uid).child(
+                                                            Constants.PROFILE).updateChildren(profile).addOnCompleteListener {
+                                                            updateUI(user)
                                                         }
                                                     }
-                                                    Firebase.database.reference.child(Constants.USER_DATA).child(
-                                                        task.result!!.user!!.uid).child(
-                                                        Constants.PROFILE).updateChildren(profile).addOnCompleteListener {
-                                                        updateUI(user)
-                                                    }
-                                                }
-                                                else{
-                                                    //New User, Never Registered Before
-                                                    val profile = HashMap<String,String>()
-                                                    profile[Constants.NAME] = if(user!!.displayName.isNullOrEmpty()){""} else user.displayName!!
-                                                    profile[Constants.PHONE] = if(user.phoneNumber.isNullOrEmpty()){""} else user.phoneNumber!!
-                                                    profile[Constants.EMAIL] = if(user.email.isNullOrEmpty()){""} else user.email!!
-                                                    profile[Constants.PROFILE_PIC_URI] = ""
-                                                    if(user.photoUrl!=null){
-                                                        if(user.photoUrl.toString().isEmpty()){
-                                                            profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
+                                                    else{
+                                                        //New User, Never Registered Before
+                                                        Log.d("Login","new user")
+                                                        val profile = HashMap<String,String>()
+                                                        profile[Constants.NAME] = if(user!!.displayName.isNullOrEmpty()){""} else user.displayName!!
+                                                        profile[Constants.PHONE] = if(user.phoneNumber.isNullOrEmpty()){""} else user.phoneNumber!!
+                                                        profile[Constants.EMAIL] = if(user.email.isNullOrEmpty()){""} else user.email!!
+                                                        profile[Constants.PROFILE_PIC_URI] = ""
+                                                        if(user.photoUrl!=null){
+                                                            if(user.photoUrl.toString().isEmpty()){
+                                                                profile[Constants.PROFILE_PIC_URI] = user.photoUrl.toString()
+                                                            }
                                                         }
-                                                    }
-                                                    Firebase.database.reference.child(Constants.USER_DATA).child(
-                                                        task.result!!.user!!.uid).child(
-                                                        Constants.PROFILE).setValue(profile).addOnCompleteListener {
-                                                        updateUI(user)
-                                                    }
+                                                        Firebase.database.reference.child(Constants.USER_DATA).child(
+                                                            task.result!!.user!!.uid).child(
+                                                            Constants.PROFILE).setValue(profile).addOnCompleteListener {
+                                                            updateUI(user)
+                                                        }
 
+                                                    }
                                                 }
-                                            }
 
-                                            override fun onCancelled(error: DatabaseError) {
-                                                updateUI(user)
-                                                Log.e("Login","Database Error in check existing user -> ${error.message}:: code ->${error.code}")
-                                                Toast.makeText(requireContext(),"Something went wrong, please try again later",Toast.LENGTH_LONG).show()
-                                            }
-                                        })
+                                                override fun onCancelled(error: DatabaseError) {
+                                                    updateUI(user)
+                                                    Log.e("Login","Database Error in check existing user -> ${error.message}:: code ->${error.code}")
+                                                    Toast.makeText(requireContext(),"Something went wrong, please try again later",Toast.LENGTH_LONG).show()
+                                                }
+                                            })
 
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.w("Login", "signInWithCredential:failure", task.exception)
-                                        updateUI(null)
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.w("Login", "signInWithCredential:failure", task.exception)
+                                            dialogLoading.dismiss()
+                                            updateUI(null)
+                                        }
                                     }
-                                }
-                        }
-                        else -> {
-                            // Shouldn't happen.
-                            Log.d("Login", "No ID token!")
+                            }
+                            else -> {
+                                dialogLoading.dismiss()
+                                // Shouldn't happen.
+                                Log.d("Login", "No ID token!")
+                            }
                         }
                     }
-                } catch (e: ApiException) {
-                    e.printStackTrace()
+                    catch (e: ApiException) {
+                        dialogLoading.dismiss()
+                        e.printStackTrace()
+                    }
                 }
+                else{
+                    try {
+                        Util.showNoInternetDialog(requireContext()){
+
+                        }
+                    }
+                    catch (e:Exception){e.printStackTrace()}
+                }
+
+
             }
         }
     }
@@ -283,6 +329,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
 
     private fun updateUI(account:FirebaseUser?){
+        dialogLoading.dismiss()
         if(account!=null){
             prefManager.email = account.email.toString()
             prefManager.isLoggedIn = true
@@ -295,7 +342,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         else{
             Toast.makeText(requireContext(),"Something is wrong",Toast.LENGTH_SHORT).show()
         }
-        dialogLoading.dismiss()
         Toast.makeText(requireContext(),"Login Success",Toast.LENGTH_LONG).show()
         navigateToMainActivity()
     }

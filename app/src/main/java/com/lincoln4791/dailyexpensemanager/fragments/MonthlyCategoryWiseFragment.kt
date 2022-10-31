@@ -19,7 +19,7 @@ import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.viewModels.VMMonthlyCategoryWise
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import com.example.mybaseproject2.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util

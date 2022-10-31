@@ -1,4 +1,4 @@
-package com.example.mybaseproject2.base
+package com.lincoln4791.dailyexpensemanager.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
