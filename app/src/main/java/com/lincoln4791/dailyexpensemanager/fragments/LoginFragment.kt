@@ -350,10 +350,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun goBack(){
         startActivity(Intent(requireActivity(),MainActivity::class.java))
+        requireActivity().finish()
     }
 
     private  fun navigateToMainActivity(){
         startActivity(Intent(requireActivity(),MainActivity::class.java))
+        requireActivity().finish()
     }
 
 

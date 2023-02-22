@@ -46,6 +46,7 @@ import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentBackupBinding
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.view.AuthActivity
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,68 +91,81 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
 
         binding.cvCloudBackup.setOnClickListener {
 
-            if(NetworkCheck.isConnect(requireContext())){
-                user = Firebase.auth.currentUser
-
-                if(user!=null){
-                    CoroutineScope(Dispatchers.IO).launch {
-                        uploadFileToGDrive(requireContext())
-                        Log.d("tag","uploading backup")
+            BackupUtil.showConfirmDriveBackupDialog(requireContext()){
+                if(it){
+                    if(NetworkCheck.isConnect(requireContext())){
+                        user = Firebase.auth.currentUser
+                        if(user!=null){
+                            CoroutineScope(Dispatchers.IO).launch {
+                                Log.d("backup","uploading backup")
+                                uploadFileToGDrive(requireContext())
+                            }
+                        }
+                        else{
+                            Util.showLoginRequiredDialog(requireContext()){
+                                if(it){
+                                    navigateToAuthActivity()
+                                }
+                            }
+                        }
 
                     }
-                }
-                else{
-                   Util.showLoginRequiredDialog(requireContext()){
-                       if(it){
-                           navigateToAuthActivity()
-                       }
-                   }
-                }
+                    else{
+                        Util.showNoInternetDialog(requireContext()){
 
-            }
-            else{
-                Util.showNoInternetDialog(requireContext()){
-
+                        }
+                    }
                 }
             }
-
 
         }
 
         binding.cvCloudRestore.setOnClickListener {
-            if(NetworkCheck.isConnect(requireContext())){
-                user = Firebase.auth.currentUser
 
-                if(user!=null){
-                        CoroutineScope(Dispatchers.IO).launch {
-                            startCloudRestoreProcess()
+            BackupUtil.showConfirmDriveRestoreDialog(requireContext()){
+                if(it){
+                    if(NetworkCheck.isConnect(requireContext())){
+                        user = Firebase.auth.currentUser
+
+                        if(user!=null){
+                            CoroutineScope(Dispatchers.IO).launch {
+                                startCloudRestoreProcess()
+                            }
                         }
-                }
-                else{
-                    Util.showLoginRequiredDialog(requireContext()){
-                        if(it){
-                            navigateToAuthActivity()
+                        else{
+                            Util.showLoginRequiredDialog(requireContext()){
+                                if(it){
+                                    navigateToAuthActivity()
+                                }
+                            }
+                        }
+
+                    }
+                    else{
+                        Util.showNoInternetDialog(requireContext()){
+
                         }
                     }
                 }
-
             }
-            else{
-                Util.showNoInternetDialog(requireContext()){
-
-                }
-            }
-
-
-
         }
 
         binding.cvLocalBackup.setOnClickListener {
-            openDocumentTree()
+
+            BackupUtil.showConfirmLocalBackupDialog(requireContext()){
+                if(it){
+                    openDocumentTree()
+                }
+            }
         }
 
         binding.cvLocalRestore.setOnClickListener {
-            restoreDBIntent()
+
+            BackupUtil.showConfirmLocalRestoreDialog(requireContext()){
+                if(it){
+                    restoreDBIntent()
+                }
+            }
         }
 
         binding.cvImg.setOnClickListener {
@@ -205,7 +219,7 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
 
     private suspend fun restoreDatabase(inputStreamNewDB: InputStream?) {
         Log.d("tag","DB Restoing process started")
-        appDatabase.close()
+        closeDB()
         //Delete the existing restoreFile and create a new one.
         prefManager.isDatabaseRestored=true
         BackupUtil.deleteRestoreBackupFile(requireContext())
@@ -214,6 +228,7 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
         if (inputStreamNewDB != null) {
             try {
                 BackupUtil.copyFile((inputStreamNewDB as FileInputStream?)!!, FileOutputStream(oldDB))
+                openDB()
                 //Toast.makeText(requireContext(),"Restore Success",Toast.LENGTH_SHORT).show()
                 /*BackupUtil.showSnackbar(findViewById(android.R.id.content),
                     getString(R.string.restore_success),
@@ -221,11 +236,16 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
                 //Take the user to home screen and there we will validate if the database file was actually restored correctly.
                 Handler(Looper.getMainLooper()).post {
                     dismissRestoringFileDialog()
-                    BackupUtil.showRestoreSuccessDialog(requireContext())
+                    BackupUtil.showRestoreSuccessDialog(requireContext()){
+                        //Util.closeApp(requireActivity())
+                        //Util.reloadApp(requireActivity())
+                        Util.closeApp(requireActivity())
+                    }
                 }
 
 
             } catch (e: IOException) {
+                openDB()
                 Toast.makeText(requireContext(),"Restore Failed ",Toast.LENGTH_SHORT).show()
                 Log.d("backup", "ex for is of restore: $e")
                 e.printStackTrace()
@@ -235,12 +255,14 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
                 }
             }
         } else {
+            openDB()
             Log.d("backup", "Restore - file does not exists")
             Handler(Looper.getMainLooper()).post {
                 dismissRestoringFileDialog()
                 BackupUtil.showRestoreFailedDialog(requireContext())
             }
         }
+        openDB()
     }
 
 
@@ -338,7 +360,7 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
 
     private fun writeFile(fileOutputStream: FileOutputStream) {
         try {
-            appDatabase.close()
+            closeDB()
             val dbfile: File = requireContext().getDatabasePath(Constants.DATABASE_NAME)
             val buffersize = 8 * 1024
             //val buffersize = 1444
@@ -351,12 +373,17 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
             fileOutputStream.flush()
             indb.close()
             fileOutputStream.close()
+            openDB()
             BackupUtil.showBackUpSuccessDialog(requireContext())
 
         } catch (e: java.lang.Exception) {
+            openDB()
             e.printStackTrace()
             BackupUtil.showBackUpFailedDialog(requireContext())
             Log.d("backup", "ex for restore file: $e")
+        }
+        finally {
+            openDB()
         }
 
 
@@ -451,20 +478,24 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
                 Handler(Looper.getMainLooper()).post {
                     showUploadingFileDialog()
                 }
-                appDatabase.close()
+                closeDB()
                 val actualFfile = File("${context.getDatabasePath(Constants.DATABASE_NAME)}")
+                Log.d("backup","b1 -> $driveService")
                 val fID = generateAndGetIDForDriveFile(driveService)
                 val gfile = com.google.api.services.drive.model.File()
+                Log.d("backup","b2")
                 gfile.name = "IncomeExpenseManager.db"
                 gfile.mimeType = "application/vnd.sqlite3"
                 gfile.setId(fID)
                 //gfile.id = "IncomeExpenseManager.db"
                 val fileContent = FileContent("application/vnd.sqlite3", actualFfile)
+                Log.d("backup","b3")
                 driveService.Files().create(gfile,fileContent).execute()
-                Log.d("tag","file saved to drive")
-                Log.d("tag","${gfile.id}")
+                Log.d("backup","b4")
+                Log.d("backup","file saved to drive")
+                Log.d("backup","${gfile.id}")
                 prefManager.driveFileID=gfile.id
-
+                openDB()
                 uploadDriveBackupFileIdInFirebase(gfile.id){ it: Boolean, previousBackupId: String? ->
                     if(it){
                         Handler(Looper.getMainLooper()).post {
@@ -503,17 +534,23 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
                 }
 
 
-            }catch ( e: Exception){
+            }
+            catch ( e: Exception){
+                openDB()
                 e.printStackTrace()
                 Handler(Looper.getMainLooper()).post {
                     dismissUploadingFileDialog()
                     BackupUtil.showBackUpFailedDialog(context)
                 }
 
-                Log.e("tag","exception  in file save to drive -> ${e.message}")
+                Log.e("backup","exception  in file save to drive -> ${e.message}")
+            }
+            finally {
+                openDB()
             }
         }
         else{
+            Log.d("backup","drive service null, requesting drive signin")
             requestGoogleSignIn(RC_GOOGLESIGNIN_BACKUP)
         }
 
@@ -850,6 +887,20 @@ class BackupFragment : BaseFragment<FragmentBackupBinding>(FragmentBackupBinding
         const val RC_GOOGLESIGNIN_RESTORE = 4
         const val LOCAL_RESTORE = "local_restore"
         const val CLOUD_RESTORE = "cloud_restore"
+    }
+
+    private fun closeDB(){
+        if(appDatabase.isOpen) {
+            appDatabase.openHelper.close()
+        }
+    }
+
+    private fun openDB(){
+
+            if(!appDatabase.isOpen){
+                appDatabase.openHelper.writableDatabase
+            }
+
     }
 
 }

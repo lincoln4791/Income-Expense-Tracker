@@ -61,6 +61,7 @@ import com.lincoln4791.dailyexpensemanager.databinding.FragmentHomeBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import com.lincoln4791.dailyexpensemanager.view.AuthActivity
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VMHomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -138,34 +139,41 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         initAdLoadingBar()
         initRewardAdView()
         //getDriveService()
+        showBottomNavigation()
 
         navCon = Navigation.findNavController(view)
 
         binding.cvAddIncomeMainActivity.setOnClickListener {
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToAddIncomeFragment()
             navigateToFragment(action)
         }
 
         binding.cvAddExpensesMainActivity.setOnClickListener {
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToAddExpenseFragment()
             navigateToFragment(action)
         }
 
         binding.cvFullReportMainActivity.setOnClickListener {
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToFullReportFragment()
             navigateToFragment(action)
         }
 
         binding.cvTransactionsMainActivity.setOnClickListener {
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(Constants.TYPE_ALL)
             navigateToFragment(action)
         }
 
         binding.cvDailyMainActivity.setOnClickListener {
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToDailyFragment()
          navigateToFragment(action)
         }
         binding.cvMonthlyMainActivity.setOnClickListener {
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToMonthlyFragment(viewModel.year, viewModel.month)
            navigateToFragment(action)
         }
@@ -178,18 +186,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         binding.cvBackupDataMainActivity.setOnClickListener {
-            //BackupUtil.backupDatabase(requireContext())
-            //openDocumentTree()
-            /*CoroutineScope(Dispatchers.IO).launch {
-                uploadFileToGDrive(requireContext())
-            }*/
-            //initializeGoogleClient()
+            hideBottomNavigation()
             val action = HomeFragmentDirections.actionHomeFragmentToBackupFragment()
             navigateToFragment(action)
         }
-        binding.cvRestoreDataMainActivity.setOnClickListener {
-            //restoreDBIntent()
-        }
+
 
         binding.ivNavMenu.setOnClickListener {
             binding.drawerLayout.open()
@@ -207,29 +208,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
             when (it.itemId) {
                 R.id.menu_profile -> {
+                    hideBottomNavigation()
                     val goToProfile = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
                     navigateToFragment(goToProfile)
                 }
                 R.id.menu_NoAds -> {
-
+                    hideBottomNavigation()
                     val action = HomeFragmentDirections.actionHomeFragmentToSubscription()
-                    //navCon.popBackStack()
                     navigateToFragment(action)
-                    //navCon.popBackStack()
-
-                    /*  Toast.makeText(requireContext().applicationContext,
-                            "Coming Soon",
-                            Toast.LENGTH_SHORT).show()*/
-                    /*if(prefManager.isDarkThemeEnabled){
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                            prefManager.isDarkThemeEnabled = false
-                            it.title = "Day Theme"
-                        }
-                        else{
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                            prefManager.isDarkThemeEnabled = true
-                            it.title = "Dark Theme"
-                        }*/
                 }
                 R.id.menu_facebookPage -> {
                     Util.goToFacebookPage(requireContext())
@@ -297,6 +283,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
     }
+
 
     private fun initAdLoadingBar() {
         adLoadingBar = Dialog(requireContext())
@@ -801,6 +788,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
             }
 
+    }
+
+    private fun hideBottomNavigation(){
+        (requireActivity() as MainActivity).hideBottomNavigation()
+    }
+
+    private fun showBottomNavigation(){
+        (requireActivity() as MainActivity).showBottomNavigation()
     }
 
 

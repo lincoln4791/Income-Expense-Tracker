@@ -14,6 +14,14 @@ plugins {
 
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\another ssd\\E Drive\\Programming is life\\AD\\signed APKs\\IncomeExpenseManager.jks')
+            storePassword '@1a2b3456'
+            keyAlias 'key0'
+            keyPassword '@1a2b3456'
+        }
+    }
     compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
@@ -21,9 +29,10 @@ android {
         applicationId "com.lincoln4791.dailyexpensemanager"
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 16
-        versionName "1.1.7"
+        versionCode 21
+        versionName "1.1.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -69,6 +78,7 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation 'androidx.test:core-ktx:1.4.0'
     implementation 'com.google.android.gms:play-services-drive:17.0.0'
+    implementation 'androidx.paging:paging-common-ktx:3.1.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -227,6 +237,11 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
         exclude module: 'guava-jdk8'
     }
+
+
+    implementation "androidx.paging:paging-runtime-ktx:3.2.0-alpha03"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 
 
 }

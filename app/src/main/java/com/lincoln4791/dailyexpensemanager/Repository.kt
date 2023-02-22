@@ -78,4 +78,8 @@ class Repository@Inject constructor(
     suspend fun loadYeaBalance(year: String,month: String)=safeApiCall { dao.loadYearBalance(year,Constants.TYPE_INCOME,Constants.TYPE_EXPENSE) }
 
 
+
+    //Quotes
+    suspend fun getAllQuotes()=safeApiCall { dao.loadAllIncomeCards(Constants.TYPE_INCOME) }
+
 }

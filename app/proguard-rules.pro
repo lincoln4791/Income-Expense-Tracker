@@ -29,3 +29,8 @@
   @com.google.gson.annotations.SerializedName <fields>;
 }
 -keep class com.lincoln4791.dailyexpensemanager.modelClass.** { *; }
+
+
+#Google api and drive rules
+-keep class com.google.** { *;}
+-keep class com.fasterxml.** { *;}

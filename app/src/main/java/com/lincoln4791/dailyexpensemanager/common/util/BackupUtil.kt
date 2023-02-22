@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.crashlytics.internal.common.CommonUtils
 import com.lincoln4791.dailyexpensemanager.MyApplication
@@ -23,6 +24,7 @@ import com.lincoln4791.dailyexpensemanager.common.Constants.MAXIMUM_DATABASE_FIL
 import com.lincoln4791.dailyexpensemanager.common.Constants.SHAREDPREF
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.*
 import java.nio.channels.FileChannel
 
@@ -234,7 +236,7 @@ object BackupUtil {
     }
 
 
-    fun showRestoreSuccessDialog(context: Context){
+    fun showRestoreSuccessDialog(context: Context,callback : ()->Unit){
         try {
             val prefManager = PrefManager(context)
             prefManager.lastBackupTime=System.currentTimeMillis()
@@ -244,7 +246,10 @@ object BackupUtil {
             dialogView.findViewById<TextView>(R.id.tv_title).text="Success"
             dialogView.findViewById<TextView>(R.id.tv_msg).text="Database Restored Successfully!"
             dialog.show()
-            dialogView.findViewById<Button>(R.id.btn_ok).setOnClickListener { dialog.dismiss() }
+            dialogView.findViewById<Button>(R.id.btn_ok).setOnClickListener {
+                dialog.dismiss()
+                callback()
+            }
 
         }
         catch (e:Exception){
@@ -299,6 +304,169 @@ object BackupUtil {
         }
 
         return date
+    }
+
+    fun showConfirmDriveBackupDialog(context: Context,callback:(action:Boolean)->Unit){
+        val dialog = Dialog(context)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_common,null,false)
+        val lotteAnimationView = dialogView.findViewById<LottieAnimationView>(R.id.lotteAnimationView)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tv_title)
+        val tvDescription = dialogView.findViewById<TextView>(R.id.tv_description)
+        val btnClose = dialogView.findViewById<CircleImageView>(R.id.iv_close)
+        val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
+        val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
+
+        lotteAnimationView.setAnimation(R.raw.lotte_cloud_backup)
+        tvTitle.text = "Google Drive Backup"
+        tvDescription.text = "Are you sure want to Backup Your Data to Google Drive?\nYour current backup file will replace your previous backup file and previous backup file be permanently deleted."
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
+            callback(true)
+        }
+
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+
+
+        dialog.setCancelable(false)
+        dialog.setContentView(dialogView)
+        try {
+            dialog.show()
+        }
+        catch (e:Exception){e.printStackTrace()}
+
+    }
+
+
+    fun showConfirmLocalBackupDialog(context: Context,callback:(action:Boolean)->Unit){
+        val dialog = Dialog(context)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_common,null,false)
+        val lotteAnimationView = dialogView.findViewById<LottieAnimationView>(R.id.lotteAnimationView)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tv_title)
+        val tvDescription = dialogView.findViewById<TextView>(R.id.tv_description)
+        val btnClose = dialogView.findViewById<CircleImageView>(R.id.iv_close)
+        val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
+        val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
+
+        lotteAnimationView.setAnimation(R.raw.lotte_local_backup)
+        tvTitle.text = "Data Backup"
+        tvDescription.text = "Are you sure want to Backup Your Data to your Mobile?"
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
+            callback(true)
+        }
+
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+
+
+        dialog.setCancelable(false)
+        dialog.setContentView(dialogView)
+        try {
+            dialog.show()
+        }
+        catch (e:Exception){e.printStackTrace()}
+
+    }
+
+
+    fun showConfirmDriveRestoreDialog(context: Context,callback:(action:Boolean)->Unit){
+        val dialog = Dialog(context)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_common,null,false)
+        val lotteAnimationView = dialogView.findViewById<LottieAnimationView>(R.id.lotteAnimationView)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tv_title)
+        val tvDescription = dialogView.findViewById<TextView>(R.id.tv_description)
+        val btnClose = dialogView.findViewById<CircleImageView>(R.id.iv_close)
+        val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
+        val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
+
+        lotteAnimationView.setAnimation(R.raw.lotte_cloud_restore)
+        tvTitle.text = "Google Drive Restore"
+        tvDescription.text = "Are you sure want to Restore Your Data from Google Drive?\nAll your current data will be replaced by Google Drive backup data."
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
+            callback(true)
+        }
+
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+
+
+        dialog.setCancelable(false)
+        dialog.setContentView(dialogView)
+        try {
+            dialog.show()
+        }
+        catch (e:Exception){e.printStackTrace()}
+
+    }
+
+
+    fun showConfirmLocalRestoreDialog(context: Context,callback:(action:Boolean)->Unit){
+        val dialog = Dialog(context)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_common,null,false)
+        val lotteAnimationView = dialogView.findViewById<LottieAnimationView>(R.id.lotteAnimationView)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tv_title)
+        val tvDescription = dialogView.findViewById<TextView>(R.id.tv_description)
+        val btnClose = dialogView.findViewById<CircleImageView>(R.id.iv_close)
+        val btnNo = dialogView.findViewById<Button>(R.id.btn_no)
+        val btnYes = dialogView.findViewById<Button>(R.id.btn_yes)
+
+        lotteAnimationView.setAnimation(R.raw.lotte_local_restore)
+        tvTitle.text = "Data Restore"
+        tvDescription.text = "Are you sure want to Restore Your Data from a Backup file?\nAll your current data will be replaced by the selected backup file data."
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
+            callback(true)
+        }
+
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+            callback(false)
+        }
+
+
+
+        dialog.setCancelable(false)
+        dialog.setContentView(dialogView)
+        try {
+            dialog.show()
+        }
+        catch (e:Exception){e.printStackTrace()}
+
     }
 
 }

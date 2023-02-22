@@ -60,7 +60,8 @@ interface DatabaseDao{
     @Query("delete from MC_Posts where id=:id")
     suspend fun delete(id:String)
 
-    @Query("Delete from mc_posts")
+   // @Query("Delete from mc_posts")
+    @Query("Delete from MC_Posts")
     suspend fun deleteAll()
 
 

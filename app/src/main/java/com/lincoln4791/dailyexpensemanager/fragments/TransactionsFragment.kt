@@ -35,6 +35,7 @@ import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentTransactionsBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import com.lincoln4791.dailyexpensemanager.viewModels.VMTransactions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +49,7 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     @Inject lateinit var prefManager : PrefManager
     @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
     @Inject lateinit var linearLayoutManager : LinearLayoutManager
+    @Inject lateinit var appDatabase: AppDatabase
     private val args: TransactionsFragmentArgs by navArgs()
     private val vmTransactions by viewModels<VMTransactions>()
 
@@ -252,9 +254,19 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
 
     private fun deleteDataAll() {
         CoroutineScope(Dispatchers.IO).launch {
-            AppDatabase.getInstance(requireContext().applicationContext).dbDao().deleteAll()
-            loadTransactions()
-            setCurrentBalance()
+            try {
+                Log.d("backup","database open? -> ${appDatabase.isOpen}")
+                appDatabase.openHelper.writableDatabase
+                appDatabase.dbDao().deleteAll()
+                loadTransactions()
+                setCurrentBalance()
+            }
+            catch (e:Exception){
+                e.printStackTrace()
+                //Util.reloadApp(requireActivity())
+                Util.closeApp(requireActivity())
+            }
+
         }
 
     }
@@ -386,6 +398,12 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
         unloadProgressBar()
 
     }
+
+   private fun hideBottomNavigation(){
+        (requireActivity() as MainActivity).hideBottomNavigation()
+    }
+
+
 
 
 

@@ -146,11 +146,12 @@
             />
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvCloudRestore"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cvCloudRestore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
@@ -182,7 +183,6 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -194,13 +194,12 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvLocalBackup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_localBackup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:padding="10dp">
 
                 <ImageView
@@ -239,14 +238,13 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvLocalRestore"
+            app:cardBackgroundColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_localRestore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:padding="10dp">
 
                 <ImageView
@@ -274,8 +272,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
-
-
 
 
     </LinearLayout>

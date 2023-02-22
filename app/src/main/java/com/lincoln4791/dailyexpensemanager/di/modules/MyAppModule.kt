@@ -10,6 +10,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.network.QuoteApi
+import com.lincoln4791.dailyexpensemanager.network.RetrofitClient
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -54,6 +56,13 @@ object MyAppModule {
         linearLayoutManager.stackFromEnd = true
         return linearLayoutManager
     }
+
+
+    @Provides
+    fun provideQuoteApi() : QuoteApi {
+        return RetrofitClient.getRetrofitQuoteClient()
+    }
+
 /*
     @Provides
     @ViewModelScoped

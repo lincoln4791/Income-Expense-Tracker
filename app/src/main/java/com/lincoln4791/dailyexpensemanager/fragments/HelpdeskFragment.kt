@@ -42,7 +42,12 @@ class HelpdeskFragment : BaseFragment<FragmentHelpdeskBinding>(FragmentHelpdeskB
         navCon = Navigation.findNavController(view)
 
         binding.cvImg.setOnClickListener { goBack() }
+        showBottomNavigation()
 
+    }
+
+    private fun showBottomNavigation() {
+        (requireActivity() as MainActivity).showBottomNavigation()
     }
 
     private fun goBack(){

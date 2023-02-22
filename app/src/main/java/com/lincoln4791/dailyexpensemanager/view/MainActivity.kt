@@ -111,6 +111,14 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
+    fun hideBottomNavigation(){
+        binding.chipNavigationBar.visibility = View.GONE
+    }
+
+    fun showBottomNavigation(){
+        binding.chipNavigationBar.visibility = View.VISIBLE
+    }
+
     override fun onSupportNavigateUp(): Boolean {
 
         Log.d("tag","Back Pressed")

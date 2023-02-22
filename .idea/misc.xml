@@ -83,9 +83,11 @@
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/activity_transactions.xml" value="0.12916666666666668" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/add_expense_fragment.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/content_ad_loading_bar.xml" value="0.171875" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/content_main_home.xml" value="0.19583333333333333" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_about.xml" value="0.14635416666666667" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_add_more_card.xml" value="0.16041666666666668" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_backup_successfull.xml" value="0.14635416666666667" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_common.xml" value="0.2" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_confirm_storagePermission_required.xml" value="0.16893115942028986" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_confirm_storage_permission_required.xml" value="0.13903985507246377" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_confirm_watch_ad.xml" value="0.264" />
@@ -97,17 +99,19 @@
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_new_version_available.xml" value="0.16" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_select_date_time.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_show_select_local_backup_dialog.xml" value="0.17708333333333334" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialog_successfull.xml" value="0.21784420289855072" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/dialogue_something_went_wrong.xml" value="0.1" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_add_income.xml" value="0.16041666666666668" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_backup.xml" value="0.17708333333333334" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_daily.xml" value="0.16041666666666668" />
-        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_feed.xml" value="0.1234375" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_feed.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_full_report.xml" value="0.2" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_helpdesk.xml" value="0.12916666666666668" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_login.xml" value="0.264" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_monthly.xml" value="0.18072916666666666" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_monthly_category_wise.xml" value="0.25" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_my_apps.xml" value="0.1140625" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_otp.xml" value="0.15677083333333333" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_otp_activity.xml" value="0.15677083333333333" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_pie_chart.xml" value="0.2341485507246377" />
@@ -118,6 +122,8 @@
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_tools.xml" value="0.15520833333333334" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/fragment_transactions.xml" value="0.22826086956521738" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/header_navigation_drawer.xml" value="0.2" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/item_quote.xml" value="0.13043478260869565" />
+        <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/item_quute.xml" value="0.2" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_content_loading.xml" value="0.16893115942028986" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_input_name.xml" value="0.16893115942028986" />
         <entry key="..\:/another ssd/E Drive/Programming is life/AD/AndroidStudioProjects/DailyExpenseManager/app/src/main/res/layout/layout_no_result_found.xml" value="0.25" />

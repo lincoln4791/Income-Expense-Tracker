@@ -1,8 +1,11 @@
 package com.lincoln4791.dailyexpensemanager.common.util
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+import android.content.Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
 import android.net.Uri
 import android.os.Bundle
 import android.util.LayoutDirection
@@ -19,9 +22,11 @@ import com.google.firebase.ktx.Firebase
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.view.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 class Util(){
     companion object{
@@ -227,6 +232,9 @@ class Util(){
 
         }
 
+
+
+
         fun removeCommonUserData(context: Context){
             val prefManager = PrefManager(context)
             prefManager.name = ""
@@ -243,6 +251,20 @@ class Util(){
             prefManager.email = user.email?:""
             prefManager.UID = user.uid
             prefManager.isLoggedIn=true
+        }
+
+        fun closeApp(activity: Activity){
+            //activity.finishAffinity()
+            //activity.finishAndRemoveTask()
+            activity.finish();
+            exitProcess(0);
+        }
+
+        fun reloadApp(activity: Activity){
+            val intent = Intent(activity,MainActivity::class.java)
+            intent.flags=FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+            intent.flags = FLAG_ACTIVITY_CLEAR_TOP
+            activity.startActivity(intent)
         }
 
     }

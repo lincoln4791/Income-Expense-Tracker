@@ -38,6 +38,7 @@ class ToolsFragment : BaseFragment<FragmentToolsBinding>(FragmentToolsBinding::i
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navCon = Navigation.findNavController(view)
+        showBottomNavigation()
 
         binding.cvImg.setOnClickListener { goBack() }
 
@@ -48,6 +49,9 @@ class ToolsFragment : BaseFragment<FragmentToolsBinding>(FragmentToolsBinding::i
         (requireActivity() as MainActivity).markChipNavigationInHomeFragment()
         this.onDestroy()
         this.onDetach()
+    }
+    private fun showBottomNavigation(){
+        (requireActivity() as MainActivity).showBottomNavigation()
     }
 
 }
