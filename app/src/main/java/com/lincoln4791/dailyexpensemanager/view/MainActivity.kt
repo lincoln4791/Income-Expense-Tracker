@@ -67,8 +67,6 @@ class MainActivity() : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
     fun markChipNavigationInHomeFragment() {

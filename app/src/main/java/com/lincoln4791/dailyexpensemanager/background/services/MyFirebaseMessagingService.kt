@@ -24,14 +24,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        Log.d("tag","fcm message received")
+        Log.d("tag","fcm message received -> ${remoteMessage.data}")
         Util.recordNotificationEvent(remoteMessage.notification!!.title.toString())
         Util.recordNotificationEvent2(remoteMessage.notification!!.title.toString())
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(this, "IEMChannelID")
             .setSmallIcon(R.drawable.notification_icon)

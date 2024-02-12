@@ -8,7 +8,6 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
     id 'dagger.hilt.android.plugin'
-
 }
 
 
@@ -22,13 +21,13 @@ android {
             keyPassword '@1a2b3456'
         }
     }
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.lincoln4791.dailyexpensemanager"
         minSdkVersion 23
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 21
         versionName "1.1.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -141,7 +140,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx:23.0.7'
 
     //Google Login
-    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
     //Auth
     implementation 'com.google.firebase:firebase-auth-ktx'
@@ -220,7 +219,7 @@ dependencies {
     implementation 'androidx.documentfile:documentfile:1.0.1'
 
     //google drive
-    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 /*    implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation 'com.google.api-client:google-api-client-android:1.26.0'
@@ -242,6 +241,21 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:3.2.0-alpha03"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+
+    //in app review
+    implementation 'com.google.android.play:core:1.10.0'
+
+    //pdf
+    implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.itextpdf.tool:xmlworker:5.5.10'
+
+    // Import the BoM for the Firebase platform
+    //implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // Add the dependencies for the In-App Messaging and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-inappmessaging-display:20.4.0")
+    //implementation("com.google.firebase:firebase-analytics:21.5.0")
 
 
 }

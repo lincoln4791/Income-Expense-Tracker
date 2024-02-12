@@ -14,6 +14,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lincoln4791.dailyexpensemanager.base.BaseFragment
 import com.google.android.gms.ads.MobileAds
+import com.itextpdf.text.Document
+import com.itextpdf.text.Paragraph
+import com.itextpdf.text.pdf.PdfWriter
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
 import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
@@ -34,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.FileOutputStream
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -458,6 +462,40 @@ class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBind
     private fun unloadProgressBar(){
         binding.mainLoadingBar.visibility = View.GONE
         binding.clContainer.visibility=View.VISIBLE
+    }
+
+
+    private fun generatePdf(dataList: List<String>) {
+        val document = Document()
+
+        // Set the output file path
+        val filePath = "path/to/your/pdf/file.pdf"
+
+        try {
+            // Initialize PDF writer and output stream
+            PdfWriter.getInstance(document, FileOutputStream(filePath))
+
+            // Open the document
+            document.open()
+
+            // Add data to the document
+            for (data in dataList) {
+                val paragraph = Paragraph(data)
+                document.add(paragraph)
+            }
+
+            // Close the document
+            document.close()
+
+            // Notify the user that the PDF was generated successfully
+            // You can show a Toast or any other appropriate UI notification
+            //showToast("PDF generated successfully.")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle any exceptions that may occur during PDF generation
+            // You can show an error message to the user
+            //showToast("Failed to generate PDF.")
+        }
     }
 
 

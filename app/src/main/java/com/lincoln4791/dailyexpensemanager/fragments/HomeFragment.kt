@@ -35,9 +35,11 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
@@ -126,7 +128,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         unloadProgressBar()
         setDate()
         setLoginAndLogoutData()
-        //getAndSaveFCM()
+        getAndSaveFCM()
         //Util.recordScreenEvent("home_fragment", "MainActivity")
         initAdMob()
         FirebaseUtil.fetchCommonDataFromRemoteConfig(requireContext())
@@ -140,6 +142,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         initRewardAdView()
         //getDriveService()
         showBottomNavigation()
+        initInAppReview(requireContext(),requireActivity())
 
         navCon = Navigation.findNavController(view)
 
@@ -769,12 +772,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
     private fun initInterstitialAd() {
-        interAd = InterstistialAdHelper(requireContext(), requireActivity(),mInterstitialAd)
-            interAd.loadinterAd(AdUnitIds.INTERSTITIAL_FULL_REPORT) {
-                Log.d("InterAd", "Inter ad loaded -> $it")
-                adLoadingBar.dismiss()
-               showInterAd()
-            }
+        interAd = InterstistialAdHelper(requireContext(), requireActivity(), mInterstitialAd)
+        interAd.loadinterAd(AdUnitIds.INTERSTITIAL_FULL_REPORT) {
+            Log.d("InterAd", "Inter ad loaded -> $it")
+            adLoadingBar.dismiss()
+            showInterAd()
+        }
 
     }
 
@@ -824,6 +827,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             context.startActivity(goToPlayStoreAppLnk)
         }
     }
+
+
+    private fun initInAppReview(context: Context,activity: Activity){
+        val manager = ReviewManagerFactory.create(context)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("tag","in app successfull")
+                // In-app review is supported, continue with the flow
+                val reviewInfo = task.result
+                val flow = manager.launchReviewFlow(activity, reviewInfo)
+                flow.addOnCompleteListener { _ ->
+                    // The in-app review flow has finished, handle the result if needed
+                    Log.d("tag","in app completed")
+                }
+            } else {
+                // In-app review is not supported, handle the error
+                Log.d("tag","in app Failed")
+            }
+        }
+    }
+
+
 
 
 
