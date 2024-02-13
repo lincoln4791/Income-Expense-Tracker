@@ -100,6 +100,7 @@ class MainActivity() : AppCompatActivity() {
         view.findViewById<View>(R.id.btn_ok_dilogue_about)
             .setOnClickListener { v: View? -> dialog.dismiss() }
 
+
         view.findViewById<View>(R.id.btn_rateApp_dilogue_about).setOnClickListener { v: View? ->
             dialog.dismiss()
             val goToPlayStoreAppLnk: Intent = Intent(Intent.ACTION_VIEW)
