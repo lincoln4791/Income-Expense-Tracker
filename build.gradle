@@ -23,6 +23,10 @@ buildscript {
     }
 }
 
+ext {
+    var = PLAY_STORE_FILE
+}
+
 allprojects {
     repositories {
         google()

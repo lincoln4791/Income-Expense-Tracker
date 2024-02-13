@@ -14,11 +14,17 @@ plugins {
 
 android {
     signingConfigs {
+        debug {
+            storeFile file(PLAY_STORE_FILE)
+            storePassword PLAY_STORE_PASSWORD
+            keyAlias PLAY_KEY_ALIAS
+            keyPassword PLAY_KEY_PASSWORD
+        }
         release {
-            storeFile file('C:\\another ssd\\E Drive\\Programming is life\\AD\\signed APKs\\IncomeExpenseManager.jks')
-            storePassword '@1a2b3456'
-            keyAlias 'key0'
-            keyPassword '@1a2b3456'
+            storeFile file(PLAY_STORE_FILE)
+            storePassword PLAY_STORE_PASSWORD
+            keyAlias PLAY_KEY_ALIAS
+            keyPassword PLAY_KEY_PASSWORD
         }
     }
     compileSdkVersion 33
