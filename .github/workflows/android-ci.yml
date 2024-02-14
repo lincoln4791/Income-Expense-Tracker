@@ -30,7 +30,7 @@ jobs:
 
       - name: Upload to Firebase App Distribution
         run: |
-          firebase appdistribution:distribute path/to/your/apk.apk --app $FIREBASE_APP_ID --token 1//0gv4Y5fYX3qFjCgYIARAAGBASNwF-L9IraSoip0wWYpHQyCZisn_8MLTw-hSR2OX0YP-Pb475godB8by_v-g8vYcKTLj16aVOsNk
+          firebase appdistribution:distribute path/to/your/apk.apk --app 1:495460956348:android:23ca64ddbe3018939df8b9 --token 1//0gv4Y5fYX3qFjCgYIARAAGBASNwF-L9IraSoip0wWYpHQyCZisn_8MLTw-hSR2OX0YP-Pb475godB8by_v-g8vYcKTLj16aVOsNk
         env:
           FIREBASE_TOKEN: 1//0gv4Y5fYX3qFjCgYIARAAGBASNwF-L9IraSoip0wWYpHQyCZisn_8MLTw-hSR2OX0YP-Pb475godB8by_v-g8vYcKTLj16aVOsNk
 
