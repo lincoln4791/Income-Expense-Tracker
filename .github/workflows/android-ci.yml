@@ -24,6 +24,10 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
+      - name: Grant Permission
+        run: |
+          chmod +x gradlew
+
       - name: Build Android App
         run: |
           ./gradlew assembleRelease
