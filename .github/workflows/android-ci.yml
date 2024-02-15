@@ -41,6 +41,20 @@ jobs:
       - name: Upload to Firebase App Distribution
         run: |
           firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
+          
+          name: Notify Discord on App Upload
+
+      - name: Send Discord Notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          APP_VERSION: "1.0"
+          RELEASE_NOTES: "New release uploaded"
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"content\": \"New app version uploaded - Version: $APP_VERSION, Release Notes: $RELEASE_NOTES\"}" \
+            $DISCORD_WEBHOOK_URL
+
 
 #      - name: Set up JDK
 #        uses: actions/setup-java@v1
