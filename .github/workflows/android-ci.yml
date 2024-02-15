@@ -40,9 +40,7 @@ jobs:
 
       - name: Upload to Firebase App Distribution
         run: |
-          firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --app 1:495460956348:android:23ca64ddbe3018939df8b9 --token 1//0g4X8SoSSkL_7CgYIARAAGBASNwF-L9IrT0FAy_xJr0bkow6CbOyyjen_7Yv_Wnl9TAAMkKttheTFShLazbKf_oWCjcQIxHK_M8Y
-        env:
-          FIREBASE_TOKEN: 1//0gv4Y5fYX3qFjCgYIARAAGBASNwF-L9IraSoip0wWYpHQyCZisn_8MLTw-hSR2OX0YP-Pb475godB8by_v-g8vYcKTLj16aVOsNk
+          firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --app $FIREBASE_APP_ID --token $FIREBASE_TOKEN
 
 #      - name: Set up JDK
 #        uses: actions/setup-java@v1
