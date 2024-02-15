@@ -32,9 +32,15 @@ jobs:
         run: |
           ./gradlew assembleRelease
 
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: app/build/outputs/apk/release/app-release.apk
+
       - name: Upload to Firebase App Distribution
         run: |
-          firebase appdistribution:distribute C:\Users\mahmu\Desktop\iem-release.apk --app 1:495460956348:android:23ca64ddbe3018939df8b9 --token 1//0g4X8SoSSkL_7CgYIARAAGBASNwF-L9IrT0FAy_xJr0bkow6CbOyyjen_7Yv_Wnl9TAAMkKttheTFShLazbKf_oWCjcQIxHK_M8Y
+          firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --app 1:495460956348:android:23ca64ddbe3018939df8b9 --token 1//0g4X8SoSSkL_7CgYIARAAGBASNwF-L9IrT0FAy_xJr0bkow6CbOyyjen_7Yv_Wnl9TAAMkKttheTFShLazbKf_oWCjcQIxHK_M8Y
         env:
           FIREBASE_TOKEN: 1//0gv4Y5fYX3qFjCgYIARAAGBASNwF-L9IraSoip0wWYpHQyCZisn_8MLTw-hSR2OX0YP-Pb475godB8by_v-g8vYcKTLj16aVOsNk
 
