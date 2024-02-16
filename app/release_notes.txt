@@ -1,3 +1,2 @@
-this is test release note\nDescription release note
-
-hi
+- Added support for dark mode.
+- Fixed bugs related to login screen.
