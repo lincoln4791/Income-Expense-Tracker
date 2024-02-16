@@ -51,8 +51,8 @@ jobs:
       - name: Generate Firebase App Distribution Link
         id: firebase_link
         run: |
-          export FIREBASE_APP_DISTRIBUTION_LINK=$(firebase appdistribution:release-history --app ${{ secrets.FIREBASE_APP_ID }} --limit 1 --format json | jq -r '.[0].downloadUrl')
-          echo "::set-output name=firebase_link::$FIREBASE_APP_DISTRIBUTION_LINK"
+          FIREBASE_APP_DISTRIBUTION=$(firebase appdistribution:release-history --app ${{ secrets.FIREBASE_APP_ID }} --limit 1 --format json | jq -r '.[0].downloadUrl')
+          echo "::set-output name=firebase_link::$FIREBASE_APP_DISTRIBUTION"
 
       - name: Read Release Notes from File
         id: release_notes
@@ -64,7 +64,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           APP_VERSION: ${{ steps.version_name.outputs.version_name }}
           RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
-          FIREBASE_APP_DISTRIBUTION_LINK: ${{ steps.firebase_link.output.firebase_link }}
+          FIREBASE_APP_DISTRIBUTION_LINK: ${{ steps.firebase_link.outputs.firebase_link }}
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
