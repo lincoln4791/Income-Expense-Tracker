@@ -67,7 +67,7 @@ jobs:
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            -d "{\"content\": \"New app version uploaded \nVersion: $APP_VERSION, \nLink :   \n\nRelease Notes: $RELEASE_NOTES\"}" \
+            -d "{\"content\": \"New app version uploaded \nVersion: $APP_VERSION, \nLink : FIREBASE_APP_DISTRIBUTION_LINK  \n\nRelease Notes: $RELEASE_NOTES\"}" \
             $DISCORD_WEBHOOK_URL
         
 
