@@ -42,16 +42,22 @@ jobs:
         run: |
           firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
 
+      - name: Read Release Notes from File
+        id: release_notes
+        run: |
+            echo "::set-output name=notes::$(cat app/release_notes.txt)"
+
       - name: Send Discord Notification
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           APP_VERSION: "1.0"
-          RELEASE_NOTES: "New release uploaded"
+          RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
             -d "{\"content\": \"New app version uploaded - Version: $APP_VERSION, Release Notes: $RELEASE_NOTES\"}" \
             $DISCORD_WEBHOOK_URL
+        
 
 
 #      - name: Set up JDK
