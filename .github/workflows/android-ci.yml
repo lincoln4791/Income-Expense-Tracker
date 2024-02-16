@@ -56,8 +56,7 @@ jobs:
       - name: Read Release Notes from File
         id: release_notes
         run: |
-            notes=$(cat app/release_notes.txt)
-            echo "::set-output name=notes::${notes}
+          echo "::set-output name=notes::$(cat app/release_notes.txt)"
 
       - name: Send Discord Notification
         env:
