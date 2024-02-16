@@ -48,6 +48,11 @@ jobs:
             versionName=$(grep -oP 'versionName "\K[^"]+' app/build.gradle)
             echo "::set-output name=version_name::$versionName"
 
+      - name: Generate Firebase App Distribution Link
+        id: firebase_link
+        run: |
+          echo "::set-output name=firebase_link::$FIREBASE_APP_DISTRIBUTION_LINK"
+
       - name: Read Release Notes from File
         id: release_notes
         run: |
@@ -58,6 +63,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           APP_VERSION: ${{ steps.version_name.outputs.version_name }}
           RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
+          FIREBASE_APP_DISTRIBUTION_LINK: ${{ secrets.FIREBASE_APP_DISTRIBUTION_LINK }}
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
