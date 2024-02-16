@@ -64,7 +64,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           APP_VERSION: ${{ steps.version_name.outputs.version_name }}
           RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
-          FIREBASE_APP_DISTRIBUTION_LINK: ${{ steps.firebase_link.outputs.firebase_link }}
+          FIREBASE_APP_DISTRIBUTION_LINK: ${{ steps.firebase_link.output.firebase_link }}
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
