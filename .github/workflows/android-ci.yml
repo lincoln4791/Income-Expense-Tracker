@@ -56,7 +56,8 @@ jobs:
       - name: Read Release Notes from File
         id: release_notes
         run: |
-            echo "::set-output name=notes::$(cat app/release_notes.txt)"
+            notes=$(cat app/release_notes.txt | tr '\n' ';' ) # Replace newline with semicolon
+            echo "::set-output name=notes::${notes}
 
       - name: Send Discord Notification
         env:
