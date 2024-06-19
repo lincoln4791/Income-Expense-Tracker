@@ -2,7 +2,6 @@ package com.itmedicus.patientaid.ads.admobAdsUpdated
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.google.android.gms.ads.*
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 
@@ -27,7 +26,7 @@ class BannerAddHelper(private val context: Context) {
 
             override fun onAdFailedToLoad(adError : LoadAdError) {
                 // Code to be executed when an ad request fails.
-                Log.d("Banner","Banner Failed")
+                Log.d("Banner","Banner Failed -> error -> ${adError.responseInfo}:::${adError.message}")
                 callBack(false)
             }
 

@@ -20,10 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Filter"
+            android:text="Search"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="@color/pink"
+            android:textColor="@color/primary"
             android:fontFamily="@font/antic_regular"
             android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,9 +54,7 @@
                     style="@style/tv_selectDayTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:text="Select Year"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -64,9 +62,10 @@
                     android:id="@+id/spinnerYear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/titleYear"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleYear" />
+                    app:layout_constraintStart_toEndOf="@+id/titleYear"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -80,13 +79,10 @@
 
                 <TextView
                     android:id="@+id/titleMonth"
+                    style="@style/tv_selectDayTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:text="Select Month"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,59 +90,9 @@
                     android:id="@+id/spinnerMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleMonth" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_type"
-                style="@style/cl_selectDayTime"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/cl_category"
-                app:layout_constraintTop_toBottomOf="@+id/cl_month">
-
-                <TextView
-                    android:id="@+id/titleType"
-                    style="@style/tv_selectDayTime"
-                    android:text="Select Type"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Spinner
-                    android:id="@+id/spinnerType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleType" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_category"
-                style="@style/cl_selectDayTime"
-                app:layout_constraintEnd_toStartOf="@+id/cl_type"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/clYear">
-
-                <TextView
-                    android:id="@+id/titleCategory"
-                    style="@style/tv_selectDayTime"
-                    android:text="Select Category"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Spinner
-                    android:id="@+id/spinnerCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleCategory" />
+                    app:layout_constraintBottom_toBottomOf="@+id/titleMonth"
+                    app:layout_constraintStart_toEndOf="@+id/titleMonth"
+                    app:layout_constraintTop_toTopOf="@+id/titleMonth" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -161,7 +107,6 @@
                     android:id="@+id/titleDay"
                     style="@style/tv_selectDayTime"
                     android:text="Select Day"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -169,13 +114,63 @@
                     android:id="@+id/spinnerDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleDay" />
+                    app:layout_constraintBottom_toBottomOf="@+id/titleDay"
+                    app:layout_constraintStart_toEndOf="@+id/titleDay"
+                    app:layout_constraintTop_toTopOf="@+id/titleDay" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_type"
+                style="@style/cl_selectDayTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cl_category"
+                app:layout_constraintTop_toBottomOf="@+id/cl_month">
+
+                <TextView
+                    android:id="@+id/titleType"
+                    style="@style/tv_selectDayTime"
+                    android:text="Select Type"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/spinnerType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/titleType"
+                    app:layout_constraintStart_toEndOf="@+id/titleType"
+                    app:layout_constraintTop_toTopOf="@+id/titleType" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_category"
+                style="@style/cl_selectDayTime"
+                app:layout_constraintEnd_toStartOf="@+id/cl_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clYear">
+
+                <TextView
+                    android:id="@+id/titleCategory"
+                    style="@style/tv_selectDayTime"
+                    android:text="Select Category"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/spinnerCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/titleCategory"
+                    app:layout_constraintStart_toEndOf="@+id/titleCategory"
+                    app:layout_constraintTop_toTopOf="@+id/titleCategory" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"

@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.Adapters
 
 import android.content.Context
-import android.provider.SyncStateContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
-
 
 
 class Adapter_MonthlyReportExpense(private val postList: List<MC_MonthlyReport>, private val context: Context,val monthlyFragment:MonthlyFragment) :

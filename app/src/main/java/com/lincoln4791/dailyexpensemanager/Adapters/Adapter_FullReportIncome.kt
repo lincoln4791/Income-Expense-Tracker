@@ -1,6 +1,5 @@
 package com.lincoln4791.dailyexpensemanager.Adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
-import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.fragments.FullReportFragment
-import com.lincoln4791.dailyexpensemanager.fragments.MonthlyFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 
 

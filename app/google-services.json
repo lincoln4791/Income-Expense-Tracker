@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "495460956348-1cd8h2c0a69ukps0bha7qn0ljom5sqmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lincoln4791.dailyexpensemanager",
+            "certificate_hash": "18184811a1343beea54c09cd792dee60fc85f48b"
+          }
+        },
+        {
+          "client_id": "495460956348-cglrh3rnk2417j1jp2dpss53linhfgp7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lincoln4791.dailyexpensemanager",
+            "certificate_hash": "dd409a982f31228186bd0e683a63cee94883c5a8"
+          }
+        },
+        {
+          "client_id": "495460956348-cimi7k7mu3eu9trp04uov772pdom3abr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lincoln4791.dailyexpensemanager",
+            "certificate_hash": "ae2ebdb6ef38ca06d5c0bfd8067e0e85dc49268e"
+          }
+        },
+        {
           "client_id": "495460956348-o2r53p9uvgdjln542gmlkah97uvrjt48.apps.googleusercontent.com",
           "client_type": 3
         }

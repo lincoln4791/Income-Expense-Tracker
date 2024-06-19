@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.BackupFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar_FullReport"
+        style="@style/cl_toolBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_img"
+            style="@style/cv_backButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/iv_home_toolbar_MonthlyReport"
+                style="@style/iv_toolBar" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_MonthlyReport"
+            style="@style/toolbar_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
+            app:layout_constraintStart_toEndOf="@+id/cv_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Backup Restore"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_MonthlyReport"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivSearch"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_FullReport"
+                style="@style/tv_toolBar"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_FullReport"
+                style="@style/tv_toolBar_value"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivSearch"
+            android:layout_width="50dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_baseline_search_24_black"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvLastBackupTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last Backup Time :          "
+        android:textStyle="italic"
+        android:textColor="@color/primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_FullReport" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLastBackupTime">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvCloudBackup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_cloudBackup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_cloud_upload"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/cloud_upload"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_CloudBackup"
+                    style="@style/tv_backup"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:text="Export to Google Drive"
+                    android:textColor="@color/primary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_cloud_upload"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/appBackground"
+            app:layout_constraintTop_toBottomOf="@id/cl_cloudBackup"
+            />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvCloudRestore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_cloudDownload"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/cloud_download"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_cloudDownload"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    style="@style/tv_backup"
+                    android:text="Import From Google Drive"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/primary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_cloudDownload"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/appBackground"
+            app:layout_constraintTop_toBottomOf="@id/cl_cloudBackup"
+            />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvLocalBackup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_local_upload"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/local_upload"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_localBackup"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    style="@style/tv_backup"
+                    android:text="Backup Data"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/primary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_local_upload"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/appBackground"
+            app:layout_constraintTop_toBottomOf="@id/cl_cloudBackup"
+            />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvLocalRestore"
+            app:cardBackgroundColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_localDownload"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/local_download"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_localDownload"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    style="@style/tv_backup"
+                    android:text="Restore Data"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/primary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_localDownload"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

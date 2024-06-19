@@ -15,7 +15,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.fragments.MonthlyCategoryWiseFragment
-import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 
 class Adapter_MonthlyCategoryWiseReport(
     private val postList: List<MC_Posts>,private val ctx: Context,private val monthlyCategoryWiseFragment: MonthlyCategoryWiseFragment

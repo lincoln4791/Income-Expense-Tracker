@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.RegistrationFragment"
+    android:background="@color/primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar"
+        style="@style/cl_toolBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_img"
+            style="@style/cv_backButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/iv_toolbar_back"
+                style="@style/iv_toolBar" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_MonthlyReport"
+            style="@style/toolbar_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
+            app:layout_constraintStart_toEndOf="@+id/cv_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Registration"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_MonthlyReport"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_MonthlyReport"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_MonthlyReport"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/applogo128"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/custom_login">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/nameR"
+                    style="@style/et_auth"
+                    android:hint="Name"
+                    android:background="@drawable/rounded_corner"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/emailR"
+                    style="@style/et_auth"
+                    android:hint="Email"
+                    android:background="@drawable/rounded_corner"
+                    android:visibility="gone"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/phoneR"
+                    style="@style/et_auth"
+                    android:hint="Phone (01XXXXXXXXX)"
+                    android:singleLine="true"
+                    android:maxLength="11"
+                    android:maxLines="1"
+                    android:inputType="numberDecimal"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/passwordR"
+                    style="@style/et_auth"
+                    android:hint="Password"
+
+                    android:visibility="gone"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/cPasswordR"
+                    style="@style/et_auth"
+                    android:hint="Confirm Password"
+                    android:visibility="gone"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/registrationR"
+                    style="@style/btn_auth"
+                    android:layout_marginTop="40dp"
+                    android:text="Register"
+                    android:layout_marginBottom="40dp"
+                    />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

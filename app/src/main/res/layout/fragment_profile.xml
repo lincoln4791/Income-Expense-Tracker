@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,13 +9,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar_profile"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/primary"
+        style="@style/cl_toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_img"
@@ -31,13 +29,13 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_profile"
+            style="@style/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_profile"
             app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="Profile"
-            app:titleTextColor="@color/white" />
+            app:title="Profile" />
 
         <LinearLayout
             android:id="@+id/ll_currentBalance_profile"
@@ -51,21 +49,11 @@
             <TextView
                 android:id="@+id/tv_currentBalanceText_toolBar_profile"
                 style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:textSize="16sp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/redressed_regular"
-                android:gravity="bottom|center"
-                android:textAlignment="gravity"
                 android:text="@string/CurrentBalance" />
 
             <TextView
                 android:id="@+id/tv_currentBalanceValue_toolBar_profile"
-                style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                style="@style/tv_toolBar_value"
                 android:gravity="top|center"
                 android:textAlignment="gravity"
                 android:text="@string/value" />
@@ -98,91 +86,117 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_profilePic" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/bio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:drawablePadding="12dp"
-        android:text="Biography"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/phone"
-        android:text="phone"
-        android:textSize="16sp"
-        android:drawablePadding="12dp"
-        android:layout_marginStart="15dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bio"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/nationality"
-        android:text="Bangladesh"
-        android:textSize="16sp"
-        android:layout_marginStart="15dp"
-        android:drawablePadding="12dp"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/gender"
-        android:text="Male"
-        android:textSize="16sp"
-        android:layout_marginStart="15dp"
-        android:drawablePadding="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nationality"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/state"
-        android:text="Dhaka"
-        android:textSize="16sp"
-        android:layout_marginStart="15dp"
-        android:drawablePadding="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gender"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <View
-        app:layout_constraintTop_toBottomOf="@+id/state"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:background="#F0F0F0"
-        android:layout_marginTop="8dp"
-        android:layout_height="2dp"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text"
-        android:text="About"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/state"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toBottomOf="@+id/name">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:drawablePadding="12dp"
+            android:text="Biography"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="12dp"
+            android:text="Phone"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bio" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="12dp"
+            android:text="Email : "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bio" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="12dp"
+            android:text="Gender : "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nationality" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nationality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="12dp"
+            android:text="Country : "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phone" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="12dp"
+            android:text="Dhaka"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gender" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:background="#F0F0F0"
+            app:layout_constraintTop_toBottomOf="@+id/state" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="About"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/state" />
+
+    </LinearLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

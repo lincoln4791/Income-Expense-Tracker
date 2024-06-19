@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.OtpValidationFragment"
+    android:background="@color/primary"
+    android:visibility="visible">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_toolbar"
+        style="@style/cl_toolBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_img"
+            style="@style/cv_backButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/iv_toolbar_back"
+                style="@style/iv_toolBar" />
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_MonthlyReport"
+            style="@style/toolbar_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
+            app:layout_constraintStart_toEndOf="@+id/cv_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Otp Validation"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_currentBalance_MonthlyReport"
+            style="@style/ll_toolBar"
+            android:orientation="vertical"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_currentBalanceText_toolBar_MonthlyReport"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/redressed_regular"
+                android:gravity="bottom|center"
+                android:textAlignment="gravity"
+                android:text="@string/CurrentBalance" />
+
+            <TextView
+                android:id="@+id/tv_currentBalanceValue_toolBar_MonthlyReport"
+                style="@style/tv_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:textAlignment="gravity"
+                android:text="@string/value" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shapeableImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/applogo128"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar"
+        android:visibility="visible"/>
+
+
+    <TextView
+        android:id="@+id/tv_appTitle_OtpActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/app_name"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shapeableImageView" />
+
+
+    <TextView
+        android:id="@+id/tv_optStatus_OtpActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="Please wait for the OTP to be sent..."
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_verifyCodeTitle_OtpActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verify Code"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_codeSentTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="code has not been sent yet"
+            android:textColor="@color/red"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_verifyCodeTitle_OtpActivity"
+            app:layout_constraintStart_toStartOf="@+id/tv_verifyCodeTitle_OtpActivity"
+            app:layout_constraintTop_toBottomOf="@+id/tv_verifyCodeTitle_OtpActivity" />
+
+        <com.chaos.view.PinView
+            android:id="@+id/pinView"
+            style="@style/PinWidget.PinView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="25dp"
+            android:cursorVisible="true"
+            android:hint="Hint."
+            android:inputType="number"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cursorColor="@color/secondary"
+            app:cursorWidth="2dp"
+            app:hideLineWhenFilled="true"
+            app:itemCount="6"
+            app:itemHeight="48dp"
+            app:itemRadius="4dp"
+            app:itemSpacing="10dp"
+            app:itemWidth="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_codeSentTo"
+            app:lineColor="@color/secondary"
+            app:lineWidth="3dp"
+            app:viewType="rectangle" />
+
+        <TextView
+            android:id="@+id/tv_resendCode_OtpActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Resend Code."
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pinView" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_verifyOtpCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/secondary"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Verify Code"
+            android:enabled="false"
+            android:clickable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_resendCode_OtpActivity" />
+
+
+        <TextView
+            android:id="@+id/tvAlreadyRegistered_OtpActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:text="Already Registered? Login"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_verifyOtpCode" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.39808482" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

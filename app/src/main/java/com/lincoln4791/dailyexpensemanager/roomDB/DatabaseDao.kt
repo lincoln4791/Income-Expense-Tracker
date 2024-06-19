@@ -1,10 +1,10 @@
 package com.lincoln4791.dailyexpensemanager.roomDB
 
 import androidx.room.*
-import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
+import com.lincoln4791.dailyexpensemanager.modelClass.Banner
 
 @Dao
 interface DatabaseDao{
@@ -60,7 +60,8 @@ interface DatabaseDao{
     @Query("delete from MC_Posts where id=:id")
     suspend fun delete(id:String)
 
-    @Query("Delete from mc_posts")
+   // @Query("Delete from mc_posts")
+    @Query("Delete from MC_Posts")
     suspend fun deleteAll()
 
 
@@ -69,13 +70,13 @@ interface DatabaseDao{
     @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type and postCategory =:category GROUP BY postCategory")
     suspend fun loadYearMonthTypeCategoryWiseByGroup(year: String, month:String, type : String,category:String): List<MC_MonthlyReport>
 
-    @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type GROUP BY postCategory")
+    @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type AND postYear=:year AND postMonth=:month))*100 as amountPercent FROM MC_Posts where postYear = :year and postMonth = :month and postType = :type GROUP BY postCategory")
     suspend fun loadYearMonthTypeWiseByGroup(year: String, month:String, type : String): List<MC_MonthlyReport>
 
     @Query("SELECT postCategory,SUM(postAmount) as postAmount, (cast(SUM(postAmount) as double) /(SELECT SUM(postAmount) FROM MC_Posts WHERE postType = :type))*100 as amountPercent FROM MC_Posts where postYear = :year and postType = :type GROUP BY postCategory")
     suspend fun loadYearTypeWiseByGroup(year: String, type : String): List<MC_MonthlyReport>
 
-    @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and  postType=:type ")
+    @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and postMonth = :month and  postType=:type")
     suspend fun loadYearMonthTypeTotal(year: String, month:String, type : String): Int
 
     @Query("SELECT SUM(postAmount) FROM  MC_Posts WHERE postYear = :year and  postType=:type ")
@@ -110,7 +111,25 @@ interface DatabaseDao{
     @Query("Delete from mc_cards where cardName =:cardName AND cardType = :cardType ")
     suspend fun deleteExpenseCardByName(cardName : String,cardType: String)
 
-    @Query("Delete from mc_cards where cardName =:cardName AND cardType =:cardType ")
+    @Query("Delete from mc_cards where cardName =:cardName AND cardType =:cardType")
     suspend fun deleteIncomeCardByName(cardName : String,cardType: String)
+
+
+
+    //Banners
+    @Query("SELECT * FROM banner")
+    suspend fun getAllBanner() : MutableList<Banner>
+
+    @Query("SELECT * FROM banner WHERE is_active=:value")
+    suspend fun getAllActiveBanner(value:String) : MutableList<Banner>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBanner(vararg banner: Banner)
+
+    @Delete
+    suspend fun deleteBanner(vararg banner: Banner)
+
+    @Query("DELETE FROM banner")
+    suspend fun deleteAllBanners()
 
 }

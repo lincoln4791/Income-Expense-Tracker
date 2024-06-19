@@ -1,23 +1,29 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
+import com.google.android.gms.ads.MobileAds
+import com.itextpdf.text.Document
+import com.itextpdf.text.Paragraph
+import com.itextpdf.text.pdf.PdfWriter
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.itmedicus.patientaid.ads.admobAdsUpdated.BannerAddHelper
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportExpense
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_MonthlyReportIncome
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.calll
 import com.lincoln4791.dailyexpensemanager.common.*
@@ -25,31 +31,31 @@ import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentMonthlyBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_MonthlyReport
+import com.lincoln4791.dailyexpensemanager.viewModels.VMMonthlyReport
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.FileOutputStream
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 
-class MonthlyFragment : Fragment(),View.OnClickListener,calll {
+@AndroidEntryPoint
+class MonthlyFragment : BaseFragment<FragmentMonthlyBinding>(FragmentMonthlyBinding::inflate),View.OnClickListener,calll {
+    @Inject lateinit var repository : Repository
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var linearLayoutManager : LinearLayoutManager
+    @Inject lateinit var linearLayoutManager2 : LinearLayoutManager
+    private var isFirstTimeMonthSelectedCompleted = false
+    private var isFirstTimeYearSelectedCompleted = false
+    private val viewModel by viewModels<VMMonthlyReport>()
     private val args: MonthlyFragmentArgs by navArgs()
-    private var tIncome = 0.0
-    private var tExpense = 0.0
-    private var balance = 0.0
     private lateinit var month: String
     private lateinit var year: String
-    private var currentMonthPosition = 0
-    private var currentMonth = 0
-    private var currentYear = 0
 
-
-    private lateinit var viewModel: VM_MonthlyReport
-    private lateinit var binding : FragmentMonthlyBinding
     private lateinit var navCon : NavController
-    private lateinit var linearLayoutManager : LinearLayoutManager
-    private lateinit var linearLayoutManager2 : LinearLayoutManager
     private lateinit var expenseAdapterExpense : Adapter_MonthlyReportExpense
     private lateinit var incomeAdapterIncome : Adapter_MonthlyReportIncome
 
@@ -59,9 +65,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
-                    // Handle the back button event
                     Log.d("tag","OnBackPressCalled -> Monthly")
-                    //navCon.navigateUp()
                     goBack()
                 }
             }
@@ -69,129 +73,106 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentMonthlyBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        unloadProgressBar()
+        initAdMob()
         Util.recordScreenEvent("monthly_fragment","MainActivity")
-
         binding.shimmerViewContainer.startShimmer()
-
         navCon = Navigation.findNavController(view)
-        viewModel = ViewModelProvider(this)[VM_MonthlyReport::class.java]
-
-        linearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-
-        linearLayoutManager2 = LinearLayoutManager(context)
-        linearLayoutManager2.reverseLayout = true
-        linearLayoutManager2.stackFromEnd = true
-
-        binding.rvExpense.layoutManager = linearLayoutManager
-        binding.rvIncome.layoutManager = linearLayoutManager2
-
-
-
-
-        val calendar = Calendar.getInstance()
-        currentMonthPosition = calendar[Calendar.MONTH]
-        currentMonth = currentMonthPosition + 1
-        currentYear = calendar[Calendar.YEAR]
-       // year = currentYear.toString()
-
-        year=args.year?:currentYear.toString()
-        currentMonth= args.month?.toInt() ?:currentMonth
-        currentMonthPosition=currentMonth-1
-        setMonth()
-        Log.d("tag","year -> $year :argyear -> ${args.year}::: month -> $month :argmonth->${args.month}")
-
-        binding.cvDailyMonthlyReport.setOnClickListener(View.OnClickListener { v: View? ->
-           /* startActivity(Intent(this@MonthlyReport,
-                Daily::class.java))*/
-        })
-        binding.cvFullReportMonthlyReport.setOnClickListener(View.OnClickListener { v: View? ->
-            /*startActivity(Intent(this@MonthlyReport,
-                FullReport::class.java))*/
-        })
-        binding.cvTransactionsMonthlyReport.setOnClickListener(View.OnClickListener { v: View? ->
-           /* val intent = Intent(this@MonthlyReport, Transactions::class.java)
-            intent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
-            startActivity(intent)*/
-        })
-
+        initialization()
 
         binding.cvImg.setOnClickListener {
             goBack()
         }
 
-        binding.tvCurrentBalanceValueToolBarMonthlyReport.setText(GlobalVariabls.currentBalance.toString())
+        binding.tvCurrentBalanceValueToolBarMonthlyReport.text = GlobalVariabls.currentBalance.toString()
         initMonthSpinner()
         initYearSpinner()
 
         observer()
-
-        //viewModel.loadYearMonth(year,month)
-        loadDatas()
+        loadData()
 
         binding.tvCurrentBalanceValueToolBarMonthlyReport.text = GlobalVariabls.currentBalance.toString()
 
 
     }
 
-    private fun loadDatas() {
+    private fun initialization() {
+        binding.rvExpense.layoutManager = linearLayoutManager
+        binding.rvIncome.layoutManager = linearLayoutManager2
+        val calendar = Calendar.getInstance()
+        viewModel.currentMonthPosition = calendar[Calendar.MONTH]
+        viewModel.currentMonth = viewModel.currentMonthPosition + 1
+        viewModel.currentYear = calendar[Calendar.YEAR]
+        // year = currentYear.toString()
+
+        year=args.year?:viewModel.currentYear.toString()
+        viewModel.currentMonth= args.month?.toInt() ?:viewModel.currentMonth
+        viewModel.currentMonthPosition=viewModel.currentMonth-1
+        setMonth()
+        Log.d("tag","year -> $year :arg year -> ${args.year}::: month -> $month :arg month->${args.month}")
+    }
+
+    private fun loadData() {
+        Log.d("date","$year/$month")
         CoroutineScope(Dispatchers.IO).launch {
             delay(350)
-            viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
-   /*         viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
-            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)*/
+            launch {
+                viewModel.loadYearMonthIncomeWiseByGroup(year,month,Constants.TYPE_INCOME)
+            }
+
+            launch {
+                viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
+            }
+
+            launch {
+                viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
+            }
+
+            launch {
+                viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
+            }
+
         }
 
     }
 
     private fun observer() {
         viewModel.expenseList.observe(viewLifecycleOwner) {
+            @Suppress("UNCHECKED_CAST")
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
                 //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateExpenseUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateExpenseUI(it.value as List<MC_MonthlyReport>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                else -> {}
             }
         }
 
         viewModel.incomeList.observe(viewLifecycleOwner) {
+            @Suppress("UNCHECKED_CAST")
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateIncomeUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateIncomeUI(it.value as List<MC_MonthlyReport>)
+                else -> {}
             }
         }
 
         viewModel.totalExpense.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateTotalExpenseUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateTotalExpenseUI(it.value as Int?)
+                else -> {}
             }
         }
 
         viewModel.totalIncome.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                //is Resource.Success -> calculateAll(it.data)
-                is Resource.Success -> updateTotalIncomeUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> { updateTotalIncomeUI(it.value as Int?) }
+                else -> {}
             }
         }
 
@@ -209,26 +190,37 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     }
 
     private fun setMonth() {
-        month = if (currentMonth == 1) {
-            "01"
-        } else if (currentMonth == 2) {
-            "02"
-        } else if (currentMonth == 3) {
-            "03"
-        } else if (currentMonth == 4) {
-            "04"
-        } else if (currentMonth == 5) {
-            "05"
-        } else if (currentMonth == 6) {
-            "06"
-        } else if (currentMonth == 7) {
-            "07"
-        } else if (currentMonth == 8) {
-            "08"
-        } else if (currentMonth == 9) {
-            "09"
-        } else {
-            currentMonth.toString()
+        month = when (viewModel.currentMonth) {
+            1 -> {
+                "01"
+            }
+            2 -> {
+                "02"
+            }
+            3 -> {
+                "03"
+            }
+            4 -> {
+                "04"
+            }
+            5 -> {
+                "05"
+            }
+            6 -> {
+                "06"
+            }
+            7 -> {
+                "07"
+            }
+            8 -> {
+                "08"
+            }
+            9 -> {
+                "09"
+            }
+            else -> {
+                viewModel.currentMonth.toString()
+            }
         }
     }
 
@@ -237,7 +229,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.monthFullNames_MonthlyReport))
         binding.spinnerMonthMonthlyReport.adapter = spinnerAdapter
-        binding.spinnerMonthMonthlyReport.setSelection(currentMonthPosition)
+        binding.spinnerMonthMonthlyReport.setSelection(viewModel.currentMonthPosition)
         binding.spinnerMonthMonthlyReport.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -245,55 +237,50 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                 position: Int,
                 id: Long,
             ) {
+                Log.d("tag","monthly spinner onItemSelectedCalled")
                 when (position) {
                     0 -> {
                         month = getString(R.string.digit01)
-                        loadDatas()
                     }
                     1 -> {
                         month = getString(R.string.digit02)
-                        loadDatas()
                     }
                     2 -> {
                         month = getString(R.string.digit03)
-                        loadDatas()
                     }
                     3 -> {
                         month = getString(R.string.digit04)
-                        loadDatas()
                     }
                     4 -> {
                         month = getString(R.string.digit05)
-                        loadDatas()
                     }
                     5 -> {
                         month = getString(R.string.digit06)
-                        loadDatas()
                     }
                     6 -> {
                         month = getString(R.string.digit07)
-                        loadDatas()
                     }
                     7 -> {
                         month = getString(R.string.digit08)
-                        loadDatas()
                     }
                     8 -> {
                         month = getString(R.string.digit09)
-                        loadDatas()
                     }
                     9 -> {
                         month = getString(R.string.digit10)
-                        loadDatas()
                     }
                     10 -> {
                         month = getString(R.string.digit11)
-                        loadDatas()
                     }
                     11 -> {
                         month = getString(R.string.digit12)
-                        loadDatas()
                     }
+                }
+                if(isFirstTimeMonthSelectedCompleted){
+                    loadData()
+                }
+                else{
+                    isFirstTimeMonthSelectedCompleted=true
                 }
             }
 
@@ -305,25 +292,27 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     }
 
     private fun initYearSpinner() {
-        val spinnerArray = arrayListOf<String>("2021","2022","2023","2024","2025")
+        val spinnerArray = arrayListOf("2021","2022","2023","2024","2025")
         val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             spinnerArray)
-        var spinnerIndex = 0
-        if(year =="2021"){
-            spinnerIndex = 0
-        }
-        else if(year =="2022"){
-            spinnerIndex = 1
-        }
-        else if(year =="2023"){
-            spinnerIndex = 2
-        }
-        else if(year == "2024"){
-            spinnerIndex=4
-        }
-        else {
-            spinnerIndex=5
+        val spinnerIndex: Int
+        when (year) {
+            "2021" -> {
+                spinnerIndex = 0
+            }
+            "2022" -> {
+                spinnerIndex = 1
+            }
+            "2023" -> {
+                spinnerIndex = 2
+            }
+            "2024" -> {
+                spinnerIndex=4
+            }
+            else -> {
+                spinnerIndex=5
+            }
         }
         binding.spinnerYearMonthlyReport.adapter = spinnerAdapter
         binding.spinnerYearMonthlyReport.setSelection(spinnerIndex)
@@ -334,32 +323,35 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
                 position: Int,
                 id: Long,
             ) {
-                year = currentYear.toString()
-                if(position==0){
-                    year = "2021"
-                    loadDatas()
-                }
-                else if(position == 1){
-                    //year = currentYear.toString()
-                    year = "2022"
-                    loadDatas()
-                }
-                else if(position==2) {
-                    //year = (currentYear.toLong()+position).toString()
-                    year = "2023"
-                    loadDatas()
-                }
+                year = viewModel.currentYear.toString()
+                Log.d("tag","year spinner onItemSelectedCalled")
+                when (position) {
+                    0 -> {
+                        year = "2021"
+                    }
+                    1 -> {
+                        //year = currentYear.toString()
+                        year = "2022"
+                    }
+                    2 -> {
+                        //year = (currentYear.toLong()+position).toString()
+                        year = "2023"
+                    }
+                    3 -> {
+                        //year = (currentYear.toLong()+position).toString()
+                        year = "2024"
+                    }
+                    4 -> {
+                        //year = (currentYear.toLong()+position).toString()
+                        year = "2025"
+                    }
 
-                else if(position==3) {
-                    //year = (currentYear.toLong()+position).toString()
-                    year = "2024"
-                    loadDatas()
                 }
-
-                else if(position==4) {
-                    //year = (currentYear.toLong()+position).toString()
-                    year = "2025"
-                    loadDatas()
+                if (isFirstTimeYearSelectedCompleted){
+                    loadData()
+                }
+                else{
+                    isFirstTimeYearSelectedCompleted=true
                 }
             }
 
@@ -370,6 +362,7 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateExpenseUI(list : List<MC_MonthlyReport>){
         if(list.isEmpty()){
             binding.cvNoResultFoundExpenses.visibility = View.VISIBLE
@@ -381,12 +374,10 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         binding.rvExpense.adapter = expenseAdapterExpense
         expenseAdapterExpense.notifyDataSetChanged()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.loadYearMonthTypeTotalExpense(year,month,Constants.TYPE_EXPENSE)
-        }
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateIncomeUI(list : List<MC_MonthlyReport>){
 
         if(list.isEmpty()){
@@ -399,31 +390,28 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
         incomeAdapterIncome = Adapter_MonthlyReportIncome(list,requireContext(),this)
         binding.rvIncome.adapter = incomeAdapterIncome
         incomeAdapterIncome.notifyDataSetChanged()
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.loadYearMonthExpeneWiseByGroup(year,month,Constants.TYPE_EXPENSE)
-        }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateTotalIncomeUI(totalIncome:Int?){
         binding.tvTitleIncomeMonthlyReport.text = "Incomes :        ${Util.getMonthNameFromMonthNumber(month)}-$year"
-        tIncome = totalIncome?.toDouble() ?: 0.0
+        viewModel.tIncome = totalIncome?.toDouble() ?: 0.0
         binding.tvTotalIncomeBotMonthlyReport.text="${totalIncome?.toString()?:"0.0"} tk"
         updateMonthlyBalanceUI()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateTotalExpenseUI(totalExpense:Int?){
         binding.tvTitleExpensesMonthlyReport.text = "Expenses :      ${Util.getMonthNameFromMonthNumber(month)}-$year"
-        tExpense = totalExpense?.toDouble() ?: 0.0
+        viewModel.tExpense = totalExpense?.toDouble() ?: 0.0
         binding.tvTotalExpenseBotMonthlyReport.text= "${totalExpense?.toString() ?: "0.0"} tk"
         updateMonthlyBalanceUI()
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.loadYearMonthTypeTotalIncome(year,month,Constants.TYPE_INCOME)
-        }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateMonthlyBalanceUI(){
         binding.tvTitleBalanceMonthlyReport.text = "Balance :      ${Util.getMonthNameFromMonthNumber(month)}-$year"
-        binding.tvBalanceBotMonthlyReport.text="${(tIncome-tExpense).toString()} tk"
+        binding.tvBalanceBotMonthlyReport.text="${(viewModel.tIncome-viewModel.tExpense)} tk"
         binding.shimmerViewContainer.stopShimmer()
         binding.shimmerViewContainer.visibility = View.GONE
         binding.clContentMain.visibility = View.VISIBLE
@@ -445,6 +433,69 @@ class MonthlyFragment : Fragment(),View.OnClickListener,calll {
     fun navigateToDetails(type:String,category:String){
         val action = MonthlyFragmentDirections.actionMonthlyFragmentToMonthlyCategoryWiseFragment(year,month,type,category,Constants.FRAGMENT_MONTHLY,null)
         navCon.navigate(action)
+    }
+
+
+    private fun initAdMob() {
+        val lastAdShowDate = prefManager.lastBannerAdShownMonthlyF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            binding.adView.visibility = View.VISIBLE
+            MobileAds.initialize(requireContext()) {
+                val bannerAdHelper = BannerAddHelper(requireContext())
+                bannerAdHelper.loadBannerAd(binding.adView) {
+                    if (it) {
+                        prefManager.lastBannerAdShownMonthlyF = CurrentDate.currentTime24H
+                    }
+                }
+            }
+        } else {
+            binding.adView.visibility = View.GONE
+        }
+    }
+
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
+    }
+
+
+    private fun generatePdf(dataList: List<String>) {
+        val document = Document()
+
+        // Set the output file path
+        val filePath = "path/to/your/pdf/file.pdf"
+
+        try {
+            // Initialize PDF writer and output stream
+            PdfWriter.getInstance(document, FileOutputStream(filePath))
+
+            // Open the document
+            document.open()
+
+            // Add data to the document
+            for (data in dataList) {
+                val paragraph = Paragraph(data)
+                document.add(paragraph)
+            }
+
+            // Close the document
+            document.close()
+
+            // Notify the user that the PDF was generated successfully
+            // You can show a Toast or any other appropriate UI notification
+            //showToast("PDF generated successfully.")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle any exceptions that may occur during PDF generation
+            // You can show an error message to the user
+            //showToast("Failed to generate PDF.")
+        }
     }
 
 

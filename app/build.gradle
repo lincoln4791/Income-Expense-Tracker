@@ -7,22 +7,38 @@ plugins {
     id("androidx.navigation.safeargs")
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
+    id 'dagger.hilt.android.plugin'
+    id 'com.google.firebase.appdistribution'
 }
 
 
 
 android {
-    compileSdkVersion 32
+    signingConfigs {
+        debug {
+            storeFile file(PLAY_STORE_FILE)
+            storePassword PLAY_STORE_PASSWORD
+            keyAlias PLAY_KEY_ALIAS
+            keyPassword PLAY_KEY_PASSWORD
+        }
+        release {
+            storeFile file(PLAY_STORE_FILE)
+            storePassword PLAY_STORE_PASSWORD
+            keyAlias PLAY_KEY_ALIAS
+            keyPassword PLAY_KEY_PASSWORD
+        }
+    }
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.lincoln4791.dailyexpensemanager"
         minSdkVersion 23
-        targetSdkVersion 32
-        versionCode 5
-        versionName "1.1.2"
-
+        targetSdkVersion 33
+        versionCode 21
+        versionName "1.1.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -39,34 +55,36 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     buildFeatures{
         viewBinding true
+    }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
     }
 
 }
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
-    implementation 'com.google.firebase:firebase-database:20.0.3'
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
+    implementation "androidx.fragment:fragment-ktx:1.5.2"
+
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+    implementation 'androidx.test:core-ktx:1.4.0'
+    implementation 'com.google.android.gms:play-services-drive:17.0.0'
+    implementation 'androidx.paging:paging-common-ktx:3.1.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -85,16 +103,16 @@ dependencies {
 
     //Import CSV
     implementation 'com.opencsv:opencsv:4.6'
-    implementation "androidx.core:core-ktx:1.7.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //RoomDB
     //Room Database
 
-    implementation 'androidx.room:room-runtime:2.4.1'
-    kapt 'androidx.room:room-compiler:2.4.1'
-    implementation 'androidx.room:room-ktx:2.4.1'
+    implementation 'androidx.room:room-runtime:2.4.3'
+    kapt 'androidx.room:room-compiler:2.4.3'
+    implementation 'androidx.room:room-ktx:2.4.3'
 
 /*    implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -102,16 +120,16 @@ dependencies {
     implementation "androidx.room:room-ktx:2.3.0"*/
 
     //Coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
     //nav comp
-    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation "androidx.activity:activity-ktx:1.5.1"
 
  /*   implementation ("androidx.room:room-coroutines:$room_version")*/
 
@@ -125,6 +143,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
+    implementation 'com.google.firebase:firebase-database:20.0.5'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.7'
+
+    //Google Login
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+
+    //Auth
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+
     //Messaging
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
@@ -135,20 +163,106 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
 
     //admob
-    implementation 'com.google.android.gms:play-services-ads:20.5.0'
+    implementation 'com.google.android.gms:play-services-ads:21.1.0'
     implementation project(path: ':nativetemplates')
 
     //Remote Config
-    implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
+    implementation 'com.google.firebase:firebase-config-ktx:21.1.1'
 
     //GSON
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     //ShimmerEffect
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     // Leak CAnarry
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+
+    //Data store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+
+    //retrofit & square ok http & gson
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:3.0.1"
+    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+
+    //Pin VIew
+    implementation 'io.github.chaosleung:pinview:1.4.4'
+
+    //G-Pay
+    //implementation "com.android.billingclient:billing:4.0.0"
+    implementation("com.android.billingclient:billing-ktx:4.1.0")
+
+    //di
+    implementation 'com.google.dagger:hilt-android:2.42'
+    kapt 'com.google.dagger:hilt-compiler:2.42'
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+    implementation("androidx.hilt:hilt-work:1.0.0")
+
+    //chip navigation bar
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+
+    //lotte
+    implementation 'com.airbnb.android:lottie:5.2.0'
+
+
+    //DB File backup
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+
+    //google drive
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+/*    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation 'com.google.api-client:google-api-client-android:1.26.0'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'*/
+    //implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+    implementation 'com.google.guava:guava:27.0.1-android'
+    //Drive
+    //implementation 'com.google.guava:guava:27.0.1-android'
+    implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        exclude group: 'org.apache.httpcomponents'
+        exclude module: 'guava-jdk8'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+        exclude module: 'guava-jdk8'
+    }
+
+
+    implementation "androidx.paging:paging-runtime-ktx:3.2.0-alpha03"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+
+    //in app review
+    implementation 'com.google.android.play:core:1.10.0'
+
+    //pdf
+    implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.itextpdf.tool:xmlworker:5.5.10'
+
+    // Import the BoM for the Firebase platform
+    //implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // Add the dependencies for the In-App Messaging and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-inappmessaging-display:20.4.0")
+    //implementation("com.google.firebase:firebase-analytics:21.5.0")
 
 
 }

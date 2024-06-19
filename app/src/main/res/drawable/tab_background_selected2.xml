@@ -2,7 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="#3BFFFFFF" />
+         <!--   <solid android:color="#3BFFFFFF" />-->
+            <solid android:color="@color/nav_bar_color" />
             <!--            <solid android:color="#00773C"/>-->
             <corners android:radius="8dp" />
         </shape>

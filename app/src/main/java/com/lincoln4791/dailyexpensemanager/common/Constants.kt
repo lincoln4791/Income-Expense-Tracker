@@ -1,6 +1,11 @@
 package com.lincoln4791.dailyexpensemanager.common
 
 object Constants {
+        const val DATABASE_NAME = "MyDatabaseRoom"
+        const val FILE_NAME = "IEMDB backup"
+        const val BACKUP_RESTORE_ROLLBACK_FILE_NAME = "IEMDB backup R"
+        const val SHAREDPREF = "sp"
+        const val MAXIMUM_DATABASE_FILE = 1
         const val MONTH_All = "All"
         const val CATEGORY_All = "All"
         const val DAY_ALL = "All"
@@ -45,13 +50,57 @@ object Constants {
         const val ACTIVITY_TRANSACTION = "activity_transaction"
         const val ACTIVITY_DAILY = "activity_daily"
         const val FRAGMENT_MONTHLY = "fragment_monthly"
+
+
+        const val SYNC_CHECKING_INTERVAL = 900000   //   15 minutes sync interval ::: 60000 milisecond =  minute
+        const val INTERVAL = 120000   //  86400000 = 24hour hours interval ::: 60000 milisecond =  minute ::: Cancel,Grace,Paused,expired,Hold
+        const val INTERVAL_SHORT = 120000   //  21600000 = 6 hours interval ::: 3600000 milisecond =  hour //::: Wrong User1
+        const val INTERVAL_LONG = 120000   //  21600000 = 6 hours interval ::: 3600000 milisecond =  hour
+        const val SUBSCRIPTION_STATUS_DIALOG_SHOWN_MAX_DAYS = 604800000   //  604800000 = 7 Day interval ::: 3600000 milisecond =  hour :::
+        const val SUBSCRIPTION_STATUS_BANNER_SHOWN_INTERVAL_DAYS = 120000   //  300000  = 5 min interval ::: 3600000 milisecond =  hour :::
+        const val INTERVAL_MONTHLY = 2592000000   //  300000  = 5 min interval ::: 3600000 milisecond =  hour :::
+        const val INTERVAL_DAILY = 86400000   //  300000  = 5 min interval ::: 3600000 milisecond =  hour :::
+        const val INTERVAL_WEEKLY = 604800000   //  300000  = 5 min interval ::: 3600000 milisecond =  hour :::
+        const val INTERVAL_HOURLY= 3600000   //  300000  = 5 min interval ::: 3600000 milisecond =  hour :::
+
+
         const val PLAY_STORE_APP_LINK =
             "https://play.google.com/store/apps/details?id=com.lincoln4791.dailyexpensemanager"
 
         const val PRIVACY_POLICY_LINK =
             "https://www.freeprivacypolicy.com/live/99f6d75d-0da4-4e65-b9f8-b29cda9349e4"
 
-        const val ADD_INTERVAL = "ad_interval"
+        const val AD_INTERVAL = "ad_interval"
+        const val AD_REMOVE_DURATION_BY_AD = "ad_remove_duration_day_by_ad"
+        const val BANNER_SYNC = "banner_sync"
+        const val APP_VERSION = "appVersion"
+        const val APP_VERSION_CONTROL = "AppVersionControl"
+
+
+
+        const val SUBSCRIPTION_MONTHLY = "no_ads_monthly"
+        const val SUBSCRIPTION_YEARLY = "no_ads_yearly"
+
+        const val NAME = "name"
+        const val PREVIOUS_BACKUP = "previous_backup"
+        const val CURRENT_BACKUP = "current_backup"
+        const val PHONE = "phone"
+        const val EMAIL = "email"
+        const val PROFILE_PIC_URI = "profile_pic_uri"
+        const val USER_DATA = "UserData"
+        const val USERS = "Users"
+        const val PROFILE = "Profile"
+        const val Common = "Common"
+        const val BANNER = "Banner"
+        const val BANNERS = "banners"
+        const val BACKUPS = "Backups"
+
+
+        const val REWARD_AD_TIMEOUT = 30000 // 30 sec\
+
+
+
+
 
 
 

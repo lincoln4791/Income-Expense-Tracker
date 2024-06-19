@@ -16,13 +16,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar_FullReport"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/primary"
+        style="@style/cl_toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cv_img"
@@ -42,13 +39,14 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_MonthlyReport"
+            style="@style/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_MonthlyReport"
             app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/Full_Report"
-            app:titleTextColor="@color/white" />
+            />
 
         <LinearLayout
             android:id="@+id/ll_currentBalance_MonthlyReport"
@@ -62,21 +60,11 @@
             <TextView
                 android:id="@+id/tv_currentBalanceText_toolBar_FullReport"
                 style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:textSize="16sp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/redressed_regular"
-                android:gravity="bottom|center"
-                android:textAlignment="gravity"
                 android:text="@string/CurrentBalance" />
 
             <TextView
                 android:id="@+id/tv_currentBalanceValue_toolBar_FullReport"
-                style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                style="@style/tv_toolBar_value"
                 android:gravity="top|center"
                 android:textAlignment="gravity"
                 android:text="@string/value" />
@@ -318,7 +306,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:weightSum="3"
+        android:weightSum="2"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout_FullReport"
         app:layout_constraintStart_toStartOf="@+id/linearLayout_FullReport"
         app:layout_constraintTop_toBottomOf="@+id/guideline1">
@@ -415,8 +403,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="-5dp"
             android:layout_marginEnd="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/purple">
+            android:layout_weight="0"
+            android:backgroundTint="@color/purple"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

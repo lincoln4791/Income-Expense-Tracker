@@ -1,292 +1,281 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
-import android.app.Dialog
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
 import com.lincoln4791.dailyexpensemanager.Adapters.*
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.InterstistialAdHelper
 import com.lincoln4791.dailyexpensemanager.common.*
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentFullReportBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_MonthlyReport
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_FullReport
+import com.lincoln4791.dailyexpensemanager.viewModels.VMFullReport
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FullReportFragment : Fragment() {
-    private val linearLayoutManager = LinearLayoutManager(context)
+@AndroidEntryPoint
+class FullReportFragment : BaseFragment<FragmentFullReportBinding>(FragmentFullReportBinding::inflate) {
+    @Inject lateinit var repository: Repository
+    @Inject lateinit var prefManager : PrefManager
+    @Inject lateinit var linearLayoutManager : LinearLayoutManager
+    private val vmFullReport by viewModels<VMFullReport>()
+
     private var adapterFullReport: Adapter_FullReport? = null
     private var adapterExpenses: Adapter_FullReportExpense? = null
     private var adapterIncomes: Adapter_FullReportIncome? = null
     private var totalIncome = 0
     private var totalExpense = 0
+    private var isAdLoaded = false
 
-    private lateinit var vm_fullReport: VM_FullReport
-    private lateinit var binding : FragmentFullReportBinding
     private lateinit var navCon : NavController
-    private lateinit var dateTimedialogView : View
-    private lateinit var dateTimeDialog : Dialog
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentFullReportBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private lateinit var dateTimeDialogView : View
+    private lateinit var dateTimeDialog : BottomSheetDialog
 
+    private lateinit var interAd: InterstistialAdHelper
+    private var mInterstitialAd: InterstitialAd? = null
+
+
+    @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         Util.recordScreenEvent("fullReport_fragment","MainActivity")
-
+        initInterstitialAd()
         navCon = Navigation.findNavController(view)
-        vm_fullReport = ViewModelProvider(this)[VM_FullReport::class.java]
-
-        linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
-
-        dateTimedialogView = layoutInflater.inflate(R.layout.dialog_select_date_time,null,false)
-        dateTimeDialog = Dialog(requireContext())
-
-        binding.rvReportDetailsFullReport.layoutManager = linearLayoutManager
-        binding.rvReportDetailsFullReport.adapter=adapterFullReport
-
-
-        binding.cvDailyFullReport.setOnClickListener(View.OnClickListener {
-            /*startActivity(Intent(this@FullReport,
-                Daily::class.java))*/
-        })
-        binding.cvMonthlyTransactionsFullReport.setOnClickListener(View.OnClickListener { v: View? ->
-           /* startActivity(Intent(this@FullReport, MonthlyReport::class.java))*/
-        })
-        binding.cvTransactionsFullReport.setOnClickListener(View.OnClickListener { v: View? ->
-          /*  val transactionsIntent = Intent(this@FullReport, Transactions::class.java)
-            transactionsIntent.putExtra(Extras.TYPE, Constants.TYPE_ALL)
-            startActivity(transactionsIntent)*/
-        })
-        binding.cvTotalIncomesFullReport.setOnClickListener(View.OnClickListener { v: View? ->
-           /* val incomeIntent = Intent(this@FullReport, Transactions::class.java)
-            incomeIntent.putExtra(Extras.TYPE, Constants.TYPE_INCOME)
-            startActivity(incomeIntent)*/
-        })
-        binding.cvTotalExpensesFullReport.setOnClickListener(View.OnClickListener { v: View? ->
-            /*val expenseIntent = Intent(this@FullReport, Transactions::class.java)
-            expenseIntent.putExtra(Extras.TYPE, Constants.TYPE_EXPENSE)
-            startActivity(expenseIntent)*/
-        })
+        initialization()
 
         binding.cvSearch.setOnClickListener {
             selectSearchCriteria()
         }
 
-        binding.cvImg.setOnClickListener(View.OnClickListener { v: View? ->
-          navCon.navigateUp()
-        })
+        binding.cvImg.setOnClickListener {
+            navCon.navigateUp()
+        }
 
         binding.tvCurrentBalanceValueToolBarFullReport.text = GlobalVariabls.currentBalance.toString()
 
 
-
-        dateTimedialogView.findViewById<Button>(R.id.btnSubmit).setOnClickListener {
+        dateTimeDialogView.findViewById<Button>(R.id.btnSubmit).setOnClickListener {
             dateTimeDialog.dismiss()
-            selectQuery()
+            showInterAd()
         }
 
         observers()
-
         //vm_fullReport.getAllCardsByTypeArrayString()
         initMonthSpinner()
         initYearSpinner()
-        initTypeSpinner(dateTimedialogView)
-
+        initTypeSpinner(dateTimeDialogView)
+        CoroutineScope(Dispatchers.Main).launch {
+            selectSearchCriteria()
+        }
     }
 
+    private fun initialization() {
+        dateTimeDialogView = layoutInflater.inflate(R.layout.dialog_select_date_time,null,false)
+        dateTimeDialog = BottomSheetDialog(requireContext())
+        binding.rvReportDetailsFullReport.layoutManager = linearLayoutManager
+        binding.rvReportDetailsFullReport.adapter=adapterFullReport
+    }
+
+    @Suppress("UNCHECKED_CAST")
     private fun observers() {
-        vm_fullReport.postsList.observe(viewLifecycleOwner, Observer {
+        vmFullReport.postsList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  updateAllTransactionsUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateAllTransactionsUI(it.value as List<MC_Posts>)
+                else -> {}
             }
-        })
+        }
 
-        vm_fullReport.expenseList.observe(viewLifecycleOwner, Observer {
+        vmFullReport.expenseList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  updateExpensesUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateExpensesUI(it.value as List<MC_MonthlyReport>)
+                else -> {}
             }
-        })
+        }
 
-        vm_fullReport.incomeList.observe(viewLifecycleOwner, Observer {
+        vmFullReport.incomeList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  updateIncomesUI(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateIncomesUI(it.value as List<MC_MonthlyReport>)
+                else -> {}
             }
-        })
+        }
 
-        vm_fullReport.categoryCards.observe(viewLifecycleOwner, Observer {
+        vmFullReport.categoryCards.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  initExpenseCategorySpinner(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> initExpenseCategorySpinner(it.value as Array<String>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                else -> {}
             }
-        })
+        }
 
-        vm_fullReport.totalIncome.observe(viewLifecycleOwner, Observer {
+        vmFullReport.totalIncome.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  updateTotalIncome(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateTotalIncome(it.value as Int?)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                else -> {}
             }
-        })
+        }
 
-        vm_fullReport.totalExpense.observe(viewLifecycleOwner, Observer {
+        vmFullReport.totalExpense.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  updateTotalExpense(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> updateTotalExpense(it.value as Int?)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                else -> {}
             }
-        })
+        }
 
     }
 
     private fun selectSearchCriteria() {
-        dateTimeDialog.setContentView(dateTimedialogView)
+        dateTimeDialog.setContentView(dateTimeDialogView)
         dateTimeDialog.show()
 
     }
 
     private fun selectQuery() {
 
-        if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.day != Constants.DAY_ALL && vm_fullReport.type != Constants.TYPE_ALL &&
-            vm_fullReport.category != Constants.CATEGORY_All
+        if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.day != Constants.DAY_ALL && vmFullReport.type != Constants.TYPE_ALL &&
+            vmFullReport.category != Constants.CATEGORY_All
         ) {
             Log.d("Tag",
-                "1)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthDayTypeCategoryWise(vm_fullReport.year,vm_fullReport.month
-                ,vm_fullReport.day,vm_fullReport.type,vm_fullReport.category)
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.type != Constants.TYPE_ALL &&
-            vm_fullReport.category != Constants.CATEGORY_All && vm_fullReport.day == Constants.DAY_ALL
+                "1)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthDayTypeCategoryWise(vmFullReport.year,vmFullReport.month
+                ,vmFullReport.day,vmFullReport.type,vmFullReport.category)
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.type != Constants.TYPE_ALL &&
+            vmFullReport.category != Constants.CATEGORY_All && vmFullReport.day == Constants.DAY_ALL
         ) {
             Log.d("Tag",
-                "2)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthTypeCategoryWise(
-                vm_fullReport.year,vm_fullReport.month,vm_fullReport.type,vm_fullReport.category
+                "2)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthTypeCategoryWise(
+                vmFullReport.year,vmFullReport.month,vmFullReport.type,vmFullReport.category
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.day != Constants.DAY_ALL &&
-            vm_fullReport.category != Constants.CATEGORY_All && vm_fullReport.type == Constants.TYPE_ALL
-        ) {
-            val d = Log.d("Tag",
-                "3)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthDayCategoryWise(
-                vm_fullReport.year,vm_fullReport.month,vm_fullReport.day,vm_fullReport.category
-            )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.day != Constants.DAY_ALL &&
-            vm_fullReport.type != Constants.TYPE_ALL && vm_fullReport.category == Constants.CATEGORY_All
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.day != Constants.DAY_ALL &&
+            vmFullReport.category != Constants.CATEGORY_All && vmFullReport.type == Constants.TYPE_ALL
         ) {
             Log.d("Tag",
-                "4)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthDayTypeWise(
-                vm_fullReport.year,vm_fullReport.month,vm_fullReport.day,vm_fullReport.type
+                "3)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthDayCategoryWise(
+                vmFullReport.year,vmFullReport.month,vmFullReport.day,vmFullReport.category
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.day != Constants.DAY_ALL && vm_fullReport.type == Constants.TYPE_ALL && vm_fullReport.category == Constants.CATEGORY_All
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.day != Constants.DAY_ALL &&
+            vmFullReport.type != Constants.TYPE_ALL && vmFullReport.category == Constants.CATEGORY_All
         ) {
             Log.d("Tag",
-                "5)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthDayWise(
-                vm_fullReport.year,vm_fullReport.month,vm_fullReport.day
+                "4)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthDayTypeWise(
+                vmFullReport.year,vmFullReport.month,vmFullReport.day,vmFullReport.type
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-            vm_fullReport.loadYearMonthBalance(vm_fullReport.year,vm_fullReport.month)
-        } else if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.type != Constants.TYPE_ALL && vm_fullReport.day == Constants.DAY_ALL && vm_fullReport.category == Constants.CATEGORY_All
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.day != Constants.DAY_ALL && vmFullReport.type == Constants.TYPE_ALL && vmFullReport.category == Constants.CATEGORY_All
         ) {
             Log.d("Tag",
-                "6)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthTypeWise(
-                vm_fullReport.year,vm_fullReport.month,vm_fullReport.type
+                "5)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthDayWise(
+                vmFullReport.year,vmFullReport.month,vmFullReport.day
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.month != Constants.MONTH_All &&
-            vm_fullReport.category != Constants.CATEGORY_All && vm_fullReport.day == Constants.DAY_ALL && vm_fullReport!!.type == Constants.TYPE_ALL
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+            vmFullReport.loadYearMonthBalance(vmFullReport.year,vmFullReport.month)
+        } else if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.type != Constants.TYPE_ALL && vmFullReport.day == Constants.DAY_ALL && vmFullReport.category == Constants.CATEGORY_All
         ) {
             Log.d("Tag",
-                "7)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthCategoryWise(
-                vm_fullReport.year,vm_fullReport.month,vm_fullReport.category
+                "6)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthTypeWise(
+                vmFullReport.year,vmFullReport.month,vmFullReport.type
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.month != Constants.MONTH_All && vm_fullReport.day == Constants.DAY_ALL && vm_fullReport!!.type == Constants.TYPE_ALL && vm_fullReport!!.category == Constants.CATEGORY_All) {
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.month != Constants.MONTH_All &&
+            vmFullReport.category != Constants.CATEGORY_All && vmFullReport.day == Constants.DAY_ALL && vmFullReport.type == Constants.TYPE_ALL
+        ) {
             Log.d("Tag",
-                "8)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthWise(
-                vm_fullReport.year,vm_fullReport.month
+                "7)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthCategoryWise(
+                vmFullReport.year,vmFullReport.month,vmFullReport.category
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-            vm_fullReport.loadYearMonthIncomeTotal(vm_fullReport.year,vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpenseTotal(vm_fullReport.year,vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.type != Constants.TYPE_ALL && vm_fullReport.month == Constants.MONTH_All && vm_fullReport!!.day == Constants.DAY_ALL && vm_fullReport!!.category == Constants.CATEGORY_All) {
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.month != Constants.MONTH_All && vmFullReport.day == Constants.DAY_ALL && vmFullReport.type == Constants.TYPE_ALL && vmFullReport.category == Constants.CATEGORY_All) {
             Log.d("Tag",
-                "9)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearTypeWise(vm_fullReport.year,vm_fullReport.type)
-            vm_fullReport.loadYearIncomeWiseByGroup(vm_fullReport.year,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearExpeneWiseByGroup(vm_fullReport.year,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.type != Constants.TYPE_ALL && vm_fullReport.category != Constants.CATEGORY_All && vm_fullReport!!.day == Constants.DAY_ALL && vm_fullReport!!.month == Constants.MONTH_All) {
-            Log.d("Tag",
-                "12)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearTypeCategoryWise(
-                vm_fullReport.year,vm_fullReport.type,vm_fullReport.category
+                "8)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthWise(
+                vmFullReport.year,vmFullReport.month
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
-        } else if (vm_fullReport.category != Constants.CATEGORY_All && vm_fullReport.month == Constants.MONTH_All && vm_fullReport!!.day == Constants.DAY_ALL && vm_fullReport!!.type == Constants.TYPE_ALL) {
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+            vmFullReport.loadYearMonthIncomeTotal(vmFullReport.year,vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseTotal(vmFullReport.year,vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.type != Constants.TYPE_ALL && vmFullReport.month == Constants.MONTH_All && vmFullReport.day == Constants.DAY_ALL && vmFullReport.category == Constants.CATEGORY_All) {
             Log.d("Tag",
-                "10)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearMonthWise(
-                vm_fullReport.year,vm_fullReport.month
+                "9)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearTypeWise(vmFullReport.year,vmFullReport.type)
+            vmFullReport.loadYearIncomeWiseByGroup(vmFullReport.year,Constants.TYPE_INCOME)
+            vmFullReport.loadYearExpenseWiseByGroup(vmFullReport.year,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.type != Constants.TYPE_ALL && vmFullReport.category != Constants.CATEGORY_All && vmFullReport.day == Constants.DAY_ALL && vmFullReport.month == Constants.MONTH_All) {
+            Log.d("Tag",
+                "12)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearTypeCategoryWise(
+                vmFullReport.year,vmFullReport.type,vmFullReport.category
             )
-            vm_fullReport.loadYearMonthIncomeWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearMonthExpeneWiseByGroup(vm_fullReport.year, vm_fullReport.month,Constants.TYPE_EXPENSE)
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
+        } else if (vmFullReport.category != Constants.CATEGORY_All && vmFullReport.month == Constants.MONTH_All && vmFullReport.day == Constants.DAY_ALL && vmFullReport.type == Constants.TYPE_ALL) {
+            Log.d("Tag",
+                "10)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearMonthWise(
+                vmFullReport.year,vmFullReport.month
+            )
+            vmFullReport.loadYearMonthIncomeWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_INCOME)
+            vmFullReport.loadYearMonthExpenseWiseByGroup(vmFullReport.year, vmFullReport.month,Constants.TYPE_EXPENSE)
         } else {
             Log.d("Tag",
-                "11)  year" + vm_fullReport.year + "month" + vm_fullReport.month + "day" + vm_fullReport.day + " type " + vm_fullReport!!.type + " category " + vm_fullReport!!.category)
-            vm_fullReport.loadYearWise(vm_fullReport.year)
-            vm_fullReport.loadYearIncomeWiseByGroup(vm_fullReport.year,Constants.TYPE_INCOME)
-            vm_fullReport.loadYearExpeneWiseByGroup(vm_fullReport.year,Constants.TYPE_EXPENSE)
+                "11)  year" + vmFullReport.year + "month" + vmFullReport.month + "day" + vmFullReport.day + " type " + vmFullReport.type + " category " + vmFullReport.category)
+            vmFullReport.loadYearWise(vmFullReport.year)
+            vmFullReport.loadYearIncomeWiseByGroup(vmFullReport.year,Constants.TYPE_INCOME)
+            vmFullReport.loadYearExpenseWiseByGroup(vmFullReport.year,Constants.TYPE_EXPENSE)
         }
     }
 
+    @SuppressLint("CutPasteId")
     private fun initTypeSpinner(view:View) {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -299,81 +288,103 @@ class FullReportFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    vm_fullReport.type = Constants.TYPE_ALL
-                    vm_fullReport.category = Constants.CATEGORY_All
-                    initNullCategorySpinner()
-                } else if (position == 1) {
-                    vm_fullReport.type = Constants.TYPE_INCOME
-                    vm_fullReport.getAllCardsByTypeArrayString(Constants.TYPE_INCOME)
-                } else if (position == 2) {
-                    vm_fullReport.type = Constants.TYPE_EXPENSE
-                    vm_fullReport.getAllCardsByTypeArrayString(Constants.TYPE_EXPENSE)
+                when (position) {
+                    0 -> {
+                        vmFullReport.type = Constants.TYPE_ALL
+                        vmFullReport.category = Constants.CATEGORY_All
+                        initNullCategorySpinner()
+                    }
+                    1 -> {
+                        vmFullReport.type = Constants.TYPE_INCOME
+                        vmFullReport.getAllCardsByTypeArrayString(Constants.TYPE_INCOME)
+                    }
+                    2 -> {
+                        vmFullReport.type = Constants.TYPE_EXPENSE
+                        vmFullReport.getAllCardsByTypeArrayString(Constants.TYPE_EXPENSE)
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.type = Constants.TYPE_ALL
-                vm_fullReport.category = Constants.CATEGORY_All
+                vmFullReport.type = Constants.TYPE_ALL
+                vmFullReport.category = Constants.CATEGORY_All
                 initNullCategorySpinner()
             }
         }
     }
 
+    @SuppressLint("CutPasteId")
     private fun initMonthSpinner() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.monthNames))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerMonth).adapter = spinnerAdapter
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerMonth).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerMonth).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerMonth).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    vm_fullReport.month = Constants.MONTH_All
-                    vm_fullReport.day = Constants.DAY_ALL
-                    initDay0Spinner()
-                } else if (position == 1 || position == 3 || position == 5 || position == 7 || position == 8 || position == 10 || position == 12) {
-                    if (position == 1) {
-                        vm_fullReport.month = getString(R.string.digit01)
-                    } else if (position == 3) {
-                        vm_fullReport.month = getString(R.string.digit03)
-                    } else if (position == 5) {
-                        vm_fullReport.month = getString(R.string.digit05)
-                    } else if (position == 7) {
-                        vm_fullReport.month = getString(R.string.digit07)
-                    } else if (position == 8) {
-                        vm_fullReport.month = getString(R.string.digit08)
-                    } else if (position == 10) {
-                        vm_fullReport.month = getString(R.string.digit10)
-                    } else if (position == 12) {
-                        vm_fullReport.month = getString(R.string.digit12)
+                when (position) {
+                    0 -> {
+                        vmFullReport.month = Constants.MONTH_All
+                        vmFullReport.day = Constants.DAY_ALL
+                        initDay0Spinner()
                     }
-                    initDay31Spinner()
-                } else if (position == 4 || position == 6 || position == 9 || position == 11) {
-                    if (position == 4) {
-                        vm_fullReport.month = getString(R.string.digit04)
-                    } else if (position == 6) {
-                        vm_fullReport.month = getString(R.string.digit06)
-                    } else if (position == 9) {
-                        vm_fullReport.month = getString(R.string.digit09)
+                    1, 3, 5, 7, 8, 10, 12 -> {
+                        when (position) {
+                            1 -> {
+                                vmFullReport.month = getString(R.string.digit01)
+                            }
+                            3 -> {
+                                vmFullReport.month = getString(R.string.digit03)
+                            }
+                            5 -> {
+                                vmFullReport.month = getString(R.string.digit05)
+                            }
+                            7 -> {
+                                vmFullReport.month = getString(R.string.digit07)
+                            }
+                            8 -> {
+                                vmFullReport.month = getString(R.string.digit08)
+                            }
+                            10 -> {
+                                vmFullReport.month = getString(R.string.digit10)
+                            }
+                            12 -> {
+                                vmFullReport.month = getString(R.string.digit12)
+                            }
+                        }
+                        initDay31Spinner()
                     }
-                    if (position == 11) {
-                        vm_fullReport.month = getString(R.string.digit11)
+                    4, 6, 9, 11 -> {
+                        when (position) {
+                            4 -> {
+                                vmFullReport.month = getString(R.string.digit04)
+                            }
+                            6 -> {
+                                vmFullReport.month = getString(R.string.digit06)
+                            }
+                            9 -> {
+                                vmFullReport.month = getString(R.string.digit09)
+                            }
+                        }
+                        if (position == 11) {
+                            vmFullReport.month = getString(R.string.digit11)
+                        }
+                        initDay30Spinner()
                     }
-                    initDay30Spinner()
-                } else if (position == 2) {
-                    vm_fullReport.month = getString(R.string.digit02)
-                    initDay28Spinner()
+                    2 -> {
+                        vmFullReport.month = getString(R.string.digit02)
+                        initDay28Spinner()
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.month = Constants.MONTH_All
-                vm_fullReport.day = Constants.DAY_ALL
+                vmFullReport.month = Constants.MONTH_All
+                vmFullReport.day = Constants.DAY_ALL
                 initDay0Spinner()
             }
         }
@@ -383,7 +394,7 @@ class FullReportFragment : Fragment() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.nullCategory))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerCategory).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerCategory).adapter = spinnerAdapter
     }
 
     private fun initExpenseCategorySpinner(expenseCards:Array<String>) {
@@ -397,7 +408,7 @@ class FullReportFragment : Fragment() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             list.toTypedArray())
-        val expenseSpinner = dateTimedialogView.findViewById<Spinner>(R.id.spinnerCategory)
+        val expenseSpinner = dateTimeDialogView.findViewById<Spinner>(R.id.spinnerCategory)
         expenseSpinner.adapter = spinnerAdapter
         expenseSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -407,16 +418,19 @@ class FullReportFragment : Fragment() {
                 id: Long
             ) {
 
-                vm_fullReport.category = if(position==0){
+                vmFullReport.category = if(position==0){
+                    //Log.d("FullReport","position -> $position:: item -> ${expenseCards[position]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
                     Constants.CATEGORY_All
+
                 }
                 else{
-                    expenseCards[position]
+                    //Log.d("FullReport","position -> $position:: item -> ${expenseCards[position-1]} :: size -> ${expenseCards.size} ::list is -> $expenseCards")
+                    expenseCards[(position-1)]
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.category = Constants.CATEGORY_All
+                vmFullReport.category = Constants.CATEGORY_All
             }
         }
     }
@@ -425,289 +439,396 @@ class FullReportFragment : Fragment() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.dayNull))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
     }
 
+    @SuppressLint("CutPasteId")
     private fun initDay31Spinner() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.day31))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    vm_fullReport.day = Constants.DAY_ALL
-                } else if (position == 1) {
-                    vm_fullReport.day = getString(R.string.digit01)
-                } else if (position == 2) {
-                    vm_fullReport.day = getString(R.string.digit02)
-                } else if (position == 3) {
-                    vm_fullReport.day = getString(R.string.digit03)
-                } else if (position == 4) {
-                    vm_fullReport.day = getString(R.string.digit04)
-                } else if (position == 5) {
-                    vm_fullReport.day = getString(R.string.digit05)
-                } else if (position == 6) {
-                    vm_fullReport.day = getString(R.string.digit06)
-                } else if (position == 7) {
-                    vm_fullReport.day = getString(R.string.digit07)
-                } else if (position == 8) {
-                    vm_fullReport.day = getString(R.string.digit08)
-                } else if (position == 9) {
-                    vm_fullReport.day = getString(R.string.digit09)
-                } else if (position == 10) {
-                    vm_fullReport.day = getString(R.string.digit10)
-                } else if (position == 11) {
-                    vm_fullReport.day = getString(R.string.digit11)
-                } else if (position == 12) {
-                    vm_fullReport.day = getString(R.string.digit12)
-                } else if (position == 13) {
-                    vm_fullReport.day = getString(R.string.digit13)
-                } else if (position == 14) {
-                    vm_fullReport.day = getString(R.string.digit14)
-                } else if (position == 15) {
-                    vm_fullReport.day = getString(R.string.digit15)
-                } else if (position == 16) {
-                    vm_fullReport.day = getString(R.string.digit16)
-                } else if (position == 17) {
-                    vm_fullReport.day = getString(R.string.digit17)
-                } else if (position == 18) {
-                    vm_fullReport.day = getString(R.string.digit18)
-                } else if (position == 19) {
-                    vm_fullReport.day = getString(R.string.digit19)
-                } else if (position == 20) {
-                    vm_fullReport.day = getString(R.string.digit20)
-                } else if (position == 21) {
-                    vm_fullReport.day = getString(R.string.digit21)
-                } else if (position == 22) {
-                    vm_fullReport.day = getString(R.string.digit22)
-                } else if (position == 23) {
-                    vm_fullReport.day = getString(R.string.digit23)
-                } else if (position == 24) {
-                    vm_fullReport.day = getString(R.string.digit24)
-                } else if (position == 25) {
-                    vm_fullReport.day = getString(R.string.digit25)
-                } else if (position == 26) {
-                    vm_fullReport.day = getString(R.string.digit26)
-                } else if (position == 27) {
-                    vm_fullReport.day = getString(R.string.digit27)
-                } else if (position == 28) {
-                    vm_fullReport.day = getString(R.string.digit28)
-                } else if (position == 29) {
-                    vm_fullReport.day = getString(R.string.digit29)
-                } else if (position == 30) {
-                    vm_fullReport.day = getString(R.string.digit30)
-                } else if (position == 31) {
-                    vm_fullReport.day = getString(R.string.digit31)
+                when (position) {
+                    0 -> {
+                        vmFullReport.day = Constants.DAY_ALL
+                    }
+                    1 -> {
+                        vmFullReport.day = getString(R.string.digit01)
+                    }
+                    2 -> {
+                        vmFullReport.day = getString(R.string.digit02)
+                    }
+                    3 -> {
+                        vmFullReport.day = getString(R.string.digit03)
+                    }
+                    4 -> {
+                        vmFullReport.day = getString(R.string.digit04)
+                    }
+                    5 -> {
+                        vmFullReport.day = getString(R.string.digit05)
+                    }
+                    6 -> {
+                        vmFullReport.day = getString(R.string.digit06)
+                    }
+                    7 -> {
+                        vmFullReport.day = getString(R.string.digit07)
+                    }
+                    8 -> {
+                        vmFullReport.day = getString(R.string.digit08)
+                    }
+                    9 -> {
+                        vmFullReport.day = getString(R.string.digit09)
+                    }
+                    10 -> {
+                        vmFullReport.day = getString(R.string.digit10)
+                    }
+                    11 -> {
+                        vmFullReport.day = getString(R.string.digit11)
+                    }
+                    12 -> {
+                        vmFullReport.day = getString(R.string.digit12)
+                    }
+                    13 -> {
+                        vmFullReport.day = getString(R.string.digit13)
+                    }
+                    14 -> {
+                        vmFullReport.day = getString(R.string.digit14)
+                    }
+                    15 -> {
+                        vmFullReport.day = getString(R.string.digit15)
+                    }
+                    16 -> {
+                        vmFullReport.day = getString(R.string.digit16)
+                    }
+                    17 -> {
+                        vmFullReport.day = getString(R.string.digit17)
+                    }
+                    18 -> {
+                        vmFullReport.day = getString(R.string.digit18)
+                    }
+                    19 -> {
+                        vmFullReport.day = getString(R.string.digit19)
+                    }
+                    20 -> {
+                        vmFullReport.day = getString(R.string.digit20)
+                    }
+                    21 -> {
+                        vmFullReport.day = getString(R.string.digit21)
+                    }
+                    22 -> {
+                        vmFullReport.day = getString(R.string.digit22)
+                    }
+                    23 -> {
+                        vmFullReport.day = getString(R.string.digit23)
+                    }
+                    24 -> {
+                        vmFullReport.day = getString(R.string.digit24)
+                    }
+                    25 -> {
+                        vmFullReport.day = getString(R.string.digit25)
+                    }
+                    26 -> {
+                        vmFullReport.day = getString(R.string.digit26)
+                    }
+                    27 -> {
+                        vmFullReport.day = getString(R.string.digit27)
+                    }
+                    28 -> {
+                        vmFullReport.day = getString(R.string.digit28)
+                    }
+                    29 -> {
+                        vmFullReport.day = getString(R.string.digit29)
+                    }
+                    30 -> {
+                        vmFullReport.day = getString(R.string.digit30)
+                    }
+                    31 -> {
+                        vmFullReport.day = getString(R.string.digit31)
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.day = Constants.DAY_ALL
+                vmFullReport.day = Constants.DAY_ALL
             }
         }
     }
 
+    @SuppressLint("CutPasteId")
     private fun initDay30Spinner() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.day30))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    vm_fullReport.day = Constants.DAY_ALL
-                } else if (position == 1) {
-                    vm_fullReport.day = getString(R.string.digit01)
-                } else if (position == 2) {
-                    vm_fullReport.day = getString(R.string.digit02)
-                } else if (position == 3) {
-                    vm_fullReport.day = getString(R.string.digit03)
-                } else if (position == 4) {
-                    vm_fullReport.day = getString(R.string.digit04)
-                } else if (position == 5) {
-                    vm_fullReport.day = getString(R.string.digit05)
-                } else if (position == 6) {
-                    vm_fullReport.day = getString(R.string.digit06)
-                } else if (position == 7) {
-                    vm_fullReport.day = getString(R.string.digit07)
-                } else if (position == 8) {
-                    vm_fullReport.day = getString(R.string.digit08)
-                } else if (position == 9) {
-                    vm_fullReport.day = getString(R.string.digit09)
-                } else if (position == 10) {
-                    vm_fullReport.day = getString(R.string.digit10)
-                } else if (position == 11) {
-                    vm_fullReport.day = getString(R.string.digit11)
-                } else if (position == 12) {
-                    vm_fullReport.day = getString(R.string.digit12)
-                } else if (position == 13) {
-                    vm_fullReport.day = getString(R.string.digit13)
-                } else if (position == 14) {
-                    vm_fullReport.day = getString(R.string.digit14)
-                } else if (position == 15) {
-                    vm_fullReport.day = getString(R.string.digit15)
-                } else if (position == 16) {
-                    vm_fullReport.day = getString(R.string.digit16)
-                } else if (position == 17) {
-                    vm_fullReport.day = getString(R.string.digit17)
-                } else if (position == 18) {
-                    vm_fullReport.day = getString(R.string.digit18)
-                } else if (position == 19) {
-                    vm_fullReport.day = getString(R.string.digit19)
-                } else if (position == 20) {
-                    vm_fullReport.day = getString(R.string.digit20)
-                } else if (position == 21) {
-                    vm_fullReport.day = getString(R.string.digit21)
-                } else if (position == 22) {
-                    vm_fullReport.day = getString(R.string.digit22)
-                } else if (position == 23) {
-                    vm_fullReport.day = getString(R.string.digit23)
-                } else if (position == 24) {
-                    vm_fullReport.day = getString(R.string.digit24)
-                } else if (position == 25) {
-                    vm_fullReport.day = getString(R.string.digit25)
-                } else if (position == 26) {
-                    vm_fullReport.day = getString(R.string.digit26)
-                } else if (position == 27) {
-                    vm_fullReport.day = getString(R.string.digit27)
-                } else if (position == 28) {
-                    vm_fullReport.day = getString(R.string.digit28)
-                } else if (position == 29) {
-                    vm_fullReport.day = getString(R.string.digit29)
-                } else if (position == 30) {
-                    vm_fullReport.day = getString(R.string.digit30)
+                when (position) {
+                    0 -> {
+                        vmFullReport.day = Constants.DAY_ALL
+                    }
+                    1 -> {
+                        vmFullReport.day = getString(R.string.digit01)
+                    }
+                    2 -> {
+                        vmFullReport.day = getString(R.string.digit02)
+                    }
+                    3 -> {
+                        vmFullReport.day = getString(R.string.digit03)
+                    }
+                    4 -> {
+                        vmFullReport.day = getString(R.string.digit04)
+                    }
+                    5 -> {
+                        vmFullReport.day = getString(R.string.digit05)
+                    }
+                    6 -> {
+                        vmFullReport.day = getString(R.string.digit06)
+                    }
+                    7 -> {
+                        vmFullReport.day = getString(R.string.digit07)
+                    }
+                    8 -> {
+                        vmFullReport.day = getString(R.string.digit08)
+                    }
+                    9 -> {
+                        vmFullReport.day = getString(R.string.digit09)
+                    }
+                    10 -> {
+                        vmFullReport.day = getString(R.string.digit10)
+                    }
+                    11 -> {
+                        vmFullReport.day = getString(R.string.digit11)
+                    }
+                    12 -> {
+                        vmFullReport.day = getString(R.string.digit12)
+                    }
+                    13 -> {
+                        vmFullReport.day = getString(R.string.digit13)
+                    }
+                    14 -> {
+                        vmFullReport.day = getString(R.string.digit14)
+                    }
+                    15 -> {
+                        vmFullReport.day = getString(R.string.digit15)
+                    }
+                    16 -> {
+                        vmFullReport.day = getString(R.string.digit16)
+                    }
+                    17 -> {
+                        vmFullReport.day = getString(R.string.digit17)
+                    }
+                    18 -> {
+                        vmFullReport.day = getString(R.string.digit18)
+                    }
+                    19 -> {
+                        vmFullReport.day = getString(R.string.digit19)
+                    }
+                    20 -> {
+                        vmFullReport.day = getString(R.string.digit20)
+                    }
+                    21 -> {
+                        vmFullReport.day = getString(R.string.digit21)
+                    }
+                    22 -> {
+                        vmFullReport.day = getString(R.string.digit22)
+                    }
+                    23 -> {
+                        vmFullReport.day = getString(R.string.digit23)
+                    }
+                    24 -> {
+                        vmFullReport.day = getString(R.string.digit24)
+                    }
+                    25 -> {
+                        vmFullReport.day = getString(R.string.digit25)
+                    }
+                    26 -> {
+                        vmFullReport.day = getString(R.string.digit26)
+                    }
+                    27 -> {
+                        vmFullReport.day = getString(R.string.digit27)
+                    }
+                    28 -> {
+                        vmFullReport.day = getString(R.string.digit28)
+                    }
+                    29 -> {
+                        vmFullReport.day = getString(R.string.digit29)
+                    }
+                    30 -> {
+                        vmFullReport.day = getString(R.string.digit30)
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.day = Constants.DAY_ALL
+                vmFullReport.day = Constants.DAY_ALL
             }
         }
     }
 
+    @SuppressLint("CutPasteId")
     private fun initDay28Spinner() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.day28))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerDay).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerDay).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    vm_fullReport.day = Constants.TYPE_ALL
-                } else if (position == 1) {
-                    vm_fullReport.day = getString(R.string.digit01)
-                } else if (position == 2) {
-                    vm_fullReport.day = getString(R.string.digit02)
-                } else if (position == 3) {
-                    vm_fullReport.day = getString(R.string.digit03)
-                } else if (position == 4) {
-                    vm_fullReport.day = getString(R.string.digit04)
-                } else if (position == 5) {
-                    vm_fullReport.day = getString(R.string.digit05)
-                } else if (position == 6) {
-                    vm_fullReport.day = getString(R.string.digit06)
-                } else if (position == 7) {
-                    vm_fullReport.day = getString(R.string.digit07)
-                } else if (position == 8) {
-                    vm_fullReport.day = getString(R.string.digit08)
-                } else if (position == 9) {
-                    vm_fullReport.day = getString(R.string.digit09)
-                } else if (position == 10) {
-                    vm_fullReport.day = getString(R.string.digit10)
-                } else if (position == 11) {
-                    vm_fullReport.day = getString(R.string.digit11)
-                } else if (position == 12) {
-                    vm_fullReport.day = getString(R.string.digit12)
-                } else if (position == 13) {
-                    vm_fullReport.day = getString(R.string.digit13)
-                } else if (position == 14) {
-                    vm_fullReport.day = getString(R.string.digit14)
-                } else if (position == 15) {
-                    vm_fullReport.day = getString(R.string.digit15)
-                } else if (position == 16) {
-                    vm_fullReport.day = getString(R.string.digit16)
-                } else if (position == 17) {
-                    vm_fullReport.day = getString(R.string.digit17)
-                } else if (position == 18) {
-                    vm_fullReport.day = getString(R.string.digit18)
-                } else if (position == 19) {
-                    vm_fullReport.day = getString(R.string.digit19)
-                } else if (position == 20) {
-                    vm_fullReport.day = getString(R.string.digit20)
-                } else if (position == 21) {
-                    vm_fullReport.day = getString(R.string.digit21)
-                } else if (position == 22) {
-                    vm_fullReport.day = getString(R.string.digit22)
-                } else if (position == 23) {
-                    vm_fullReport.day = getString(R.string.digit23)
-                } else if (position == 24) {
-                    vm_fullReport.day = getString(R.string.digit24)
-                } else if (position == 25) {
-                    vm_fullReport.day = getString(R.string.digit25)
-                } else if (position == 26) {
-                    vm_fullReport.day = getString(R.string.digit26)
-                } else if (position == 27) {
-                    vm_fullReport.day = getString(R.string.digit27)
-                } else if (position == 28) {
-                    vm_fullReport.day = getString(R.string.digit28)
+                when (position) {
+                    0 -> {
+                        vmFullReport.day = Constants.TYPE_ALL
+                    }
+                    1 -> {
+                        vmFullReport.day = getString(R.string.digit01)
+                    }
+                    2 -> {
+                        vmFullReport.day = getString(R.string.digit02)
+                    }
+                    3 -> {
+                        vmFullReport.day = getString(R.string.digit03)
+                    }
+                    4 -> {
+                        vmFullReport.day = getString(R.string.digit04)
+                    }
+                    5 -> {
+                        vmFullReport.day = getString(R.string.digit05)
+                    }
+                    6 -> {
+                        vmFullReport.day = getString(R.string.digit06)
+                    }
+                    7 -> {
+                        vmFullReport.day = getString(R.string.digit07)
+                    }
+                    8 -> {
+                        vmFullReport.day = getString(R.string.digit08)
+                    }
+                    9 -> {
+                        vmFullReport.day = getString(R.string.digit09)
+                    }
+                    10 -> {
+                        vmFullReport.day = getString(R.string.digit10)
+                    }
+                    11 -> {
+                        vmFullReport.day = getString(R.string.digit11)
+                    }
+                    12 -> {
+                        vmFullReport.day = getString(R.string.digit12)
+                    }
+                    13 -> {
+                        vmFullReport.day = getString(R.string.digit13)
+                    }
+                    14 -> {
+                        vmFullReport.day = getString(R.string.digit14)
+                    }
+                    15 -> {
+                        vmFullReport.day = getString(R.string.digit15)
+                    }
+                    16 -> {
+                        vmFullReport.day = getString(R.string.digit16)
+                    }
+                    17 -> {
+                        vmFullReport.day = getString(R.string.digit17)
+                    }
+                    18 -> {
+                        vmFullReport.day = getString(R.string.digit18)
+                    }
+                    19 -> {
+                        vmFullReport.day = getString(R.string.digit19)
+                    }
+                    20 -> {
+                        vmFullReport.day = getString(R.string.digit20)
+                    }
+                    21 -> {
+                        vmFullReport.day = getString(R.string.digit21)
+                    }
+                    22 -> {
+                        vmFullReport.day = getString(R.string.digit22)
+                    }
+                    23 -> {
+                        vmFullReport.day = getString(R.string.digit23)
+                    }
+                    24 -> {
+                        vmFullReport.day = getString(R.string.digit24)
+                    }
+                    25 -> {
+                        vmFullReport.day = getString(R.string.digit25)
+                    }
+                    26 -> {
+                        vmFullReport.day = getString(R.string.digit26)
+                    }
+                    27 -> {
+                        vmFullReport.day = getString(R.string.digit27)
+                    }
+                    28 -> {
+                        vmFullReport.day = getString(R.string.digit28)
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.day = Constants.DAY_ALL
+                vmFullReport.day = Constants.DAY_ALL
             }
         }
     }
 
+    @SuppressLint("CutPasteId")
     private fun initYearSpinner() {
         val spinnerAdapter: ArrayAdapter<*> = ArrayAdapter<Any?>(requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.year))
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerYear).adapter = spinnerAdapter
-        dateTimedialogView.findViewById<Spinner>(R.id.spinnerYear).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerYear).adapter = spinnerAdapter
+        dateTimeDialogView.findViewById<Spinner>(R.id.spinnerYear).onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View,
                 position: Int,
                 id: Long
             ) {
-                if (position == 0) {
-                    vm_fullReport.year = Constants.YEAR_DEFAULT
-                } else if (position == 1) {
-                    vm_fullReport.year = "2022"
-                } else if (position == 2) {
-                    vm_fullReport.year = "2023"
-                } else if (position == 3) {
-                    vm_fullReport.year = "2024"
-                } else if (position == 4) {
-                    vm_fullReport.year = "2025"
-                } else if (position == 5) {
-                    vm_fullReport.year = "2026"
+                when (position) {
+                    0 -> {
+                        vmFullReport.year = Constants.YEAR_DEFAULT
+                    }
+                    1 -> {
+                        vmFullReport.year = "2022"
+                    }
+                    2 -> {
+                        vmFullReport.year = "2023"
+                    }
+                    3 -> {
+                        vmFullReport.year = "2024"
+                    }
+                    4 -> {
+                        vmFullReport.year = "2025"
+                    }
+                    5 -> {
+                        vmFullReport.year = "2026"
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                vm_fullReport.year = Constants.YEAR_DEFAULT
+                vmFullReport.year = Constants.YEAR_DEFAULT
             }
         }
     }
 
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     fun updateAllTransactionsUI(list : List<MC_Posts>){
         if(list.isEmpty()){
             binding.cvNoResultFound.visibility = View.VISIBLE
@@ -715,14 +836,22 @@ class FullReportFragment : Fragment() {
         else{
             binding.cvNoResultFound.visibility = View.GONE
         }
-        // setting transaction searchs title
-        val mMonth = if(vm_fullReport.month!=Constants.MONTH_All){ "${vm_fullReport.month}" } else{ "" }
-        val mDay = if(vm_fullReport.day!=Constants.DAY_ALL){ "${vm_fullReport.day}" } else{ "" }
-        val mType = if(vm_fullReport.type!=Constants.TYPE_ALL){ "${vm_fullReport.type}" } else{ "" }
-        val mCategory = if(vm_fullReport.category!=Constants.CATEGORY_All){ "${vm_fullReport.category}" } else{ "" }
+        // setting transaction search title
+        val mMonth = if(vmFullReport.month!=Constants.MONTH_All){
+            vmFullReport.month
+        } else{ "" }
+        val mDay = if(vmFullReport.day!=Constants.DAY_ALL){
+            vmFullReport.day
+        } else{ "" }
+        val mType = if(vmFullReport.type!=Constants.TYPE_ALL){
+            vmFullReport.type
+        } else{ "" }
+        val mCategory = if(vmFullReport.category!=Constants.CATEGORY_All){
+            vmFullReport.category
+        } else{ "" }
 
-        binding.tvTitleTransactionsFullReport.text = "Transactions : ${vm_fullReport.year}-${Util.getMonthNameFromMonthNumber(mMonth)}-$mDay-$mType-$mCategory "
-        binding.tvTitleTop.text = "Report : ${vm_fullReport.year}-${Util.getMonthNameFromMonthNumber(mMonth)}"
+        binding.tvTitleTransactionsFullReport.text = "Transactions : ${vmFullReport.year}-${Util.getMonthNameFromMonthNumber(mMonth)}-$mDay-$mType-$mCategory "
+        binding.tvTitleTop.text = "Report : ${vmFullReport.year}-${Util.getMonthNameFromMonthNumber(mMonth)}"
 
         binding.rvReportDetailsFullReport.layoutManager = LinearLayoutManager(requireContext())
         adapterFullReport = Adapter_FullReport(requireContext(),list)
@@ -730,6 +859,7 @@ class FullReportFragment : Fragment() {
         adapterFullReport!!.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateIncomesUI(list : List<MC_MonthlyReport>){
         if(list.isEmpty()){
             binding.cvNoResultFoundTop.visibility = View.VISIBLE
@@ -744,6 +874,7 @@ class FullReportFragment : Fragment() {
         adapterIncomes!!.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateExpensesUI(list : List<MC_MonthlyReport>){
         if(list.isEmpty()){
             binding.cvNoResultFoundTop2.visibility = View.VISIBLE
@@ -757,6 +888,7 @@ class FullReportFragment : Fragment() {
         adapterExpenses!!.notifyDataSetChanged()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun  updateTotalIncome(amount : Int?){
         binding.tvTotalIncomeValueTopBarFullReport.text = "$amount tk"
         if (amount != null) {
@@ -764,6 +896,7 @@ class FullReportFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun  updateTotalExpense(amount : Int?){
         binding.tvTotalExpenseValueTopBarFullReport.text = "$amount tk"
         if (amount != null) {
@@ -772,8 +905,44 @@ class FullReportFragment : Fragment() {
         updateBalance()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun  updateBalance(){
         binding.tvBalanceValueTopBarFullReport.text = "${totalIncome-totalExpense} tk"
     }
+
+
+
+    private fun initInterstitialAd() {
+        interAd = InterstistialAdHelper(requireContext(), requireActivity(),mInterstitialAd)
+        val lastAdShown = prefManager.lastInterstitialAdShownFRF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShown)) {
+            interAd.loadinterAd(AdUnitIds.INTERSTITIAL_FULL_REPORT) {
+                Log.d("InterAd", "Inter ad loaded -> $it")
+                isAdLoaded = it
+            }
+        }
+    }
+
+
+    private fun showInterAd() {
+        if (isAdLoaded) {
+            Log.d("InterAD", "InterAd Loaded")
+            interAd.showInterAd { isShown: Boolean, error: String? ->
+                if (isShown) {
+                    Log.d("InterAD", "InterAd has been shown")
+                    prefManager.lastInterstitialAdShownFRF = CurrentDate.currentTime24H
+                    isAdLoaded = false
+                    selectQuery()
+                } else {
+                    Log.d("InterAD", "InterAd Not been shown->$error")
+                    selectQuery()
+                }
+            }
+        } else {
+            Log.d("InterAD", "InterAd Not Loaded yet")
+            selectQuery()
+        }
+    }
+
 
 }

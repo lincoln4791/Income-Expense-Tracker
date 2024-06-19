@@ -1,7 +1,6 @@
 package com.lincoln4791.dailyexpensemanager.Adapters
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lincoln4791.dailyexpensemanager.R
 import com.lincoln4791.dailyexpensemanager.common.Constants
-import com.lincoln4791.dailyexpensemanager.common.NodeName
 import com.lincoln4791.dailyexpensemanager.fragments.DailyFragment
-import com.lincoln4791.dailyexpensemanager.fragments.TransactionsFragment
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 
 

@@ -2,7 +2,6 @@ package com.lincoln4791.dailyexpensemanager.common.util
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 
 object NetworkCheck {
 

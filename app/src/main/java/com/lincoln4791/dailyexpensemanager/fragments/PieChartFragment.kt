@@ -1,3 +1,4 @@
+/*
 package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.os.Bundle
@@ -67,7 +68,9 @@ class PieChartFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true /* enabled by default */) {
+            object : OnBackPressedCallback(true */
+/* enabled by default *//*
+) {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
                     Log.d("tag","OnBackPressCalled -> Monthly")
@@ -100,13 +103,13 @@ class PieChartFragment : Fragment() {
         year = args.year!!
         month = args.month!!
 
-        viewModel.postsList.observe(viewLifecycleOwner, {
+        viewModel.postsList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Loading -> Log.d("Transaction", "Loading...")
-                is Resource.Success ->  calculateAll(it.data)
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                is Resource.Success<*> -> calculateAll(it.value as List<MC_Posts>)
+                //is Resource.Failure -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
-        })
+        }
 
 
         setReportTime()
@@ -129,8 +132,7 @@ class PieChartFragment : Fragment() {
     }
 
     private fun goBack() {
-        val action = PieChartFragmentDirections.actionPieChartFragmentToMonthlyFragment(year,month)
-        navCon.navigate(action)
+
     }
 
 
@@ -261,4 +263,4 @@ class PieChartFragment : Fragment() {
         binding.pieChartExpense.startAnimation()
     }
 
-}
+}*/

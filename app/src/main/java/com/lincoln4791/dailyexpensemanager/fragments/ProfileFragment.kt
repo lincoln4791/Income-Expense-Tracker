@@ -1,23 +1,22 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentProfileBinding
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_Profile
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class ProfileFragment : Fragment() {
-
-    private lateinit var viewModel: VM_Profile
-    private lateinit var binding : FragmentProfileBinding
+@AndroidEntryPoint
+class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
+    @Inject lateinit var prefManager : PrefManager
     private lateinit var navCon : NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,28 +32,23 @@ class ProfileFragment : Fragment() {
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentProfileBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         Util.recordScreenEvent("profile_fragment","MainActivity")
-
         navCon = Navigation.findNavController(view)
-        viewModel = ViewModelProvider(this)[VM_Profile::class.java]
 
         binding.cvImg.setOnClickListener {
             navCon.navigateUp()
         }
 
         binding.tvCurrentBalanceValueToolBarProfile.text = GlobalVariabls.currentBalance.toString()
+
+        binding.name.text = "Name : ${prefManager.name}"
+        binding.phone.text = "Phone : ${prefManager.phone}"
+        binding.email.text = "Email : ${prefManager.email}"
 
     }
 

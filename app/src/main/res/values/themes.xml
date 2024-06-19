@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.DailyExpenseManager" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DailyExpenseManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+ <!--   <style name="Theme.DailyExpenseManager" parent="Theme.AppCompat.DayNight.DarkActionBar">-->
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_varient</item>
@@ -10,7 +11,7 @@
         <item name="colorSecondaryVariant">@color/secondary_varient</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" >@color/white</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

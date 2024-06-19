@@ -1,117 +1,97 @@
 package com.lincoln4791.dailyexpensemanager.fragments
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.app.Dialog
 import android.app.TimePickerDialog
-import android.content.Intent
-import androidx.lifecycle.ViewModelProvider
+import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lincoln4791.dailyexpensemanager.base.BaseFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.itmedicus.patientaid.ads.admobAdsUpdated.AdMobUtil
+import com.lincoln4791.dailyexpensemanager.common.util.CurrentDate
 import com.lincoln4791.dailyexpensemanager.Adapters.Adapter_AddExpense
 import com.lincoln4791.dailyexpensemanager.R
+import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.AdUnitIds
+import com.lincoln4791.dailyexpensemanager.admobAdsUpdated.NativeAdUtil
 import com.lincoln4791.dailyexpensemanager.common.Constants
+import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
 import com.lincoln4791.dailyexpensemanager.databinding.AddExpenseFragmentBinding
 import com.lincoln4791.dailyexpensemanager.model.MC_Cards
 import com.lincoln4791.dailyexpensemanager.model.MC_Posts
 import com.lincoln4791.dailyexpensemanager.roomDB.AppDatabase
-import com.lincoln4791.dailyexpensemanager.view.MainActivity
-import com.lincoln4791.dailyexpensemanager.viewModels.VM_AddExpenses
+import com.lincoln4791.dailyexpensemanager.viewModels.VMAddExpenses
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class AddExpenseFragment : Fragment(), View.OnClickListener {
-    private var hour = 0
-    private var minute = 0
-    private var year = 0
-    private var month = 0
-    private var day = 0
-    var am_pm: String? = null
-    var hourInString: String? = null
-    var vm_addExpenses: VM_AddExpenses? = null
+@AndroidEntryPoint
+class AddExpenseFragment : BaseFragment<AddExpenseFragmentBinding>(AddExpenseFragmentBinding::inflate), View.OnClickListener {
+    @Inject lateinit var repository: Repository
+    @Inject lateinit var prefManager: PrefManager
 
-    lateinit var viewModel: VM_AddExpenses
-    private lateinit var binding : AddExpenseFragmentBinding
+    val vmAddExpenses by viewModels<VMAddExpenses>()
     private lateinit var navCon : NavController
+
+    private var tempHour = 0
+    private var tempMinute = 0
+    private var tempYear = 0
+    private var tempMonth = 0
+    private var tempDay = 0
+    private var amPm: String? = null
+    private var hourInString: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("LifeCycle", "AddExpense Fragment create")
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
                     // Handle the back button event
                     Log.d("tag","OnBackPressCalled -> Monthly")
-                    //navCon.navigateUp()
-                    goBack()
+                  goBack()
+
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        binding = AddExpenseFragmentBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
+    @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("LifeCycle", "AddExpense Fragment ViewCreated")
+        unloadProgressBar()
+        showNativeAdd()
         Util.recordScreenEvent("add_expense_fragment","MainActivity")
-
-        viewModel = ViewModelProvider(this)[VM_AddExpenses::class.java]
         navCon = Navigation.findNavController(view)
+        initialization()
 
-        vm_addExpenses = ViewModelProvider(this)[VM_AddExpenses::class.java]
-        val calendar = Calendar.getInstance()
-        year = calendar[Calendar.YEAR]
-        month = calendar[Calendar.MONTH]
-        day = calendar[Calendar.DAY_OF_MONTH]
-        val simpleHourFormat = SimpleDateFormat("hh")
-        val simpleMinuteFormat = SimpleDateFormat("mm")
-        hour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
-        minute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
-
-
-        viewModel.postsList.observe(viewLifecycleOwner){
-            Log.d("addExpense", "observed")
-            when (it) {
-                is Resource.Loading -> Log.d("Transaction", "Loading...")
-                //is Resource.Success -> adapter_transactions = Adapter_Transactions(it.data, this)
-                is Resource.Success ->  updateUI(it.data){
-
-                }
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-            }
+        binding.cvBackAddExpense.setOnClickListener {
+            goBack()
         }
-
-
-        binding.cvBackAddExpense.setOnClickListener(View.OnClickListener { v: View? ->
-         goBack()
-        })
 
         binding.cvImg.setOnClickListener {
             goBack()
@@ -125,9 +105,7 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
             Toast.makeText(requireContext(),"Coming Soon",Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.loadAllCards(){
-
-        }
+        vmAddExpenses.loadAllCards()
 
         binding.cvAmount500AddExpense.setOnClickListener(this)
         binding.cvAmount1000AddExpense.setOnClickListener(this)
@@ -161,21 +139,25 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvSaveAddExpense.setOnClickListener { saveData() }
         binding.tvDateTimeAddExpense.setOnClickListener { changeDate() }
 
-        binding.tvCurrentBalanceValueToolBarAddExpense.setText(GlobalVariabls.currentBalance.toString())
+        binding.tvCurrentBalanceValueToolBarAddExpense.text = GlobalVariabls.currentBalance.toString()
         observe()
-        setDateTime()
+        vmAddExpenses.setDateTime()
 
     }
 
-    private fun updateUI(data: List<MC_Cards>,callback: (isUIUpdated : Boolean) -> Unit) {
+    private fun initialization() {
+        val calendar = Calendar.getInstance()
+        tempYear = calendar[Calendar.YEAR]
+        tempMonth = calendar[Calendar.MONTH]
+        tempDay = calendar[Calendar.DAY_OF_MONTH]
+        val simpleHourFormat = SimpleDateFormat("hh")
+        val simpleMinuteFormat = SimpleDateFormat("mm")
+        tempHour = simpleHourFormat.format(System.currentTimeMillis()).toInt()
+        tempMinute = simpleMinuteFormat.format(System.currentTimeMillis()).toInt()
+    }
 
-/*        if(data.isNotEmpty()){
-            binding.cvSelectedMoreCard.visibility = View.VISIBLE
-        }
-        else{
-            binding.cvSelectedMoreCard.visibility = View.GONE
-        }*/
-
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateUI(data: List<MC_Cards>, callback: (isUIUpdated : Boolean) -> Unit) {
         val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         val myAdapter = Adapter_AddExpense(data,requireContext(),this)
         binding.recyclerView.layoutManager=layoutManager
@@ -184,24 +166,12 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         callback(true)
     }
 
-    private fun setDateTime() {
-        val simpleDateTimeFormat = SimpleDateFormat("dd-MM-yyyy  hh:mm a", Locale.getDefault())
-        val simpleDayFormat = SimpleDateFormat("dd", Locale.getDefault())
-        val simpleMonthFormat = SimpleDateFormat("MM", Locale.getDefault())
-        val simpleYearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-        val simpleTimeFormat = SimpleDateFormat("hh-mm a", Locale.getDefault())
-        vm_addExpenses!!.day = simpleDayFormat.format(System.currentTimeMillis())
-        vm_addExpenses!!.month = simpleMonthFormat.format(System.currentTimeMillis())
-        vm_addExpenses!!.year = simpleYearFormat.format(System.currentTimeMillis())
-        vm_addExpenses!!.time = simpleTimeFormat.format(System.currentTimeMillis())
-        vm_addExpenses!!.dateTime = simpleDateTimeFormat.format(System.currentTimeMillis())
-        binding.tvDateTimeAddExpense.text = vm_addExpenses!!.dateTime
-    }
+
 
     private fun saveData() {
         if (TextUtils.isEmpty(binding.etExpenseAmountAddExpense.text)) {
             binding.etExpenseAmountAddExpense.error = getString(R.string.AmontNeeded)
-        } else if (TextUtils.isEmpty(vm_addExpenses!!.category)) {
+        } else if (TextUtils.isEmpty(vmAddExpenses.category)) {
             Toast.makeText(context, getString(R.string.Pleaseselectacatagory), Toast.LENGTH_SHORT)
                 .show()
         } else {
@@ -211,191 +181,264 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
                 expenseDescription = binding.etExpenseDescriptionAddExpense.text.toString()
             }
             val posts = MC_Posts(expenseDescription,
-                vm_addExpenses!!.category,
+                vmAddExpenses.category,
                 Constants.TYPE_EXPENSE,
                 amount.toInt(),
-                vm_addExpenses!!.year!!,
-                vm_addExpenses!!.month!!,
-                vm_addExpenses!!.day!!,
-                vm_addExpenses!!.time!!,
+                vmAddExpenses.year!!,
+                vmAddExpenses.month!!,
+                vmAddExpenses.day!!,
+                vmAddExpenses.time!!,
                 System.currentTimeMillis().toString(),
-                vm_addExpenses!!.dateTime)
-            /* val helper = SQLiteHelper(this@AddExpense)
-             helper.saveData(posts)*/
-            try {
-                CoroutineScope(Dispatchers.IO).launch {
-                    AppDatabase.getInstance(requireContext().applicationContext).dbDao().insertAll(posts)
-                    CoroutineScope(Dispatchers.Main).launch {
-                        GlobalVariabls.currentBalance = GlobalVariabls.currentBalance - amount.toInt()
-                        Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
-                        val action = AddExpenseFragmentDirections.actionAddExpenseFragmentToHomeFragment()
-                        navCon.navigate(action)
-                    }
-                }
-
-            }
-            catch (e:Exception){
-                Toast.makeText(requireContext(), "Failed ${e.message}::: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-            }
-
+                vmAddExpenses.dateTime.value!!)
+            vmAddExpenses.insertExpense(posts)
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun observe() {
-        vm_addExpenses!!.mutable_category.observe(viewLifecycleOwner, { s: String ->
-            if (s == Constants.CATEGORY_FOOD) {
-                markFood()
-            } else if (s == Constants.CATEGORY_TRANSPORT) {
-                markTransport()
-            } else if (s == Constants.CATEGORY_BILLS) {
-                markBills()
-            } else if (s == Constants.CATEGORY_HOUSE_RENT) {
-                markHouseRent()
-            } else if (s == Constants.CATEGORY_BUSINESS) {
-                markBusiness()
-            } else if (s == Constants.CATEGORY_MEDICINE) {
-                markMedicine()
-            } else if (s == Constants.CATEGORY_CLOTHS) {
-                addMoreCard()
-            } else if (s == Constants.CATEGORY_EDUCATION) {
-                markEducation()
-            } else if (s == Constants.CATEGORY_LIFESTYLE) {
-                markLifeStyle()
-            } else if (s == Constants.CATEGORY_OTHER) {
-                markOther()
+        vmAddExpenses.mutable_category.observe(viewLifecycleOwner) { s: String ->
+            when (s) {
+                Constants.CATEGORY_FOOD -> {
+                    markFood()
+                }
+                Constants.CATEGORY_TRANSPORT -> {
+                    markTransport()
+                }
+                Constants.CATEGORY_BILLS -> {
+                    markBills()
+                }
+                Constants.CATEGORY_HOUSE_RENT -> {
+                    markHouseRent()
+                }
+                Constants.CATEGORY_BUSINESS -> {
+                    markBusiness()
+                }
+                Constants.CATEGORY_MEDICINE -> {
+                    markMedicine()
+                }
+                Constants.CATEGORY_CLOTHS -> {
+                    addMoreCard()
+                }
+                Constants.CATEGORY_EDUCATION -> {
+                    markEducation()
+                }
+                Constants.CATEGORY_LIFESTYLE -> {
+                    markLifeStyle()
+                }
+                Constants.CATEGORY_OTHER -> {
+                    markOther()
+                }
             }
-        })
-        vm_addExpenses!!.mutable_amount.observe(viewLifecycleOwner, { s ->
-            if (s == Constants.AMOUNT_500) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_500)
-            } else if (s == Constants.AMOUNT_1000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_1000)
-            } else if (s == Constants.AMOUNT_1500) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_1500)
-            } else if (s == Constants.AMOUNT_2000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_2000)
-            } else if (s == Constants.AMOUNT_2500) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_2500)
-            } else if (s == Constants.AMOUNT_3000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_3000)
-            } else if (s == Constants.AMOUNT_4000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_4000)
-            } else if (s == Constants.AMOUNT_5000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_5000)
-            } else if (s == Constants.AMOUNT_10000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_10000)
-            } else if (s == Constants.AMOUNT_20000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_20000)
-            } else if (s == Constants.AMOUNT_30000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_30000)
-            } else if (s == Constants.AMOUNT_40000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_40000)
-            } else if (s == Constants.AMOUNT_50000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_50000)
-            } else if (s == Constants.AMOUNT_100000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_100000)
-            } else if (s == Constants.AMOUNT_200000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_200000)
-            } else if (s == Constants.AMOUNT_300000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_300000)
-            } else if (s == Constants.AMOUNT_400000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_400000)
-            } else if (s == Constants.AMOUNT_500000) {
-                binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_500000)
+        }
+
+        vmAddExpenses.mutable_amount.observe(viewLifecycleOwner) { s ->
+            when (s) {
+                Constants.AMOUNT_500 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_500)
+                }
+                Constants.AMOUNT_1000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_1000)
+                }
+                Constants.AMOUNT_1500 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_1500)
+                }
+                Constants.AMOUNT_2000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_2000)
+                }
+                Constants.AMOUNT_2500 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_2500)
+                }
+                Constants.AMOUNT_3000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_3000)
+                }
+                Constants.AMOUNT_4000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_4000)
+                }
+                Constants.AMOUNT_5000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_5000)
+                }
+                Constants.AMOUNT_10000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_10000)
+                }
+                Constants.AMOUNT_20000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_20000)
+                }
+                Constants.AMOUNT_30000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_30000)
+                }
+                Constants.AMOUNT_40000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_40000)
+                }
+                Constants.AMOUNT_50000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_50000)
+                }
+                Constants.AMOUNT_100000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_100000)
+                }
+                Constants.AMOUNT_200000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_200000)
+                }
+                Constants.AMOUNT_300000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_300000)
+                }
+                Constants.AMOUNT_400000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_400000)
+                }
+                Constants.AMOUNT_500000 -> {
+                    binding.etExpenseAmountAddExpense.setText(Constants.AMOUNT_500000)
+                }
             }
-        })
+        }
+
+        vmAddExpenses.postsList.observe(viewLifecycleOwner){
+            Log.d("addExpense", "observed")
+            when (it) {
+                is Resource.Loading -> Log.d("Transaction", "Loading...")
+                is Resource.Success<*> ->  updateUI(it.value as List<MC_Cards>){
+
+                }
+                is Resource.Failure ->{
+                    Toast.makeText(context,"Something is Wrong", Toast.LENGTH_LONG).show()
+                }
+                else -> {}
+            }
+        }
+
+        vmAddExpenses.adExpenseFlag.observe(viewLifecycleOwner){
+            if(it==true){
+                vmAddExpenses.adjustBalance(binding.etExpenseAmountAddExpense.text.toString().toInt())
+                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                navCon.navigateUp()
+            }
+            else{
+                Toast.makeText(requireContext(), "Something is wrong, Try Again Later", Toast.LENGTH_SHORT).show()
+                navCon.navigateUp()
+            }
+        }
+
+        vmAddExpenses.dateTime.observe(viewLifecycleOwner){
+            binding.tvDateTimeAddExpense.text = it
+        }
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.cv_amount500_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_500
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount1000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_1000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount1500_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_1500
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount2000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_2000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount2500_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_2500
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount3000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_3000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount3500_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_3500
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount4000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_4000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount5000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_5000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount10000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_10000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount20000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_20000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount30000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_30000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount40000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_40000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount50000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_50000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount100000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_100000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount200000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_200000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount300000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_300000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount400000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_400000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_amount500000_AddExpense) {
-            vm_addExpenses!!.amount = Constants.AMOUNT_500000
-            vm_addExpenses!!.mutable_amount.setValue(vm_addExpenses!!.amount)
-        } else if (v.id == R.id.cv_food_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_FOOD
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_business_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_BUSINESS
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_houseRent_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_HOUSE_RENT
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_transport_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_TRANSPORT
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        }
-       /* else if (v.id == R.id.cv_cloths_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_CLOTHS
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        }*/
-        else if (v.id == R.id.cv_bills_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_BILLS
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_education_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_EDUCATION
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_lifeStyle_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_LIFESTYLE
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_medicine_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_MEDICINE
-            vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
-        } else if (v.id == R.id.cv_other_AddExpense) {
-            vm_addExpenses!!.category = Constants.CATEGORY_OTHER
-            vm_addExpenses!!.mutable_category.value = vm_addExpenses!!.category
+        when (v.id) {
+            R.id.cv_amount500_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_500
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount1000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_1000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount1500_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_1500
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount2000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_2000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount2500_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_2500
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount3000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_3000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount3500_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_3500
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount4000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_4000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount5000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_5000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount10000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_10000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount20000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_20000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount30000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_30000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount40000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_40000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount50000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_50000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount100000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_100000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount200000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_200000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount300000_AddExpense -> {
+                Constants.AMOUNT_300000.also { vmAddExpenses.amount = it }
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount400000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_400000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_amount500000_AddExpense -> {
+                vmAddExpenses.amount = Constants.AMOUNT_500000
+                vmAddExpenses.mutable_amount.setValue(vmAddExpenses.amount)
+            }
+            R.id.cv_food_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_FOOD
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_business_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_BUSINESS
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_houseRent_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_HOUSE_RENT
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_transport_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_TRANSPORT
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            /* else if (v.id == R.id.cv_cloths_AddExpense) {
+                 vm_addExpenses!!.category = Constants.CATEGORY_CLOTHS
+                 vm_addExpenses!!.mutable_category.setValue(vm_addExpenses!!.category)
+             }*/
+            R.id.cv_bills_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_BILLS
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_education_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_EDUCATION
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_lifeStyle_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_LIFESTYLE
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_medicine_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_MEDICINE
+                vmAddExpenses.mutable_category.setValue(vmAddExpenses.category)
+            }
+            R.id.cv_other_AddExpense -> {
+                vmAddExpenses.category = Constants.CATEGORY_OTHER
+                vmAddExpenses.mutable_category.value = vmAddExpenses.category
+            }
         }
     }
 
@@ -472,15 +515,16 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
         binding.cvOtherAddExpense.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
     }
 
+    @SuppressLint("InflateParams")
     private fun addMoreCard() {
         deSelectedMoreCard()
         deselectAllCard()
-        viewModel.category=""
+        vmAddExpenses.category=""
 
         Log.d("tag","Add Card Called")
 
         val viewAddCard = layoutInflater.inflate(R.layout.dialog_add_more_card,null,false)
-        val dialog = Dialog(requireContext())
+        val dialog = BottomSheetDialog(requireContext())
         dialog.setContentView(viewAddCard)
         dialog.show()
 
@@ -524,9 +568,9 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
                         runBlocking {
                             job2.join()
-                            viewModel.loadAllCards(){
-                                selectMoreCard(tvCard.text.toString())
-                            }
+                            vmAddExpenses.loadAllCards()
+                            selectMoreCard(tvCard.text.toString())
+
                         }
                     }
                     else{
@@ -609,74 +653,94 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
 
     private fun changeDate() {
         val timePickerDialog =
-            TimePickerDialog(requireContext(), { view: TimePicker?, hourOfDay: Int, minute: Int ->
-                vm_addExpenses!!.time = "$hourOfDay : $minute"
+            TimePickerDialog(requireContext(), { _: TimePicker?, hourOfDay: Int, minute: Int ->
+                vmAddExpenses.time = "$hourOfDay : $minute"
                 Log.d("tag", "hour$hourOfDay")
                 if (hourOfDay >= 12) {
-                    am_pm = "pm"
+                    amPm = "pm"
                     hourInString = (hourOfDay - 12).toString()
                 } else {
-                    am_pm = "am"
+                    amPm = "am"
                     hourInString = hourOfDay.toString()
                 }
-                vm_addExpenses!!.dateTime =
-                    vm_addExpenses!!.day + "-" + vm_addExpenses!!.month + "-" + vm_addExpenses!!.year + "  " + hourInString + ":" + minute.toString() + " " + am_pm
-                //Log.d("tag","year"+vm_addIncome.year+" month "+vm_addIncome.month+" day "+vm_addIncome.day+" hour "+hourOfDay+"min "+minute+" "+am_pm);
-                binding.tvDateTimeAddExpense.text = vm_addExpenses!!.dateTime
-            }, hour, minute, true)
-        val datePickerDialog = DatePickerDialog(requireContext(), { view, year, month, dayOfMonth ->
+                vmAddExpenses.dateTime.value =
+                    vmAddExpenses.day + "-" + vmAddExpenses.month + "-" + vmAddExpenses.year + "  " + hourInString + ":" + minute.toString() + " " + amPm
+            }, tempHour, tempMinute, true)
+        val datePickerDialog = DatePickerDialog(requireContext(), { _, _, month, dayOfMonth ->
             setDay(dayOfMonth)
             setMonth(month + 1)
             timePickerDialog.show()
-        }, year, month, day)
+        }, tempYear, tempMonth, tempDay)
         datePickerDialog.show()
     }
 
     private fun setDay(day: Int) {
-        if (day == 1) {
-            vm_addExpenses!!.day = getString(R.string.digit01)
-        } else if (day == 2) {
-            vm_addExpenses!!.day = getString(R.string.digit02)
-        } else if (day == 3) {
-            vm_addExpenses!!.day = getString(R.string.digit03)
-        } else if (day == 4) {
-            vm_addExpenses!!.day = getString(R.string.digit04)
-        } else if (day == 5) {
-            vm_addExpenses!!.day = getString(R.string.digit05)
-        } else if (day == 6) {
-            vm_addExpenses!!.day = getString(R.string.digit06)
-        } else if (day == 7) {
-            vm_addExpenses!!.day = getString(R.string.digit07)
-        } else if (day == 8) {
-            vm_addExpenses!!.day = getString(R.string.digit08)
-        } else if (day == 9) {
-            vm_addExpenses!!.day = getString(R.string.digit09)
-        } else {
-            vm_addExpenses!!.day = day.toString()
+        when (day) {
+            1 -> {
+                vmAddExpenses.day = getString(R.string.digit01)
+            }
+            2 -> {
+                vmAddExpenses.day = getString(R.string.digit02)
+            }
+            3 -> {
+                vmAddExpenses.day = getString(R.string.digit03)
+            }
+            4 -> {
+                vmAddExpenses.day = getString(R.string.digit04)
+            }
+            5 -> {
+                vmAddExpenses.day = getString(R.string.digit05)
+            }
+            6 -> {
+                vmAddExpenses.day = getString(R.string.digit06)
+            }
+            7 -> {
+                vmAddExpenses.day = getString(R.string.digit07)
+            }
+            8 -> {
+                vmAddExpenses.day = getString(R.string.digit08)
+            }
+            9 -> {
+                vmAddExpenses.day = getString(R.string.digit09)
+            }
+            else -> {
+                vmAddExpenses.day = day.toString()
+            }
         }
     }
 
     private fun setMonth(month: Int) {
-        if (month == 1) {
-            vm_addExpenses!!.month = getString(R.string.digit01)
-        } else if (month == 2) {
-            vm_addExpenses!!.month = getString(R.string.digit02)
-        } else if (month == 3) {
-            vm_addExpenses!!.month = getString(R.string.digit03)
-        } else if (month == 4) {
-            vm_addExpenses!!.month = getString(R.string.digit04)
-        } else if (month == 5) {
-            vm_addExpenses!!.month = getString(R.string.digit05)
-        } else if (month == 6) {
-            vm_addExpenses!!.month = getString(R.string.digit06)
-        } else if (month == 7) {
-            vm_addExpenses!!.month = getString(R.string.digit07)
-        } else if (month == 8) {
-            vm_addExpenses!!.month = getString(R.string.digit08)
-        } else if (month == 9) {
-            vm_addExpenses!!.month = getString(R.string.digit09)
-        } else {
-            vm_addExpenses!!.month = month.toString()
+        when (month) {
+            1 -> {
+                vmAddExpenses.month = getString(R.string.digit01)
+            }
+            2 -> {
+                vmAddExpenses.month = getString(R.string.digit02)
+            }
+            3 -> {
+                vmAddExpenses.month = getString(R.string.digit03)
+            }
+            4 -> {
+                vmAddExpenses.month = getString(R.string.digit04)
+            }
+            5 -> {
+                vmAddExpenses.month = getString(R.string.digit05)
+            }
+            6 -> {
+                vmAddExpenses.month = getString(R.string.digit06)
+            }
+            7 -> {
+                vmAddExpenses.month = getString(R.string.digit07)
+            }
+            8 -> {
+                vmAddExpenses.month = getString(R.string.digit08)
+            }
+            9 -> {
+                vmAddExpenses.month = getString(R.string.digit09)
+            }
+            else -> {
+                vmAddExpenses.month = month.toString()
+            }
         }
     }
 
@@ -696,20 +760,90 @@ class AddExpenseFragment : Fragment(), View.OnClickListener {
     fun selectMoreCard(cardName : String){
 
         deselectAllCard()
-        viewModel.category = cardName
+        vmAddExpenses.category = cardName
         binding.tvSelectedMoreCard.text = cardName
         binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.pink))
         binding.cvSelectedMoreCard.visibility = View.VISIBLE
     }
 
-    fun deSelectedMoreCard(){
+    private fun deSelectedMoreCard(){
         binding.tvSelectedMoreCard.text = ""
         binding.cvSelectedMoreCard.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         binding.cvSelectedMoreCard.visibility = View.INVISIBLE
     }
 
+    private fun showNativeAdd() {
+        val lastAdShowDate = prefManager.lastNativeAdShownAEF
+        if (AdMobUtil.canAdShow(requireContext(), lastAdShowDate)) {
+            val nativeAd = NativeAdUtil(requireContext().applicationContext)
+            nativeAd.loadNativeAd(requireActivity(),
+                binding.nativeAd,
+                AdUnitIds.NATIVE_ADD_TRANSACTION) {
+                if (it) {
+                    binding.nativeAd.visibility = View.VISIBLE
+                    Log.d("Native", "Native Ad Shown")
+                    prefManager.lastNativeAdShownAEF = CurrentDate.currentTime24H
+                }
+            }
+        }
+        else{
+            binding.nativeAd.visibility = View.GONE
+        }
+    }
+
     private fun goBack(){
         navCon.navigateUp()
+    }
+
+
+    override fun onDestroy() {
+        Log.d("LifeCycle", "AddExpense Fragment Destroyed")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("LifeCycle", "AddExpense Fragment DestroyedView")
+        super.onDestroyView()
+    }
+
+    override fun onStop() {
+        Log.d("LifeCycle", "AddExpense Fragment Stop")
+        super.onStop()
+    }
+
+    override fun onPause() {
+        Log.d("LifeCycle", "AddExpense Fragment Paused")
+        super.onPause()
+    }
+
+    override fun onAttach(context: Context) {
+        Log.d("LifeCycle", "AddExpense Fragment Attached")
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        Log.d("LifeCycle", "AddExpense Fragment Detached")
+        super.onDetach()
+    }
+
+    override fun onStart() {
+        Log.d("LifeCycle", "AddExpense Fragment Started")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d("LifeCycle", "AddExpense Fragment resumed")
+        super.onResume()
+    }
+
+    private fun loadProgressBar() {
+        binding.mainLoadingBar.visibility = View.VISIBLE
+        binding.clContainer.visibility=View.GONE
+    }
+
+    private fun unloadProgressBar(){
+        binding.mainLoadingBar.visibility = View.GONE
+        binding.clContainer.visibility=View.VISIBLE
     }
 
 }

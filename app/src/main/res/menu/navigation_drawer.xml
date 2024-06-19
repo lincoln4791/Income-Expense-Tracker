@@ -12,7 +12,14 @@
         <item
             android:id="@+id/menu_DarkTheme"
             android:icon="@drawable/ic_darkmoon_24"
-            android:title="Dark Theme" />
+            android:title="Dark Theme"
+            android:visible="false"/>
+
+        <item
+            android:id="@+id/menu_NoAds"
+            android:icon="@drawable/premium_yellow32"
+            android:title="Premium"
+            android:visible="true"/>
         <item
             android:id="@+id/menu_facebookPage"
             android:icon="@drawable/ic_facebook_icon"
@@ -52,6 +59,6 @@
             android:id="@+id/menu_loginLogout"
             android:icon="@drawable/ic_login_24"
             android:title="Login"
-            android:visible="false"/>
+            android:visible="true"/>
     </group>
 </menu>

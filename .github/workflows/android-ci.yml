@@ -1,0 +1,71 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - ci-cd
+  pull_request:
+    branches:
+      - ci-cd
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.0.0'
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Grant Permission
+        run: |
+          chmod +x gradlew
+
+      - name: Build Android App
+        run: |
+          ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --token ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Read Version Name from build.gradle
+        id: version_name
+        run: |
+            versionName=$(grep -oP 'versionName "\K[^"]+' app/build.gradle)
+            echo "::set-output name=version_name::$versionName"
+
+      - name: Generate Firebase App Distribution Link
+        id: firebase_link
+        run: |
+          echo "::set-output name=firebase_link::$FIREBASE_APP_DISTRIBUTION_LINK"
+
+      - name: Read Release Notes from File
+        id: release_notes
+        run: |
+          echo "::set-output name=notes::$(cat app/release_notes.txt)"
+
+      - name: Send Discord Notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          APP_VERSION: ${{ steps.version_name.outputs.version_name }}
+          RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
+          FIREBASE_APP_DISTRIBUTION_LINK: ${{ secrets.FIREBASE_APP_DISTRIBUTION_LINK }}
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"content\": \"New app version uploaded \nVersion: $APP_VERSION, \nLink : $FIREBASE_APP_DISTRIBUTION_LINK  \n\nRelease Notes: $RELEASE_NOTES\"}" \
+            $DISCORD_WEBHOOK_URL

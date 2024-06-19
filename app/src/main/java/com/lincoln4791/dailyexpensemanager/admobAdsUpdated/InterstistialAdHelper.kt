@@ -1,5 +1,4 @@
-/*
-package com.itmedicus.patientaid.ads.admobAdsUpdated
+package com.lincoln4791.dailyexpensemanager.admobAdsUpdated
 
 import android.app.Activity
 import android.content.Context
@@ -11,12 +10,11 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
-class InterstistialAdHelper(private val context: Context,private val activity:Activity) {
+class InterstistialAdHelper(private val context: Context,private val activity:Activity,private var mInterstitialAd: InterstitialAd?) {
 
-    var mInterstitialAd: InterstitialAd? = null
+    //var mInterstitialAd: InterstitialAd? = null
 
-     fun loadinterAd(aui:String,callback:(isAdLoaded : Boolean)-> Unit){
-
+    fun loadinterAd(aui:String,callback:(isAdLoaded : Boolean)-> Unit){
         InterstitialAd.load(context,aui, AdRequest.Builder().build(), object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.d("InterAD", adError.message)
@@ -43,8 +41,8 @@ class InterstistialAdHelper(private val context: Context,private val activity:Ac
                 callback(true,null)
             }
 
-            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                Log.d("InterAD", "InterAd failed to show -> ${adError!!.message}")
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                Log.d("InterAD", "InterAd failed to show -> ${adError.message}")
                 callback(false,adError.message)
             }
 
@@ -60,8 +58,10 @@ class InterstistialAdHelper(private val context: Context,private val activity:Ac
             Log.d("InterAD", "The interstitial ad wasn't ready yet.")
             callback(false,"Inter Ad is not ready yet!")
         }
+
     }
 
 
 
-}*/
+
+}

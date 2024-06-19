@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.AddIncomeFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_toolbar_AddIncome"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/primary"
+        style="@style/cl_toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <com.google.android.material.card.MaterialCardView
@@ -32,13 +31,14 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_AddIncome"
+            style="@style/toolbar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/ll_currentBalance_AddIncome"
             app:layout_constraintStart_toEndOf="@+id/cv_img"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/AddIncome"
-            app:titleTextColor="@color/white" />
+            />
 
         <LinearLayout
             android:id="@+id/ll_currentBalance_AddIncome"
@@ -52,21 +52,11 @@
             <TextView
                 android:id="@+id/tv_currentBalanceText_toolBar_AddIncome"
                 style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:textSize="16sp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/redressed_regular"
-                android:gravity="bottom|center"
-                android:textAlignment="gravity"
                 android:text="@string/CurrentBalance" />
 
             <TextView
                 android:id="@+id/tv_currentBalanceValue_toolBar_AddIncome"
-                style="@style/tv_toolBar"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                style="@style/tv_toolBar_value"
                 android:gravity="top|center"
                 android:textAlignment="gravity"
                 android:text="@string/value" />
@@ -75,52 +65,75 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/mainLoadingBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_AddIncome"
-        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_toolbar_AddIncome">
 
+        <include
+            layout="@layout/layout_content_loading"
+            />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_toolbar_AddIncome">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cl_container"
+            app:layout_constraintBottom_toTopOf="@id/nativeAd">
 
-            <TextView
-                android:id="@+id/tv_typeTitle_AddIncome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="3dp"
-                android:text="Select Category"
-                android:textColor="@color/green"
-                android:textSize="16sp"
-                android:textStyle="bold|italic"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/horizontalScrollView2_AddIncome"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:weightSum="5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_typeTitle_AddIncome">
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_typeTitle_AddIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="3dp"
+                    android:text="Select Category"
+                    android:textColor="@color/green"
+                    android:textSize="16sp"
+                    android:textStyle="bold|italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/horizontalScrollView2_AddIncome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_typeTitle_AddIncome">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cv_salary_AddIncome"
                         style="@style/CV_horizontalScroll_MainActivity">
 
-                        <LinearLayout
-                            style="@style/ll_horizontalScroll_MainActivity">
+                        <LinearLayout style="@style/ll_horizontalScroll_MainActivity">
 
                             <ImageView
                                 style="@style/iv_horizontalScroll_MainActivity"
@@ -139,8 +152,7 @@
                         android:id="@+id/cv_business_AddIncome"
                         style="@style/CV_horizontalScroll_MainActivity">
 
-                        <LinearLayout
-                          style="@style/ll_horizontalScroll_MainActivity">
+                        <LinearLayout style="@style/ll_horizontalScroll_MainActivity">
 
                             <ImageView
                                 style="@style/iv_horizontalScroll_MainActivity"
@@ -159,8 +171,7 @@
                         android:id="@+id/cv_houseRent_AddIncome"
                         style="@style/CV_horizontalScroll_MainActivity">
 
-                        <LinearLayout
-                           style="@style/ll_horizontalScroll_MainActivity">
+                        <LinearLayout style="@style/ll_horizontalScroll_MainActivity">
 
                             <ImageView
                                 style="@style/iv_horizontalScroll_MainActivity"
@@ -168,8 +179,7 @@
 
                             <TextView
                                 style="@style/tv_horizontalScroll_MainActivity"
-                                android:text="@string/HouseRent"
-                                />
+                                android:text="@string/HouseRent" />
 
                         </LinearLayout>
 
@@ -180,8 +190,7 @@
                         android:id="@+id/cv_other_AddIncome"
                         style="@style/CV_horizontalScroll_MainActivity">
 
-                        <LinearLayout
-                            style="@style/ll_horizontalScroll_MainActivity">
+                        <LinearLayout style="@style/ll_horizontalScroll_MainActivity">
 
                             <ImageView
                                 style="@style/iv_horizontalScroll_MainActivity"
@@ -197,534 +206,549 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_AddMore"
-                    style="@style/CV_horizontalScroll_MainActivity">
+                        android:id="@+id/cv_AddMore"
+                        style="@style/CV_horizontalScroll_MainActivity">
+
+                        <LinearLayout
+                            style="@style/ll_horizontalScroll_MainActivity"
+                            android:layout_height="match_parent"
+                            android:padding="8dp">
+
+                            <ImageView
+                                style="@style/iv_horizontalScroll_MainActivity"
+                                android:src="@drawable/add" />
+
+                            <!-- <TextView
+                                style="@style/tv_horizontalScroll_MainActivity"
+                                android:text="Add More.." />-->
+
+                        </LinearLayout>
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_selectedMoreCard"
+                    style="@style/CV_horizontalScroll_MainActivity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/horizontalScrollView2_AddIncome">
 
                     <LinearLayout
                         style="@style/ll_horizontalScroll_MainActivity"
-                        android:layout_height="match_parent"
-                        android:padding="8dp">
+                        android:layout_width="wrap_content">
 
-                        <ImageView
-                            style="@style/iv_horizontalScroll_MainActivity"
-                            android:src="@drawable/add" />
-
-                       <!-- <TextView
+                        <TextView
+                            android:id="@+id/tv_selectedMoreCard"
                             style="@style/tv_horizontalScroll_MainActivity"
-                            android:text="Add More.." />-->
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="50dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="50dp"
+                            android:paddingBottom="5dp"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
 
                 </com.google.android.material.card.MaterialCardView>
 
-            </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_selectedMoreCard"
-                style="@style/CV_horizontalScroll_MainActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView2_AddIncome">
-
-                <LinearLayout style="@style/ll_horizontalScroll_MainActivity"
-                    android:layout_width="wrap_content">
-
-                    <TextView
-                        android:id="@+id/tv_selectedMoreCard"
-                        style="@style/tv_horizontalScroll_MainActivity"
-                        android:layout_width="wrap_content"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:paddingStart="50dp"
-                        android:paddingEnd="50dp"
-                        android:textStyle="bold"
-                        android:text=""
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_selectedMoreCard" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_incomeDescription_AddIncome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="10dp"
-                app:cardElevation="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/recyclerView"
-                app:strokeColor="@color/green"
-                app:strokeWidth="1dp">
-
-                <EditText
-                    android:id="@+id/et_incomeDescription_AddIncome"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cv_selectedMoreCard" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_incomeDescription_AddIncome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
                     android:minHeight="40dp"
-                    android:background="@color/white"
-                    android:drawablePadding="10dp"
-                    android:hint="Description (Optional)"
-                    android:maxLength="60"
-                    android:paddingStart="10dp" />
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerView"
+                    app:strokeColor="@color/green"
+                    app:strokeWidth="1dp">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <EditText
+                        android:id="@+id/et_incomeDescription_AddIncome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:drawablePadding="10dp"
+                        android:hint="Description (Optional)"
+                        android:maxLength="60"
+                        android:minHeight="40dp"
+                        android:paddingStart="10dp" />
+
+                </com.google.android.material.card.MaterialCardView>
 
 
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/materialCardView2_AddIncome"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="10dp"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_incomeDescription_AddIncome"
-                app:strokeColor="@color/green"
-                app:strokeWidth="1dp">
-
-                <EditText
-                    android:id="@+id/et_amount_AddIncome"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView2_AddIncome"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent"
-                    android:drawableLeft="@drawable/ic_dollar"
-                    android:drawablePadding="10dp"
-                    android:hint="@string/EnterAmount"
-                    android:inputType="number"
-                    android:textColor="@color/black" />
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cv_incomeDescription_AddIncome"
+                    app:strokeColor="@color/green"
+                    app:strokeWidth="1dp">
+
+                    <EditText
+                        android:id="@+id/et_amount_AddIncome"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/transparent"
+                        android:drawableLeft="@drawable/ic_dollar"
+                        android:drawablePadding="10dp"
+                        android:hint="@string/EnterAmount"
+                        android:inputType="number"
+                        android:textColor="@color/black" />
 
 
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView3_AddIncome"
-                android:layout_width="0dp"
-                android:layout_height="65dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardView2_AddIncome">
+                <HorizontalScrollView
+                    android:id="@+id/horizontalScrollView3_AddIncome"
+                    android:layout_width="0dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView2_AddIncome">
 
-                <LinearLayout
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount500_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="500" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount1000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount1500_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1500" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount2000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount2500_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2500" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount3000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount3500_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3500" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount4000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount5000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="5000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount10000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="10000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount15000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="15000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount20000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="20000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount30000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="30000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount40000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="40000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount50000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="50000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount100000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="100000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount200000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="200000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount300000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="300000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount400000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="400000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cv_amount500000_AddIncome"
+                            style="@style/CV_amounts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/tv_amounts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="500000" />
+
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/tv_dateTime_AddIncome"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount500_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="500" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount1000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount1500_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1500" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount2000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount2500_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="2500" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount3000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount3500_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3500" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount4000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount5000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:text="5000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount10000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount15000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="15000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount20000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount30000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="30000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount40000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="40000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount50000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="50000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount100000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="100000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount200000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="200000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount300000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="300000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount400000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="400000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cv_amount500000_AddIncome"
-                        style="@style/CV_amounts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/tv_amounts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="500000" />
-
-                    </com.google.android.material.card.MaterialCardView>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/tv_dateTime_AddIncome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/ic_schedule"
-                android:drawablePadding="10dp"
-                android:text="@string/demoDate"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/horizontalScrollView3_AddIncome"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_AddIncome" />
-
-            <TextView
-                android:id="@+id/tc_changeDate_AddIncome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/ChangeDate"
-                android:textColor="@color/black"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView3_AddIncome"
-                app:layout_constraintTop_toTopOf="@+id/tv_dateTime_AddIncome" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_save_AddIncome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:backgroundTint="@color/green"
-                android:clickable="true"
-                app:cardCornerRadius="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/tc_changeDate_AddIncome"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_AddIncome">
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/ic_schedule"
+                    android:drawablePadding="10dp"
+                    android:text="@string/demoDate"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/horizontalScrollView3_AddIncome"
+                    app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_AddIncome" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="50dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="50dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/Save"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:id="@+id/tc_changeDate_AddIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/ChangeDate"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/horizontalScrollView3_AddIncome"
+                    app:layout_constraintTop_toTopOf="@+id/tv_dateTime_AddIncome" />
 
-            </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_save_AddIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:backgroundTint="@color/green"
+                    android:clickable="true"
+                    app:cardCornerRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/tc_changeDate_AddIncome"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView3_AddIncome">
 
-          <!--  <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_back_AddIncome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/gray"
-                android:clickable="true"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="16dp"
-                app:layout_constraintStart_toStartOf="@+id/tv_dateTime_AddIncome"
-                app:layout_constraintTop_toTopOf="@+id/cv_save_AddIncome">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="50dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="50dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/Save"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="50dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="50dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/Back"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                </com.google.android.material.card.MaterialCardView>
 
-            </com.google.android.material.card.MaterialCardView>-->
+                <!--  <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_back_AddIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray"
+                    android:clickable="true"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="16dp"
+                    app:layout_constraintStart_toStartOf="@+id/tv_dateTime_AddIncome"
+                    app:layout_constraintTop_toTopOf="@+id/cv_save_AddIncome">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="50dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="50dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/Back"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cv_calculator_AddIncome"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginEnd="20dp"
-                android:backgroundTint="@color/gray"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="50dp"
-                app:cardElevation="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:strokeColor="@color/red"
-                app:strokeWidth="1dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/calculator_round" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>-->
 
 
-    </ScrollView>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_calculator_AddIncome"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="@color/gray"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:strokeColor="@color/red"
+                    app:strokeWidth="1dp"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/calculator_round" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </ScrollView>
+
+        <com.google.android.ads.nativetemplates.TemplateView
+            android:id="@+id/nativeAd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:gnt_template_type="@layout/gnt_small_template_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/cl_container"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
