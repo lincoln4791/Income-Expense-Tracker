@@ -2,6 +2,7 @@ package com.lincoln4791.dailyexpensemanager.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,8 +31,12 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
 import com.lincoln4791.dailyexpensemanager.common.util.NetworkCheck
+import com.lincoln4791.dailyexpensemanager.common.util.SSLTransactionHelper
 import com.lincoln4791.dailyexpensemanager.databinding.FragmentSubscriptionBinding
 import com.lincoln4791.dailyexpensemanager.modelClass.SubscriptionInfoFromGoogle
+import com.sslwireless.sslcommerzlibrary.model.response.SSLCTransactionInfoModel
+import com.sslwireless.sslcommerzlibrary.view.singleton.IntegrateSSLCommerz
+import com.sslwireless.sslcommerzlibrary.viewmodel.listener.SSLCTransactionResponseListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -136,6 +141,10 @@ class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscript
             }
         }
 
+        binding.cvSubscriptionTestSSL.setOnClickListener {
+                sslTest()
+        }
+
         binding.cvWatchAd.setOnClickListener {
             adLoadingBar.show()
             loadRewardedAd()
@@ -145,6 +154,27 @@ class Subscription : BaseFragment<FragmentSubscriptionBinding>(FragmentSubscript
             goBack()
         }
 
+    }
+
+    private fun sslTest() {
+        IntegrateSSLCommerz
+            .getInstance((context as ContextWrapper).baseContext)
+            .addSSLCommerzInitialization(SSLTransactionHelper.getSSLCommerzInitializer(10.0,"123456","testCategory"))
+            .addCustomerInfoInitializer(SSLTransactionHelper.getCustomerInitializer(requireContext()))
+            .addAdditionalInitializer(SSLTransactionHelper.getAdditionalInitializer(requireContext(),"testProductID","testProductname"))
+            .buildApiCall(object : SSLCTransactionResponseListener{
+                override fun transactionSuccess(p0: SSLCTransactionInfoModel?) {
+                    Toast.makeText(requireContext(),"success",Toast.LENGTH_SHORT).show()
+                }
+
+                override fun transactionFail(p0: String?) {
+                    Toast.makeText(requireContext(),"Failed",Toast.LENGTH_SHORT).show()
+                }
+
+                override fun merchantValidationError(p0: String?) {
+                    Toast.makeText(requireContext(),"Error",Toast.LENGTH_SHORT).show()
+                }
+            });
     }
 
     @SuppressLint("InflateParams", "SetTextI18n")
