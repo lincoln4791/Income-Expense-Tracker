@@ -29,6 +29,8 @@ import com.lincoln4791.dailyexpensemanager.Repository
 import com.lincoln4791.dailyexpensemanager.Resource
 import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
+import com.lincoln4791.dailyexpensemanager.common.eventbus.EventBusUtil
+import com.lincoln4791.dailyexpensemanager.common.eventbus.MessageEvent
 import com.lincoln4791.dailyexpensemanager.common.util.DbAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.Util
 import com.lincoln4791.dailyexpensemanager.common.util.GlobalVariabls
@@ -41,6 +43,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,6 +87,7 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //EventBusUtil.postEvent("My Test Event Bus")
 
         Log.d("LifeCycle","Transactions Fragment ViewCreated")
         Util.recordScreenEvent("transactions_fragment","MainActivity")
@@ -155,6 +161,11 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
         binding.ivDeleteAllTransactions.setOnClickListener { confirmDeleteAll() }
         binding.cvImg.setOnClickListener {
             goBack()
+        }
+
+        binding.toolbarTransactions.setOnClickListener {
+            //EventBusUtil.postEvent("Event From Transaction")
+            EventBusUtil.postStickyEvent("Event From Transaction")
         }
 
         setCurrentBalance()
@@ -353,10 +364,7 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
         super.onDestroyView()
     }
 
-    override fun onStop() {
-        Log.d("LifeCycle", "Transactions Fragment Stop")
-        super.onStop()
-    }
+
 
     override fun onPause() {
         Log.d("LifeCycle", "Transactions Fragment Paused")
@@ -376,6 +384,12 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
     override fun onStart() {
         Log.d("LifeCycle", "Transactions Fragment Started")
         super.onStart()
+        EventBus.getDefault().register(this)
+    }
+    override fun onStop() {
+        Log.d("LifeCycle", "Transactions Fragment Stop")
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onResume() {
@@ -401,6 +415,11 @@ class TransactionsFragment : BaseFragment<FragmentTransactionsBinding>(FragmentT
 
    private fun hideBottomNavigation(){
         (requireActivity() as MainActivity).hideBottomNavigation()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        Toast.makeText(requireContext(), event.message, Toast.LENGTH_LONG).show()
     }
 
 

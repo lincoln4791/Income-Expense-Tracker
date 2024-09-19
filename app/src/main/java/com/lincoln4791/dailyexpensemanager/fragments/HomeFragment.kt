@@ -55,6 +55,8 @@ import com.lincoln4791.dailyexpensemanager.common.Constants
 import com.lincoln4791.dailyexpensemanager.common.Constants.DATABASE_NAME
 import com.lincoln4791.dailyexpensemanager.common.PrefManager
 import com.lincoln4791.dailyexpensemanager.common.SubscriptionUtil
+import com.lincoln4791.dailyexpensemanager.common.eventbus.EventBusUtil
+import com.lincoln4791.dailyexpensemanager.common.eventbus.MessageEvent
 import com.lincoln4791.dailyexpensemanager.common.slider.SliderAdapter
 import com.lincoln4791.dailyexpensemanager.common.util.*
 import com.lincoln4791.dailyexpensemanager.common.util.BackupUtil.backupDatabaseForRestore
@@ -69,6 +71,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -203,7 +208,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             confirmWatchAd()
         }
 
-
+        binding.toolbarMainActivity.setOnClickListener {
+            Log.d("tag","Event Sent FromHome")
+            EventBusUtil.postEvent("Event From Home")
+            //EventBusUtil.postStickyEvent("Event From Home")
+        }
 
         binding.navigationView.setNavigationItemSelectedListener {
             it.isChecked = true
@@ -282,6 +291,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         viewModel.getIncomeExpenseData()
         initDarkTheme()
         observe()
+
+        CommonUtils.test {a,b->
+            Log.d("tag","cb is -> $b")
+        }
 
 
 
@@ -562,11 +575,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         super.onDestroyView()
     }
 
-    override fun onStop() {
-        Log.d("LifeCycle", "Home Fragment Stop")
-        super.onStop()
-    }
-
     override fun onPause() {
         Log.d("LifeCycle", "Home Fragment Paused")
         super.onPause()
@@ -586,6 +594,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun onStart() {
         Log.d("LifeCycle", "Home Fragment Started")
         super.onStart()
+    }
+
+    override fun onStop() {
+        Log.d("LifeCycle", "Home Fragment Stop")
+        super.onStop()
     }
 
     override fun onResume() {
@@ -848,10 +861,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         }
     }
-
-
-
-
-
-
 }
