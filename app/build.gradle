@@ -209,7 +209,7 @@ dependencies {
 
     //G-Pay
     //implementation "com.android.billingclient:billing:4.0.0"
-    implementation("com.android.billingclient:billing-ktx:4.1.0")
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
 
     //di
     implementation 'com.google.dagger:hilt-android:2.51.1'
