@@ -29,11 +29,11 @@ class MyApplication : Application(), Configuration.Provider {
        //Log.d("tag","FID - ${}")
     }
 
-    override fun getWorkManagerConfiguration(): Configuration {
+/*    override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-    }
+    }*/
 
     companion object {
         lateinit var instance: MyApplication
@@ -48,4 +48,14 @@ class MyApplication : Application(), Configuration.Provider {
             Log.e("tag", "Error getting Firebase Installation ID", e)
         }
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+
+    /*   override val workManagerConfiguration: Configuration =   Configuration.Builder()
+           .setWorkerFactory(workerFactory)
+           .build()*/
+        //get() = TODO("Not yet implemented")
 }

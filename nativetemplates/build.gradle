@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 32
+    namespace 'com.google.android.ads.nativetemplates'
+    compileSdkVersion 35
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 32
+        minSdkVersion 26
+        targetSdkVersion 35
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -17,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pgcfg'
             consumerProguardFiles 'proguard-rules.pgcfg'
         }
+    }
+    buildFeatures{
+        viewBinding true
+        buildConfig = true
     }
 
 }
