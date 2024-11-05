@@ -785,7 +785,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun initInterstitialAd() {
         interAd = InterstistialAdHelper(requireContext(), requireActivity(), mInterstitialAd)
-        interAd.loadinterAd(AdUnitIds.INTERSTITIAL_FULL_REPORT) {
+        interAd.loadinterAd(AdUnitIds.INTERSTITIAL_TEST) {
             Log.d("InterAd", "Inter ad loaded -> $it")
             adLoadingBar.dismiss()
             showInterAd()

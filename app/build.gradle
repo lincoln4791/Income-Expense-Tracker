@@ -36,8 +36,8 @@ android {
         applicationId "com.lincoln4791.dailyexpensemanager"
         minSdkVersion 26
         targetSdkVersion 35
-        versionCode 21
-        versionName "1.1.9"
+        versionCode 22
+        versionName "1.1.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
     }
@@ -165,7 +165,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-database-ktx'
 
     //admob
-    implementation 'com.google.android.gms:play-services-ads:21.1.0'
+    implementation ('com.google.android.gms:play-services-ads:23.5.0') {
+        exclude group: 'com.google.android.gms', module: 'play-services-measurement-api'
+    }
     implementation project(path: ':nativetemplates')
 
     //Remote Config

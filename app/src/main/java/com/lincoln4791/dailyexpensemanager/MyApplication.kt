@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 import com.google.firebase.installations.FirebaseInstallations
@@ -18,9 +19,9 @@ class MyApplication : Application(), Configuration.Provider {
    // private var appOpenManager: AppOpenManager? = null
     override fun onCreate() {
         super.onCreate()
-        /*MobileAds.initialize(
+        MobileAds.initialize(
             this
-        ) { }*/
+        ) { }
        instance=this
        FirebaseApp.initializeApp(this);
        getFirebaseInstallationId()
